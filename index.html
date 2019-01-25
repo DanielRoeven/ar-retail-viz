@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+    <body>
+        <svg width="1000" height="1000">
+        </svg>
+    </body>
+
+
+    <script>
+        var Airtable = require('airtable');
+        var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
+
+        var fetchData = function(){
+            var examples = [];
+
+            base('Examples').select({
+                // Selecting the first 3 records in Grid view:
+                view: "Grid view"
+            }).eachPage(function page(records, fetchNextPage) {
+                // This function (`page`) will get called for each page of records.
+
+                records.forEach(function(record) {
+                    examples.push(record.fields);
+                });
+
+                // To fetch the next page of records, call `fetchNextPage`.
+                // If there are more records, `page` will get called again.
+                // If there are no more records, `done` will get called.
+                fetchNextPage();
+
+            }, function done(err) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                else {
+                    plotData(examples)
+                }
+            });   
+        };
+
+        var plotData = function(examples){
+            console.log(examples);
+
+            var svg = d3.select('svg');
+            
+            texts = svg.selectAll('text');
+            
+            texts.data(examples)
+                    .enter()
+                    .append('text')
+                        .attr("x", function(){return 1000*Math.random()})
+                        .attr("y", function(){return 1000*Math.random()})
+                        .attr("text-anchor", "end")
+                        .text(function(d){return d['Title of product/project']});
+                    };
+
+        fetchData();
+    </script>
+</html>
