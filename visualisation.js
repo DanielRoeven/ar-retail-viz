@@ -44,8 +44,8 @@ var plotData = function(examples){
                 .enter()
                 .append('div')
                     .attr('class', 'primaryPurposeLabel')
-                    .style('grid-column', function(d, i){return i+2})
-                    .style('grid-row', 1)
+                    .style('grid-column', 1)
+                        .style('grid-row', function(d, i){return i+2})
                     .append('p')
                         .text(function(d){return d});
 
@@ -54,8 +54,8 @@ var plotData = function(examples){
                     .enter()
                     .append('div')
                         .attr('class', 'contextLabel')
-                        .style('grid-column', 1)
-                        .style('grid-row', function(d, i){return i+1})
+                    .style('grid-column', function(d, i){return i+2})
+                        .style('grid-row', 1)
                         .append('p')
                             .text(function(d){return d});
 
@@ -74,8 +74,8 @@ var plotData = function(examples){
             });
 
             var cell = document.createElement('div')
-            cell.style['grid-row'] = (ic + 2);
-            cell.style['grid-column'] = (ip + 2);
+            cell.style['grid-column'] = (ic + 2);
+            cell.style['grid-row'] = (ip + 2);
             cell.classList.add('cell');
 
             document.getElementsByClassName('grid')[0].appendChild(cell)
