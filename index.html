@@ -22,7 +22,7 @@
             <div class="container">
                     <div class="row" style="padding: 2em;">
                         <div>
-                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                <div class="btn-group mr-2 btn-group-toggle" data-toggle="buttons" role="group" aria-label="First group">
                                         <button type="button" class="btn btn-outline-secondary">Theme 1</button>
                                         <button type="button" class="btn btn-outline-secondary">Theme 2</button>
                                         <button type="button" class="btn btn-outline-secondary">Theme 3</button>
@@ -34,8 +34,8 @@
                                         <button type="button" class="btn btn-outline-secondary">Theme 9</button>
                                         <button type="button" class="btn btn-outline-secondary">Theme 10</button>
                                       </div>
-                                      <div class="btn-group" role="group" aria-label="Third group">
-                                        <button type="button" class="btn btn-secondary">Including TTC</button>
+                                      <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Second group">
+                                        <button type="button" class="btn btn-outline-secondary">Including TTC</button>
                                       </div>
                                     </div>
                         
@@ -44,13 +44,13 @@
                 
                     <div class="row">
                         <div class="col-12 col-sm-6 col-lg-8" >        
-                            <p>SVG PLACE</p>
-                            <svg width="1000" height="1000">
-                            </svg>
+                            <h3 style="font-size: 1.5em;">division by theme and purpose</h3>
+                            <div class='grid'>
+                                </div>
                         </div>
                         
                         <div class="col-6 col-lg-4" style="background-color:cornsilk;">
-                            <h3>More info</h3>    
+                            <h3 style="font-size: 1.5em;">More info</h3>    
                         </div>
                     </div>
             </div>
@@ -58,13 +58,12 @@
 
         <!-- <svg width="1000" height="1000">
         </svg> -->
-        <div class='grid'>
-        </div>
+        
     </body>
     <style>
         .grid {
-            width: 1000px;
-            height: 1000px;
+            width: 100%;
+            height: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
