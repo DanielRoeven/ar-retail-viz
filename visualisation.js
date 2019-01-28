@@ -45,7 +45,7 @@ var plotData = function(examples){
                 .append('div')
                     .attr('class', 'primaryPurposeLabel')
                     .style('grid-column', function(d, i){return i+2})
-                    .style('grid-row', 5)
+                    .style('grid-row', 1)
                     .append('p')
                         .text(function(d){return d});
 
@@ -69,21 +69,50 @@ var plotData = function(examples){
         });
 
         primaryPurposes.forEach(function(primaryPurpose, ip){
-            contextAndPrimaryPurposeExamples = _.filter(examples, function(contextAndPrimaryPurposeExample){
+            contextAndPrimaryPurposeExamples = _.filter(contextExamples, function(contextAndPrimaryPurposeExample){
               return contextAndPrimaryPurposeExample['Primary Purpose'] === primaryPurpose;
             });
 
             var cell = document.createElement('div')
-            cell.style['grid-row'] = (ic + 1);
+            cell.style['grid-row'] = (ic + 2);
             cell.style['grid-column'] = (ip + 2);
+            cell.classList.add('cell');
 
             document.getElementsByClassName('grid')[0].appendChild(cell)
+
             d3.select(cell).selectAll('.exampleLabel')
                 .data(contextAndPrimaryPurposeExamples)
                 .enter()
                 .append('p')
                     .attr('class', 'exampleLabel')
                     .text(function(d){return d['Title of product/project']})
+                    .style('background-color', function(d){
+                        switch(d['Theme']) {
+                            case 'AR Presentation':
+                                return d3.schemeSet3[1];
+                            case 'AR Catalog':
+                                return d3.schemeSet3[2];
+                            case 'AR Try-on':
+                                return d3.schemeSet3[3];
+                            case 'Digital Fit Determination':
+                                return d3.schemeSet3[4];
+                            case 'VR Catalog':
+                                return d3.schemeSet3[5];
+                            case 'Appealing to the Senses':
+                                return d3.schemeSet3[6];
+                            case 'Virtual Preview':
+                                return d3.schemeSet3[7];
+                            case 'AR More Info':
+                                return d3.schemeSet3[8];
+                            case 'Attract Through AR':
+                                return d3.schemeSet3[9];
+                            case 'Grab Attention':
+                                return d3.schemeSet3[10];
+                            default:
+                                console.log(d['Primary Purpose'])
+                                throw new Error('Primary purpose does not exist!');
+                        };
+                    });
         });
     });
 
@@ -159,31 +188,7 @@ var plotData = function(examples){
     //                 .attr('width', '80')
     //                 .attr('height', '20')
     //                 .attr('fill', function(d){
-    //                     switch(d['Theme']) {
-    //                         case 'AR Presentation':
-    //                             return "#3366cc";
-    //                         case 'AR Catalog':
-    //                             return "#dc3912";
-    //                         case 'AR Try-on':
-    //                             return "#ff9900";
-    //                         case 'Digital Fit Determination':
-    //                             return "#109618";
-    //                         case 'VR Catalog':
-    //                             return "#990099";
-    //                         case 'Appealing to the Senses':
-    //                             return "#0099c6";
-    //                         case 'Virtual Preview':
-    //                             return "#dd4477";
-    //                         case 'AR More Info':
-    //                             return "#66aa00";
-    //                         case 'Attract Through AR':
-    //                             return "#b82e2e";
-    //                         case 'Grab Attention':
-    //                             return "#316395";
-    //                         default:
-    //                             console.log(d['Primary Purpose'])
-    //                             throw new Error('Primary purpose does not exist!');
-    //                     };
+
     //                 });
                     
 //     rects = grid.selectAll('rect');

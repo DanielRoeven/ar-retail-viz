@@ -9,6 +9,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <script src="./visualisation.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
@@ -71,11 +72,23 @@
             height: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 88px 1fr 1fr 1fr 1fr;
+            grid-column-gap: 8px;
+            grid-row-gap: 8px;
+        }
+
+        .cell {
+            overflow: scroll;
+            height: 200px;
+            display: block;
         }
 
         .exampleLabel {
             font-size: 12px;
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: 4px;
+            overflow: hidden;
         }
     </style>
 </html>
