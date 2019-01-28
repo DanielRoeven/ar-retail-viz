@@ -31,19 +31,20 @@ var fetchData = function(){
 };
 
 var plotData = function(examples){
-    var themes = examples.map(example => example.Theme);
-    themes = d3.set(themes).values();
+    var primaryPurposes = examples.map(example => example['Primary Purpose']);
+    primaryPurposes = d3.set(primaryPurposes).values();
+    console.log(primaryPurposes);
     
     var contexts = examples.map(example => example.Context);
     contexts = d3.set(contexts).values();
 
     var grid = d3.select('.grid');
 
-    var themeLabels = grid.selectAll('.themeLabel');
-    themeLabels.data(themes)
+    var primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
+    primaryPurposeLabels.data(primaryPurposes)
                 .enter()
                 .append('div')
-                    .attr('class', 'themeLabel')
+                    .attr('class', 'primaryPurposeLabel')
                     .style('grid-column', function(d, i){return i+2})
                     .style('grid-row', 5)
                     .append('p')
@@ -58,6 +59,10 @@ var plotData = function(examples){
                         .style('grid-row', function(d, i){return i+1})
                         .append('p')
                             .text(function(d){return d});
+
+    var data = [];
+    examples.forEach(function(example, i){
+    });
 
     // groups.data(examples)
     //         .enter()
