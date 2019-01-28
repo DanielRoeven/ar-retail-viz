@@ -33,7 +33,6 @@ var fetchData = function(){
 var plotData = function(examples){
     var primaryPurposes = examples.map(example => example['Primary Purpose']);
     primaryPurposes = d3.set(primaryPurposes).values();
-    console.log(primaryPurposes);
     
     var contexts = examples.map(example => example.Context);
     contexts = d3.set(contexts).values();
@@ -60,9 +59,35 @@ var plotData = function(examples){
                         .append('p')
                             .text(function(d){return d});
 
-    var data = [];
-    examples.forEach(function(example, i){
+    var bAndMExamples = _.filter(examples, function(example){
+        return example.Context === 'B&M retail'
     });
+
+    contexts.forEach(function(context, ic){
+        contextExamples = _.filter(examples, function(contextExample){
+            return contextExample.Context === context;
+        });
+
+        primaryPurposes.forEach(function(primaryPurpose, ip){
+            contextAndPrimaryPurposeExamples = _.filter(examples, function(contextAndPrimaryPurposeExample){
+              return contextAndPrimaryPurposeExample['Primary Purpose'] === primaryPurpose;
+            });
+
+            var cell = document.createElement('div')
+            cell.style['grid-row'] = (ic + 1);
+            cell.style['grid-column'] = (ip + 2);
+
+            document.getElementsByClassName('grid')[0].appendChild(cell)
+            d3.select(cell).selectAll('.exampleLabel')
+                .data(contextAndPrimaryPurposeExamples)
+                .enter()
+                .append('p')
+                    .attr('class', 'exampleLabel')
+                    .text(function(d){return d['Title of product/project']})
+        });
+    });
+
+
 
     // groups.data(examples)
     //         .enter()
