@@ -47,7 +47,13 @@ var plotData = function(examples){
     primaryPurposeLabels.data(primaryPurposes)
                 .enter()
                 .append('div')
-                    .attr('class', 'primaryPurposeLabel')
+                    .attr('class', function(d, i){
+                        if (i % 2 == 0) {
+                            return 'primaryPurposeLabel odd';
+                        } else {
+                            return 'primaryPurposeLabel even';
+                        }
+                    })
                     .style('grid-column', 1)
                         .style('grid-row', function(d, i){return i+2})
                     .append('p')
@@ -81,6 +87,11 @@ var plotData = function(examples){
             cell.style['grid-column'] = (ic + 2);
             cell.style['grid-row'] = (ip + 2);
             cell.classList.add('cell');
+            if (ip % 2 == 0) {
+                cell.classList.add('odd')
+            } else {
+                cell.classList.add('even')
+            }
 
             document.getElementsByClassName('grid')[0].appendChild(cell)
 
@@ -90,28 +101,30 @@ var plotData = function(examples){
                 .append('p')
                     .attr('class', 'exampleLabel')
                     .text(function(d){return d['Title of product/project']})
+                    // .style('border-width', '2px')
+                    // .style('border-style', 'solid')
                     .style('background-color', function(d){
                         switch(d['Theme']) {
                             case 'AR Presentation':
-                                return d3.schemeSet3[0];
+                                return d3.schemePastel1[0];
                             case 'AR Catalog':
-                                return d3.schemeSet3[2];
+                                return d3.schemePastel1[1];
                             case 'AR Try-on':
-                                return d3.schemeSet3[3];
+                                return d3.schemePastel1[2];
                             case 'Digital Fit Determination':
-                                return d3.schemeSet3[4];
+                                return d3.schemePastel1[3];
                             case 'VR Catalog':
-                                return d3.schemeSet3[5];
+                                return d3.schemePastel1[4];
                             case 'Appealing to the Senses':
-                                return d3.schemeSet3[6];
+                                return d3.schemePastel1[5];
                             case 'Virtual Preview':
-                                return d3.schemeSet3[7];
+                                return d3.schemePastel1[6];
                             case 'AR More Info':
-                                return d3.schemeSet3[8];
+                                return d3.schemePastel1[7];
                             case 'Attract Through AR':
-                                return d3.schemeSet3[9];
+                                return d3.schemePastel1[8];
                             case 'Grab Attention':
-                                return d3.schemeSet3[10];
+                                return d3.schemePastel2[0];
                             default:
                                 console.log(d['Theme'])
                                 throw new Error('Theme does not exist!');
@@ -129,34 +142,34 @@ var colorButtons = function(themes){
         var css = '';
         switch(theme) {
             case 'AR-Presentation':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[0]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[0]);
                 break;
             case 'AR-Catalog':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[2]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[1]);
                 break;
             case 'AR-Try-on':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[3]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[2]);
                 break;
             case 'Digital-Fit-Determination':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[4]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[3]);
                 break;
             case 'VR-Catalog':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[5]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[4]);
                 break;
             case 'Appealing-to-the-Senses':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[6]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[5]);
                 break;
             case 'Virtual-Preview':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[7]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[6]);
                 break;
             case 'AR-More-Info':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[8]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[7]);
                 break;
             case 'Attract-Through-AR':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[9]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel1[8]);
                 break;
             case 'Grab-Attention':
-                css = generateActiveButtonCSS(theme, d3.schemeSet3[10]);
+                css = generateActiveButtonCSS(theme, d3.schemePastel2[0]);
                 break;
             default:
                 throw new Error('Theme does not exist!');
@@ -170,7 +183,7 @@ var colorButtons = function(themes){
 };
 
 var generateActiveButtonCSS = function(theme, color) {
-    const css = '#' + theme + '.active {' +
+    const css = '#' + theme + '.active, ' + '#' + theme + ':hover {' +
                     'background-color: ' + color + ' !important;' +
                 '}'
     return css;
