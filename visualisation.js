@@ -69,10 +69,6 @@ var plotData = function(examples){
                         .append('p')
                             .text(function(d){return d});
 
-    var bAndMExamples = _.filter(examples, function(example){
-        return example.Context === 'B&M retail'
-    });
-
     contexts.forEach(function(context, ic){
         contextExamples = _.filter(examples, function(contextExample){
             return contextExample.Context === context;
