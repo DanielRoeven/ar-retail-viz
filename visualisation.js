@@ -232,6 +232,19 @@ var plotData = function(examples){
                 });
         });
     });
+
+    var themesToShow = [];
+
+    var arPresButton = d3.select('#AR-Presentation').on('click', function(d){
+        const btn = document.getElementById('AR-Presentation');
+        theme = btn.id
+        if (_.contains(themesToShow, theme)) {
+            themesToShow = _.without(themesToShow, theme)
+        } else {
+            themesToShow.push(theme)
+        }
+        console.log(themesToShow);
+    });
 };
 
 var colorButtons = function(themes){
@@ -286,10 +299,5 @@ var generateActiveButtonCSS = function(theme, color) {
                 '}'
     return css;
 };
-
-var openModal = function(){
-
-};
-
 
 fetchData();
