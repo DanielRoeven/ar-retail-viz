@@ -9,4 +9,36 @@ h1, h3 {
     font-size: 12px;
 }
 
-a:hover
+.grid {
+    width: 100%;
+    height: 75vh;
+    min-height: 700px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.cell {
+    overflow: scroll;
+    display: block;
+    /*box-shadow: 0 8px 6px -6px gray;*/
+}
+
+.cell.odd, .primaryPurposeLabel.odd {
+	background-color: #F0F2F6;
+}
+
+.cell.even, .primaryPurposeLabel.even {
+}
+
+.exampleLabel {
+    font-size: 12px;
+    border-radius: 8px;
+    padding: 2px 4px;
+    margin: 4px;
+    overflow: hidden;
+}
+
+.buttonthemes.active, .buttonthemes:hover {
+	color: #2F2F2F !important;
+}
