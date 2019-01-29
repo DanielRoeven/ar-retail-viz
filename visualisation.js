@@ -129,7 +129,11 @@ var plotData = function(examples){
                                 console.log(d['Theme'])
                                 throw new Error('Theme does not exist!');
                         };
-                    });
+                    })
+                .on("click", function(d){
+                    console.log("clicked! " + d['Theme']);
+                    
+                });
                     
         });
     });
@@ -188,5 +192,10 @@ var generateActiveButtonCSS = function(theme, color) {
                 '}'
     return css;
 };
+
+var openModal = function(){
+
+};
+
 
 fetchData();
