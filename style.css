@@ -1,5 +1,6 @@
 body {
-padding: 2em;
+    font-family: 
+    padding: 2em;
 }
 h1, h3 {
      font-family: 'Major Mono Display'; 
@@ -9,4 +10,3 @@ h1, h3 {
     font-size: 12px;
 }
 
-a:hover
