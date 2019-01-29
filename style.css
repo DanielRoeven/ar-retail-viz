@@ -48,3 +48,52 @@ h1, h3 {
 .infobox {
 	background-color: #F0F2F6;
 }
+
+#projectLink {
+	color: #212E48;
+}
+
+.fa-external-link-alt, .fa-youtube {
+	color: #8995AE;
+}
+
+#projectByline {
+	font-style: italic;
+}
+
+#projectPurposes, #projectTech {
+	font-weight: bold;
+}
+
+.purposeTag, .techTag {
+	background-color: #D8D8D8;
+	border-radius: 100px;
+	padding: 0px 8px;
+	margin: 4px 4px;
+	display: inline-block;
+	font-weight: normal;
+}
+
+.primPurposeTag {
+	background-color: white;
+	border: 1px solid #909090;
+}
+
+#projectImg {
+	display: block;
+	width: 100%;
+}
+
+#projectImg.hidden, #projectVideo.hidden {
+	display: none;
+}
+
+#projectVideoLink {
+	color: #212E48;
+	text-decoration: none;
+	width: 100%;
+}
+
+#projectVideoLink:hover {
+	text-decoration: underline;
+}
