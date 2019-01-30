@@ -68,7 +68,7 @@ var plotData = function(examples){
         .data(primaryPurposes)                          // Bind the data
         .enter()                                        // Prepare selection set
         .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', function(d, i){                  // Set classes to primaryPurposeLabel and odd/even for zebra stripes
+            .attr('class', function(d, i){              // Set classes to primaryPurposeLabel and odd/even for zebra stripes
                 if (i % 2 == 0) {
                     return 'primaryPurposeLabel odd';
                 } else {
@@ -88,14 +88,18 @@ var plotData = function(examples){
     // Start by selecting all the context labels (none) so the selection set is empty
     var contextLabels = grid.selectAll('.contextLabel');
     contextLabels
-        .data(contexts)                                 // 
-        .enter()
-        .append('div')
-            .attr('class', 'contextLabel')
-            .style('grid-column', function(d, i){return i+2})
-            .style('grid-row', 1)
-            .append('p')
-                .text(function(d){return d});
+        .data(contexts)                                 // Bind the data
+        .enter()                                        // Prepare selection set
+        .append('div')                                  // Create a div for everything not in selection set (everything)
+            .attr('class', 'contextLabel')              // Set class to context label
+            .style('grid-column', function(d, i){       // Columns start at 2 (+1 because index start at 0 but css grid at 1, +1 because first column is other labels)
+                return i+2;
+            })
+            .style('grid-row', 1)                       // Labels are all in first column
+            .append('p')                                // Create paragraph inside div
+                .text(function(d){                      // Set text to data (context name)
+                    return d;
+                });
 
     contexts.forEach(function(context, ic){
         contextExamples = _.filter(examples, function(contextExample){
