@@ -41,6 +41,12 @@ h1, h3 {
     overflow: hidden;
 }
 
+.exampleLabel:hover{
+    background: rgba(253, 200, 140, 0.747)!important;
+    z-index: 9999;
+    cursor: pointer;
+}
+
 .buttonthemes.active, .buttonthemes:hover {
 	color: #2F2F2F !important;
 }

@@ -159,9 +159,39 @@ var plotData = function(examples){
                         };
                     })
                 .on("click", function(d){ showMoreInfo(d)})
-                .on("mouseover", function(d){})
-                .on("mouseout", function(d){})
-            ;
+                // .on("mouseover", function(){ d3.select(this)
+                //     .style('background-color', "white")
+                //     .style('opacity', "0.5");})
+                // .on("mouseout", function(d){d3.select(this)
+                //     .style('opacity', "1")
+                //     .style('background-color', function(d){
+                //         switch(d['Theme']) {
+                //             case 'AR Presentation':
+                //                 return d3.schemePastel1[0];
+                //             case 'AR Catalog':
+                //                 return d3.schemePastel1[1];
+                //             case 'AR Try-on':
+                //                 return d3.schemePastel1[2];
+                //             case 'Digital Fit Determination':
+                //                 return d3.schemePastel1[3];
+                //             case 'VR Catalog':
+                //                 return d3.schemePastel1[4];
+                //             case 'Appealing to the Senses':
+                //                 return d3.schemePastel1[5];
+                //             case 'Virtual Preview':
+                //                 return d3.schemePastel1[6];
+                //             case 'AR More Info':
+                //                 return d3.schemePastel1[7];
+                //             case 'Attract Through AR':
+                //                 return d3.schemePastel1[8];
+                //             case 'Grab Attention':
+                //                 return d3.schemePastel2[0];
+                //             default:
+                //                 console.log(d['Theme'])
+                //                 throw new Error('Theme does not exist!');
+                //         };
+                //     })
+                //});
         });
     });
 
