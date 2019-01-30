@@ -1,16 +1,20 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 
+// Get data from Airtable
 var fetchData = function(){
+    // Create array to load in examples
     var examples = [];
 
+    // Get all the records from the Examples table in Airtable
     base('Examples').select({
-        // Selecting the first 3 records in Grid view:
+        // Selecting the grid view (tabular layout)
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
-
+        
+        // Called for each 'page' (~50 records)
         records.forEach(function(record) {
+            // Add all fields of records (examples) to examples array
             examples.push(record.fields);
         });
 
@@ -20,54 +24,78 @@ var fetchData = function(){
         fetchNextPage();
 
     }, function done(err) {
+        // There are no more records
         if (err) {
+            // Something went wrong when or after calling the last page
             console.error(err);
             return;
         }
         else {
+            // Nothing went wrong, start plotting our examples
             plotData(examples)
         }
     });   
 };
 
+// Plot examples we retrieved from Airtable
 var plotData = function(examples){
-    var primaryPurposes = examples.map(example => example['Primary Purpose']);
-    primaryPurposes = d3.set(primaryPurposes).values();
-    
-    var contexts = examples.map(example => example.Context);
-    contexts = d3.set(contexts).values();
 
-    var themes = examples.map(example => example.Theme);
-    themes = d3.set(themes).values();
+    // Make a list of primary purposes:
+    // Map all examples to array with only the field primary purpose
+    // Then make array unique, stripping out duplicate primary purposes
+    const primaryPurposes = _.uniq(examples.map(example => example['Primary Purpose']));
+    
+    // Make a list of contexts:
+    // Map all examples to array with only the field context
+    // Then make array unique, stripping out duplicate contexts
+    var contexts = _.uniq(examples.map(example => example['Context']));
+
+    // Make a list of themes:
+    // Map all examples to array with only the field theme
+    // Then make array unique, stripping out duplicate contexts
+    var themes = _.uniq(examples.map(example => example['Theme']));
+
+    // Give the theme filter buttons a color
     colorButtons(themes);
 
+    // Make d3 look at the div with a css grid
     var grid = d3.select('.grid');
 
+    // Create the primary purpose labels
+    // Start by selecting all the existing primary purpose labels (none) so selection set is empty
     var primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
-    primaryPurposeLabels.data(primaryPurposes)
-                .enter()
-                .append('div')
-                    .attr('class', function(d, i){
-                        if (i % 2 == 0) {
-                            return 'primaryPurposeLabel odd';
-                        } else {
-                            return 'primaryPurposeLabel even';
-                        }
-                    })
-                    .style('grid-column', 1)
-                        .style('grid-row', function(d, i){return i+2})
-                    .append('p')
-                        .text(function(d){return d});
+    primaryPurposeLabels
+        .data(primaryPurposes)                          // Bind the data
+        .enter()                                        // Prepare selection set
+        .append('div')                                  // Create a div for everything not in selection set (everything)
+            .attr('class', function(d, i){                  // Set classes to primaryPurposeLabel and odd/even for zebra stripes
+                if (i % 2 == 0) {
+                    return 'primaryPurposeLabel odd';
+                } else {
+                    return 'primaryPurposeLabel even';
+                }
+            })
+            .style('grid-column', 1)                    // Labels are all in the first column
+            .style('grid-row', function(d, i){          // Rows start at 2 (+1 because index starts at 0 but css grid at 1, +1 because top row is other labels)
+                return i+2;
+            })
+                .append('p')                            // Create paragraph inside div
+                    .text(function(d){                  // Set text to data (primary purpose name)
+                        return d;
+                    });
 
+    // Create the context labels
+    // Start by selecting all the context labels (none) so the selection set is empty
     var contextLabels = grid.selectAll('.contextLabel');
-    contextLabels.data(contexts)
-                    .enter()
-                    .append('div')
-                        .attr('class', 'contextLabel')
-                    .style('grid-column', function(d, i){return i+2})
-                        .style('grid-row', 1)
-                        .append('p')
-                            .text(function(d){return d});
+    contextLabels
+        .data(contexts)                                 // 
+        .enter()
+        .append('div')
+            .attr('class', 'contextLabel')
+            .style('grid-column', function(d, i){return i+2})
+            .style('grid-row', 1)
+            .append('p')
+                .text(function(d){return d});
 
     contexts.forEach(function(context, ic){
         contextExamples = _.filter(examples, function(contextExample){
@@ -234,62 +262,30 @@ var plotData = function(examples){
     });
 
     var themesToShow = [];
-
-    var arPresButton = d3.select('#AR-Presentation').on('click', function(d){
-        const btn = document.getElementById('AR-Presentation');
-        theme = btn.id
-        if (_.contains(themesToShow, theme)) {
-            themesToShow = _.without(themesToShow, theme)
-        } else {
-            themesToShow.push(theme)
-        }
-        console.log(themesToShow);
-    });
 };
 
 var colorButtons = function(themes){
-    themes.forEach(function(theme){
-        theme = theme.replace(/ /g,"-");
-        var css = '';
-        switch(theme) {
-            case 'AR-Presentation':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[0]);
-                break;
-            case 'AR-Catalog':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[1]);
-                break;
-            case 'AR-Try-on':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[2]);
-                break;
-            case 'Digital-Fit-Determination':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[3]);
-                break;
-            case 'VR-Catalog':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[4]);
-                break;
-            case 'Appealing-to-the-Senses':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[5]);
-                break;
-            case 'Virtual-Preview':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[6]);
-                break;
-            case 'AR-More-Info':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[7]);
-                break;
-            case 'Attract-Through-AR':
-                css = generateActiveButtonCSS(theme, d3.schemePastel1[8]);
-                break;
-            case 'Grab-Attention':
-                css = generateActiveButtonCSS(theme, d3.schemePastel2[0]);
-                break;
-            default:
-                throw new Error('Theme does not exist!');
-        };
+    const colors = [
+        d3.schemePastel1[0],
+        d3.schemePastel1[1],
+        d3.schemePastel1[2],
+        d3.schemePastel1[3],
+        d3.schemePastel1[4],
+        d3.schemePastel1[5],
+        d3.schemePastel1[6],
+        d3.schemePastel1[7],
+        d3.schemePastel1[8],
+        d3.schemePastel2[0],
+    ];
 
-        var styleEl = document.createElement('style');
-        document.head.appendChild(styleEl);
-        var styleSheet = styleEl.sheet;
+    themes.forEach(function(theme, i){
+        const themeNoSpaces = theme.replace(/ /g,"-");
+        const css = generateActiveButtonCSS(themeNoSpaces, colors[i]);
+
+        const styleEl = document.createElement('style');
+        const styleSheet = styleEl.sheet;
         styleSheet.insertRule(css);
+        document.head.appendChild(styleEl);
     });
 };
 
