@@ -57,8 +57,29 @@ var plotData = function(examples){
     // Save list of themes to show
     var themesToShow = _.uniq(examples.map(example => example['Theme']));;
 
+
+    const colors = [
+        d3.schemePastel1[0],
+        d3.schemePastel1[1],
+        d3.schemePastel1[2],
+        d3.schemePastel1[3],
+        d3.schemePastel1[4],
+        d3.schemePastel1[5],
+        d3.schemePastel1[6],
+        d3.schemePastel1[7],
+        d3.schemePastel1[8],
+        d3.schemePastel2[0],
+    ];
+
+    var themeColors = {};
+    themes.forEach(function(theme, i){
+        themeColors[theme] = colors[i];
+    });
+
+    console.log(themeColors);
+
     // Give the theme filter buttons a color
-    colorButtons(themes);
+    colorButtons(themes, themeColors);
 
     // Make d3 look at the div with a css grid
     const grid = d3.select('.grid');
@@ -169,10 +190,10 @@ var plotData = function(examples){
                 }
             })
 
-    fillGrid(contexts, primaryPurposes, examples, themesToShow);
+    fillGrid(contexts, primaryPurposes, examples, themeColors);
 };
 
-var fillGrid = function(contexts, primaryPurposes, examples){
+var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
 
     contexts.forEach(function(context, ic){
         const contextExamples = _.filter(examples, function(contextExample){
@@ -207,31 +228,7 @@ var fillGrid = function(contexts, primaryPurposes, examples){
                     // .style('border-width', '2px')
                     // .style('border-style', 'solid')
                     .style('background-color', function(d){
-                        switch(d['Theme']) {
-                            case 'AR Presentation':
-                                return d3.schemePastel1[0];
-                            case 'AR Catalog':
-                                return d3.schemePastel1[1];
-                            case 'AR Try-on':
-                                return d3.schemePastel1[2];
-                            case 'Digital Fit Determination':
-                                return d3.schemePastel1[3];
-                            case 'VR Catalog':
-                                return d3.schemePastel1[4];
-                            case 'Appealing to the Senses':
-                                return d3.schemePastel1[5];
-                            case 'Virtual Preview':
-                                return d3.schemePastel1[6];
-                            case 'AR More Info':
-                                return d3.schemePastel1[7];
-                            case 'Attract Through AR':
-                                return d3.schemePastel1[8];
-                            case 'Grab Attention':
-                                return d3.schemePastel2[0];
-                            default:
-                                console.log(d['Theme'])
-                                throw new Error('Theme does not exist!');
-                        };
+                        return themeColors[d['Theme']];
                     })
                 .on("click", function(d){ 
                     showMoreInfo(d); 
@@ -241,23 +238,10 @@ var fillGrid = function(contexts, primaryPurposes, examples){
     });
 };
 
-var colorButtons = function(themes){
-    const colors = [
-        d3.schemePastel1[0],
-        d3.schemePastel1[1],
-        d3.schemePastel1[2],
-        d3.schemePastel1[3],
-        d3.schemePastel1[4],
-        d3.schemePastel1[5],
-        d3.schemePastel1[6],
-        d3.schemePastel1[7],
-        d3.schemePastel1[8],
-        d3.schemePastel2[0],
-    ];
-
-    themes.forEach(function(theme, i){
+var colorButtons = function(themes, colors){
+    themes.forEach(function(theme){
         const themeNoSpaces = theme.replace(/ /g,"-");
-        const css = generateActiveButtonCSS(themeNoSpaces, colors[i]);
+        const css = generateActiveButtonCSS(themeNoSpaces, colors[theme]);
 
         const styleEl = document.createElement('style');
         document.head.appendChild(styleEl);
