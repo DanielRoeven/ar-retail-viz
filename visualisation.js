@@ -55,7 +55,7 @@ var plotData = function(examples){
     // Then make array unique, stripping out duplicate contexts
     const themes = _.uniq(examples.map(example => example['Theme']));
     // Save list of themes to show
-    var themesToShow = _.uniq(examples.map(example => example['Theme']));
+    var themesToShow = _.uniq(examples.map(example => example['Theme']));;
 
     // Give the theme filter buttons a color
     colorButtons(themes);
@@ -122,26 +122,60 @@ var plotData = function(examples){
                 return d;
             })
             .on('click', function(d){
-                if (_.contains(themesToShow, d)) {
-                    themesToShow = _.without(themesToShow, d)
-                } else {
-                    themesToShow.push(d);
+                // Create classnname for theme examples without spaces
+                themeClassName = d.replace(/ /g,"-") + '-Example';
+
+                if (themesToShow.length == 10) {
+                    // If all themes are shown, hide all
+
+                    // Themes to show is empty
+                    themesToShow = [];
+
+                    // Get all example labels
+                    const examplesToHide = document.getElementsByClassName('exampleLabel');
+
+                    // Hide all example labels
+                    Array.prototype.forEach.call(examplesToHide, function(example){
+                        example.classList.add('hidden');
+                    });
                 }
-                //fillGrid(contexts, primaryPurposes, examples, themesToShow);
+
+                if (_.contains(themesToShow, d)) {
+                    // Hide theme
+
+                    // If theme is in list of themes to show, remove it
+                    themesToShow = _.without(themesToShow, d)
+
+                    // Find the example labels for this theme
+                    const exampleLabels = document.getElementsByClassName(themeClassName);
+
+                    // Hide them
+                    Array.prototype.forEach.call(exampleLabels, function(example){
+                        example.classList.add('hidden');
+                    });
+                } else {
+                    // Show theme
+
+                    // If theme is not in list of themes to show, add it
+                    themesToShow.push(d);
+
+                    // Find the example labels for this theme
+                    const exampleLabels = document.getElementsByClassName(themeClassName);
+
+                    // Unhide (show) them
+                    Array.prototype.forEach.call(exampleLabels, function(example){
+                        example.classList.remove('hidden');
+                    });
+                }
             })
 
     fillGrid(contexts, primaryPurposes, examples, themesToShow);
 };
 
-var fillGrid = function(contexts, primaryPurposes, examples, themesToShow){
-    
-    themeExamples = _.filter(examples, function(themeExample){
-        var exampleMatchesTheme = _.contains(themesToShow, themeExample['Theme']);
-        return exampleMatchesTheme;
-    });
+var fillGrid = function(contexts, primaryPurposes, examples){
 
     contexts.forEach(function(context, ic){
-        const contextExamples = _.filter(themeExamples, function(contextExample){
+        const contextExamples = _.filter(examples, function(contextExample){
             return contextExample.Context === context;
         });
 
@@ -165,7 +199,10 @@ var fillGrid = function(contexts, primaryPurposes, examples, themesToShow){
             selection = d3.select(cell).selectAll('.exampleLabel').data(contextAndPrimaryPurposeExamples);
             selection.enter()
                 .append('p')
-                    .attr('class', 'exampleLabel')
+                    .attr('class', function(d){
+                        const themeNoSpaces = d['Theme'].replace(/ /g,"-");
+                        return 'exampleLabel ' + themeNoSpaces + '-Example';
+                    })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
                     // .style('border-style', 'solid')

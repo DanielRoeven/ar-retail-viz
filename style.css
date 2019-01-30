@@ -41,13 +41,17 @@ h1, h3 {
     overflow: hidden;
 }
 
-.exampleLabel:hover{
+.exampleLabel:hover {
     background: rgba(253, 200, 140, 0.747)!important;
     z-index: 9999;
     cursor: pointer;
 }
 
-.exampleLabel.selected{
+.exampleLabel.hidden {
+	display: none !important;
+}
+
+.exampleLabel.selected {
     background: rgb(241, 172, 93)!important;
     cursor: pointer;
 }
