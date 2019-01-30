@@ -158,7 +158,15 @@ var plotData = function(examples){
                                 throw new Error('Theme does not exist!');
                         };
                     })
-                .on("click", function(d){ showMoreInfo(d)})
+                .on("click", function(d){ 
+                    showMoreInfo(d); 
+
+                    d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
+                  
+                       
+                    
+                
+                })
                 // .on("mouseover", function(){ d3.select(this)
                 //     .style('background-color', "white")
                 //     .style('opacity', "0.5");})
