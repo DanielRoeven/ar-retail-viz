@@ -86,7 +86,7 @@ var plotData = function(examples){
 
     // Create the context labels
     // Start by selecting all the context labels (none) so the selection set is empty
-    var contextLabels = grid.selectAll('.contextLabel');
+    const contextLabels = grid.selectAll('.contextLabel');
     contextLabels
         .data(contexts)                                 // Bind the data
         .enter()                                        // Prepare selection set
@@ -102,12 +102,12 @@ var plotData = function(examples){
                 });
 
     contexts.forEach(function(context, ic){
-        contextExamples = _.filter(examples, function(contextExample){
+        const contextExamples = _.filter(examples, function(contextExample){
             return contextExample.Context === context;
         });
 
         primaryPurposes.forEach(function(primaryPurpose, ip){
-            contextAndPrimaryPurposeExamples = _.filter(contextExamples, function(contextAndPrimaryPurposeExample){
+            const contextAndPrimaryPurposeExamples = _.filter(contextExamples, function(contextAndPrimaryPurposeExample){
               return contextAndPrimaryPurposeExample['Primary Purpose'] === primaryPurpose;
             });
 
@@ -121,7 +121,7 @@ var plotData = function(examples){
                 cell.classList.add('even')
             }
 
-            document.getElementsByClassName('grid')[0].appendChild(cell)
+            document.getElementsByClassName('grid')[0].appendChild(cell);
 
             d3.select(cell).selectAll('.exampleLabel')
                 .data(contextAndPrimaryPurposeExamples)
@@ -203,7 +203,26 @@ var plotData = function(examples){
         });
     });
 
-    var themesToShow = [];
+    const themeButtonsContainer = d3.select('#themeButtonsContainer');
+    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
+    themeButtons
+        .data(themes)
+        .enter()
+        .append('button')
+            .attr('class', 'btn btn-outline-secondary buttonthemes')
+            .attr('id', function(d){
+                return d.replace(/ /g,"-");
+            })
+            .attr('type', 'button')
+            .attr('data-toggle', 'collapse')
+            .attr('data-target', function(d){
+                return '#' + d.replace(/ /g,"-") + '-Description';
+            })
+            .text(function(d){
+                return d;
+            })
+            .on('click', function(d){
+            })
 };
 
 var colorButtons = function(themes){
