@@ -54,6 +54,8 @@ var plotData = function(examples){
     // Map all examples to array with only the field theme
     // Then make array unique, stripping out duplicate contexts
     const themes = _.uniq(examples.map(example => example['Theme']));
+    // Save list of themes to show
+    var themesToShow = _.uniq(examples.map(example => example['Theme']));
 
     // Give the theme filter buttons a color
     colorButtons(themes);
@@ -101,8 +103,45 @@ var plotData = function(examples){
                     return d;
                 });
 
+    const themeButtonsContainer = d3.select('#themeButtonsContainer');
+    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
+    themeButtons
+        .data(themes)
+        .enter()
+        .append('button')
+            .attr('class', 'btn btn-outline-secondary buttonthemes')
+            .attr('id', function(d){
+                return d.replace(/ /g,"-");
+            })
+            .attr('type', 'button')
+            .attr('data-toggle', 'collapse')
+            .attr('data-target', function(d){
+                return '#' + d.replace(/ /g,"-") + '-Description';
+            })
+            .text(function(d){
+                return d;
+            })
+            .on('click', function(d){
+                if (_.contains(themesToShow, d)) {
+                    themesToShow = _.without(themesToShow, d)
+                } else {
+                    themesToShow.push(d);
+                }
+                //fillGrid(contexts, primaryPurposes, examples, themesToShow);
+            })
+
+    fillGrid(contexts, primaryPurposes, examples, themesToShow);
+};
+
+var fillGrid = function(contexts, primaryPurposes, examples, themesToShow){
+    
+    themeExamples = _.filter(examples, function(themeExample){
+        var exampleMatchesTheme = _.contains(themesToShow, themeExample['Theme']);
+        return exampleMatchesTheme;
+    });
+
     contexts.forEach(function(context, ic){
-        const contextExamples = _.filter(examples, function(contextExample){
+        const contextExamples = _.filter(themeExamples, function(contextExample){
             return contextExample.Context === context;
         });
 
@@ -123,9 +162,8 @@ var plotData = function(examples){
 
             document.getElementsByClassName('grid')[0].appendChild(cell);
 
-            d3.select(cell).selectAll('.exampleLabel')
-                .data(contextAndPrimaryPurposeExamples)
-                .enter()
+            selection = d3.select(cell).selectAll('.exampleLabel').data(contextAndPrimaryPurposeExamples);
+            selection.enter()
                 .append('p')
                     .attr('class', 'exampleLabel')
                     .text(function(d){return d['Title of product/project']})
@@ -160,69 +198,10 @@ var plotData = function(examples){
                     })
                 .on("click", function(d){ 
                     showMoreInfo(d); 
-
                     d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
-                  
-                       
-                    
-                
                 })
-                // .on("mouseover", function(){ d3.select(this)
-                //     .style('background-color', "white")
-                //     .style('opacity', "0.5");})
-                // .on("mouseout", function(d){d3.select(this)
-                //     .style('opacity', "1")
-                //     .style('background-color', function(d){
-                //         switch(d['Theme']) {
-                //             case 'AR Presentation':
-                //                 return d3.schemePastel1[0];
-                //             case 'AR Catalog':
-                //                 return d3.schemePastel1[1];
-                //             case 'AR Try-on':
-                //                 return d3.schemePastel1[2];
-                //             case 'Digital Fit Determination':
-                //                 return d3.schemePastel1[3];
-                //             case 'VR Catalog':
-                //                 return d3.schemePastel1[4];
-                //             case 'Appealing to the Senses':
-                //                 return d3.schemePastel1[5];
-                //             case 'Virtual Preview':
-                //                 return d3.schemePastel1[6];
-                //             case 'AR More Info':
-                //                 return d3.schemePastel1[7];
-                //             case 'Attract Through AR':
-                //                 return d3.schemePastel1[8];
-                //             case 'Grab Attention':
-                //                 return d3.schemePastel2[0];
-                //             default:
-                //                 console.log(d['Theme'])
-                //                 throw new Error('Theme does not exist!');
-                //         };
-                //     })
-                //});
         });
     });
-
-    const themeButtonsContainer = d3.select('#themeButtonsContainer');
-    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
-    themeButtons
-        .data(themes)
-        .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary buttonthemes')
-            .attr('id', function(d){
-                return d.replace(/ /g,"-");
-            })
-            .attr('type', 'button')
-            .attr('data-toggle', 'collapse')
-            .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-") + '-Description';
-            })
-            .text(function(d){
-                return d;
-            })
-            .on('click', function(d){
-            })
 };
 
 var colorButtons = function(themes){
