@@ -18,9 +18,6 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
-
-
     </head>
     <body>
             
@@ -29,8 +26,8 @@
             <div class="container">
                     <div class="row" style="padding: 2em;">
                         <div>
-                                <div class="btn-group mr-2 btn-group-toggle" data-toggle="buttons" role="group" aria-label="First group" >
-                                        <button id="AR-Presentation" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARpres">AR Presentation</button>
+                                <div id="themeButtonsContainer" class="btn-group mr-2 btn-group-toggle" data-toggle="buttons" role="group" aria-label="First group" >
+<!--                                         <button id="AR-Presentation" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARpres">AR Presentation</button>
                                         <button id="AR-Catalog" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARcat">AR Catalog</button>
                                         <button id="AR-Try-on" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARtry">AR Try-on</button>
                                         <button id="Digital-Fit-Determination" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#digifit">Digital Fit Determ.</button>
@@ -40,11 +37,11 @@
                                         <button id="AR-More-Info" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARinfo">AR More info</button>
                                         <button id="Attract-Through-AR" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARattr">AR Attract</button>
                                         <button id="Grab-Attention" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#attention">Grab Attention</button>
-                                      </div>
-                                      <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Second group">
-                                        <button type="button" class="btn btn-outline-primary buttonthemes">Including TTC</button>
-                                      </div>
-                                    </div>
+ -->                            </div>
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Second group">
+                                    <button type="button" class="btn btn-outline-primary buttonthemes">Including TTC</button>
+                                </div>
+                            </div>
                         
                         </div>
                     </div>
@@ -59,43 +56,43 @@
                         <div class="col-6 col-lg-4 infobox">
                             <h3 style="font-size: 1.5em;">More Info</h3>
                             <div id="themesinfo">  
-                                <div id="ARpres" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="AR-Presentation-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>AR Presentation</b> - showcasing concepts through different AR technologies such as screens, pepper's ghost, hololens, projection mapping.
                                 </div>
                                 
-                                <div id="ARcat" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="AR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>AR Catalog</b> - preview what the item from the store's catalog would look like in your own environment.
                                 </div>
 
-                                <div id="ARtry" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="AR-Try-on-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>AR Try-on</b> - preview items on your own body.
                                 </div>
 
-                                <div id="digifit" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="Digital-Fit-Determination-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>Digital Fit Determination</b> - solutions to determine fit without trying on the item.
                                 </div>
 
-                                <div id="VRcat" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="VR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>VR Catalog</b> - preview what the item from the store's catalog would look like in a VR environment.
                                 </div>
 
-                                <div id="senses" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="Appealing-to-the-Senses-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>Appealing to the Senses</b> - creating the experience by addressing many different senses, this helps engagement, emerson, imagination and therefore purchasing confidence.
                                 </div>
 
-                                <div id="virtprev" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="Virtual-Preview-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>Virtual Preview</b> - preview interactive 3D rendered models.
                                 </div>
 
-                                <div id="ARinfo" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="AR-More-Info-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>AR More Info</b> - explanatory information overlaid on the real world using.
                                 </div>
 
-                                <div id="ARattr" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="Attract-Through-AR-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>Attract through AR</b> - get people into your store with an AR experience.
                                 </div>
 
-                                <div id="attention" class="collapse" style="padding-top: 0.5em;"> 
+                                <div id="Grab-Attention-Description" class="collapse" style="padding-top: 0.5em;"> 
                                     <b>Grab Attention</b> - raise people's interest in the brand through engaging interactive AR installations and apps.
                                 </div>
                                 <hr>
