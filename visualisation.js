@@ -230,7 +230,7 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                     .style('background-color', function(d){
                         return themeColors[d['Theme']];
                     })
-                .on("click", function(d){ 
+                .on("click", function(d, i){ 
                     showMoreInfo(d); 
                     d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
                 })
