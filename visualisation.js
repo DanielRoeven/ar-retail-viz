@@ -48,22 +48,22 @@ var plotData = function(examples){
     // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
-    var contexts = _.uniq(examples.map(example => example['Context']));
+    const contexts = _.uniq(examples.map(example => example['Context']));
 
     // Make a list of themes:
     // Map all examples to array with only the field theme
     // Then make array unique, stripping out duplicate contexts
-    var themes = _.uniq(examples.map(example => example['Theme']));
+    const themes = _.uniq(examples.map(example => example['Theme']));
 
     // Give the theme filter buttons a color
     colorButtons(themes);
 
     // Make d3 look at the div with a css grid
-    var grid = d3.select('.grid');
+    const grid = d3.select('.grid');
 
     // Create the primary purpose labels
     // Start by selecting all the existing primary purpose labels (none) so selection set is empty
-    var primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
+    const primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
     primaryPurposeLabels
         .data(primaryPurposes)                          // Bind the data
         .enter()                                        // Prepare selection set
@@ -287,9 +287,9 @@ var colorButtons = function(themes){
         const css = generateActiveButtonCSS(themeNoSpaces, colors[i]);
 
         const styleEl = document.createElement('style');
+        document.head.appendChild(styleEl);
         const styleSheet = styleEl.sheet;
         styleSheet.insertRule(css);
-        document.head.appendChild(styleEl);
     });
 };
 
