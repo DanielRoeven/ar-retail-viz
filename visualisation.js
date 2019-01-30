@@ -54,6 +54,8 @@ var plotData = function(examples){
     // Map all examples to array with only the field theme
     // Then make array unique, stripping out duplicate contexts
     const themes = _.uniq(examples.map(example => example['Theme']));
+    // Save list of themes to show
+    var themesToShow = _.uniq(examples.map(example => example['Theme']));;
 
     // Give the theme filter buttons a color
     colorButtons(themes);
@@ -101,6 +103,77 @@ var plotData = function(examples){
                     return d;
                 });
 
+    const themeButtonsContainer = d3.select('#themeButtonsContainer');
+    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
+    themeButtons
+        .data(themes)
+        .enter()
+        .append('button')
+            .attr('class', 'btn btn-outline-secondary buttonthemes')
+            .attr('id', function(d){
+                return d.replace(/ /g,"-");
+            })
+            .attr('type', 'button')
+            .attr('data-toggle', 'collapse')
+            .attr('data-target', function(d){
+                return '#' + d.replace(/ /g,"-") + '-Description';
+            })
+            .text(function(d){
+                return d;
+            })
+            .on('click', function(d){
+                // Create classnname for theme examples without spaces
+                themeClassName = d.replace(/ /g,"-") + '-Example';
+
+                if (themesToShow.length == 10) {
+                    // If all themes are shown, hide all
+
+                    // Themes to show is empty
+                    themesToShow = [];
+
+                    // Get all example labels
+                    const examplesToHide = document.getElementsByClassName('exampleLabel');
+
+                    // Hide all example labels
+                    Array.prototype.forEach.call(examplesToHide, function(example){
+                        example.classList.add('hidden');
+                    });
+                }
+
+                if (_.contains(themesToShow, d)) {
+                    // Hide theme
+
+                    // If theme is in list of themes to show, remove it
+                    themesToShow = _.without(themesToShow, d)
+
+                    // Find the example labels for this theme
+                    const exampleLabels = document.getElementsByClassName(themeClassName);
+
+                    // Hide them
+                    Array.prototype.forEach.call(exampleLabels, function(example){
+                        example.classList.add('hidden');
+                    });
+                } else {
+                    // Show theme
+
+                    // If theme is not in list of themes to show, add it
+                    themesToShow.push(d);
+
+                    // Find the example labels for this theme
+                    const exampleLabels = document.getElementsByClassName(themeClassName);
+
+                    // Unhide (show) them
+                    Array.prototype.forEach.call(exampleLabels, function(example){
+                        example.classList.remove('hidden');
+                    });
+                }
+            })
+
+    fillGrid(contexts, primaryPurposes, examples, themesToShow);
+};
+
+var fillGrid = function(contexts, primaryPurposes, examples){
+
     contexts.forEach(function(context, ic){
         const contextExamples = _.filter(examples, function(contextExample){
             return contextExample.Context === context;
@@ -123,11 +196,13 @@ var plotData = function(examples){
 
             document.getElementsByClassName('grid')[0].appendChild(cell);
 
-            d3.select(cell).selectAll('.exampleLabel')
-                .data(contextAndPrimaryPurposeExamples)
-                .enter()
+            selection = d3.select(cell).selectAll('.exampleLabel').data(contextAndPrimaryPurposeExamples);
+            selection.enter()
                 .append('p')
-                    .attr('class', 'exampleLabel')
+                    .attr('class', function(d){
+                        const themeNoSpaces = d['Theme'].replace(/ /g,"-");
+                        return 'exampleLabel ' + themeNoSpaces + '-Example';
+                    })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
                     // .style('border-style', 'solid')
@@ -160,69 +235,10 @@ var plotData = function(examples){
                     })
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
-                    var prevElem, prevColor;
-                    d3.select(this).classed('selected', !d3.select(this).classed("selected"));
-
-                       
-                    
-                
+                    d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
                 })
-                // .on("mouseover", function(){ d3.select(this)
-                //     .style('background-color', "white")
-                //     .style('opacity', "0.5");})
-                // .on("mouseout", function(d){d3.select(this)
-                //     .style('opacity', "1")
-                //     .style('background-color', function(d){
-                //         switch(d['Theme']) {
-                //             case 'AR Presentation':
-                //                 return d3.schemePastel1[0];
-                //             case 'AR Catalog':
-                //                 return d3.schemePastel1[1];
-                //             case 'AR Try-on':
-                //                 return d3.schemePastel1[2];
-                //             case 'Digital Fit Determination':
-                //                 return d3.schemePastel1[3];
-                //             case 'VR Catalog':
-                //                 return d3.schemePastel1[4];
-                //             case 'Appealing to the Senses':
-                //                 return d3.schemePastel1[5];
-                //             case 'Virtual Preview':
-                //                 return d3.schemePastel1[6];
-                //             case 'AR More Info':
-                //                 return d3.schemePastel1[7];
-                //             case 'Attract Through AR':
-                //                 return d3.schemePastel1[8];
-                //             case 'Grab Attention':
-                //                 return d3.schemePastel2[0];
-                //             default:
-                //                 console.log(d['Theme'])
-                //                 throw new Error('Theme does not exist!');
-                //         };
-                //     })
-                //});
         });
     });
-
-    const themeButtonsContainer = d3.select('#themeButtonsContainer');
-    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
-    themeButtons
-        .data(themes)
-        .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary buttonthemes')
-            .attr('id', function(d){
-                return d.replace(/ /g,"-");
-            })
-            .attr('type', 'button')
-            .attr('data-toggle', 'collapse')
-            .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-") + '-Description';
-            })
-            .text(function(d){
-                return d;
-            })
-            .on('click', function(d){
-            })
 };
 
 var colorButtons = function(themes){
