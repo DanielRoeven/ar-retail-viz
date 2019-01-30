@@ -158,110 +158,10 @@ var plotData = function(examples){
                                 throw new Error('Theme does not exist!');
                         };
                     })
-                .on("click", function(d){
-
-                    // Title
-                    const title = document.getElementById('projectTitle');
-                    title.textContent = (d['Title of product/project'] + ' ');
-
-                    // Link
-                    const link = document.getElementById('projectLink');
-                    if (d['Link']) {
-                        link.href = d['Link'];
-                        link.target = '_blank';
-
-                        const linkIcon = document.createElement('i');
-                        linkIcon.classList.add('fas');
-                        linkIcon.classList.add('fa-external-link-alt');
-                        title.append(linkIcon);
-                    } else {
-                        link.href = '#';
-                        link.target = '';
-                    }
-
-                    // Byline
-                    var bylineString = '';
-                    if (d['Creators']) {
-                        bylineString = 'by ' + d['Creators'];
-                    }
-                    if (d['Company']) {
-                        bylineString += ' for ' + d['Company'];
-                    }
-                    if (d['Year']) {
-                        bylineString +=  ' (' + d['Year'] + ')';
-                    }
-                    const byline = document.getElementById('projectByline');
-                    byline.textContent = bylineString;
-
-                    // Description
-                    const description = document.getElementById('projectDescription');
-                    description.textContent = d['Description'];
-
-                    // Context, Industry and Interaction Style
-                    var contextIndustryString = 'A ' + 
-                                                d['Context'].toLowerCase() +
-                                                ' example in the ' +
-                                                d['Industry'].toLowerCase() +
-                                                ' industry'
-                    if (d['Interaction Style']) {
-                        contextIndustryString += ' using ' + d['Interaction Style'].toLowerCase() + ' interaction.'
-                    } else {
-                        contextIndustryString += '.'
-                    }
-
-                    const contextAndIndustry = document.getElementById('projectContextIndustry');
-                    contextAndIndustry.textContent = contextIndustryString;
-
-                    // Purposes
-                    const primaryPurposeTag = document.createElement('span');
-                    primaryPurposeTag.classList.add('purposeTag');
-                    primaryPurposeTag.classList.add('primPurposeTag');
-                    primaryPurposeTag.textContent = d['Primary Purpose'];
-                    
-                    const purposes = document.getElementById('projectPurposes');
-                    purposes.textContent = 'Purposes:';
-                    purposes.appendChild(primaryPurposeTag);
-
-                    if (d['Secondary Purposes']) {
-                        d['Secondary Purposes'].forEach(function(purpose){
-                            const purposeTag = document.createElement('span');
-                            purposeTag.classList.add('purposeTag');
-                            purposeTag.textContent = purpose;
-                            purposes.appendChild(purposeTag);
-                        });                        
-                    }
-
-                    // Technologies
-                    const technologies = document.getElementById('projectTech');
-                    technologies.textContent = 'Technologies:';
-
-                    d['Technologies Used'].forEach(function(tech){
-                        const techTag = document.createElement('span');
-                        techTag.classList.add('techTag');
-                        techTag.textContent = tech;
-                        technologies.appendChild(techTag);
-                    });
-
-                    // Pictures
-                    const image = document.getElementById('projectImg');
-                    if (d['Picture']) {
-                        image.src = d['Picture'];
-                        image.classList.remove('hidden');
-                    } else {
-                        image.classList.add('hidden');
-                    }
-
-                    // Video
-                    const videoP = document.getElementById('projectVideo');
-                    const videoLink = document.getElementById('projectVideoLink');
-                    if (d['Video']) {
-                        videoLink.textContent = 'Watch a video here ';
-                        videoLink.href = d['Video'];
-                        videoP.classList.remove('hidden');
-                    } else {
-                        videoP.classList.add('hidden');
-                    }
-                });
+                .on("click", function(d){ showMoreInfo(d)})
+                .on("mouseover", function(d){})
+                .on("mouseout", function(d){})
+            ;
         });
     });
 
@@ -298,6 +198,111 @@ var generateActiveButtonCSS = function(theme, color) {
                     'background-color: ' + color + ' !important;' +
                 '}'
     return css;
+};
+
+var showMoreInfo = function(d){
+
+        // Title
+        const title = document.getElementById('projectTitle');
+        title.textContent = (d['Title of product/project'] + ' ');
+
+        // Link
+        const link = document.getElementById('projectLink');
+        if (d['Link']) {
+            link.href = d['Link'];
+            link.target = '_blank';
+
+            const linkIcon = document.createElement('i');
+            linkIcon.classList.add('fas');
+            linkIcon.classList.add('fa-external-link-alt');
+            title.append(linkIcon);
+        } else {
+            link.href = '#';
+            link.target = '';
+        }
+
+        // Byline
+        var bylineString = '';
+        if (d['Creators']) {
+            bylineString = 'by ' + d['Creators'];
+        }
+        if (d['Company']) {
+            bylineString += ' for ' + d['Company'];
+        }
+        if (d['Year']) {
+            bylineString +=  ' (' + d['Year'] + ')';
+        }
+        const byline = document.getElementById('projectByline');
+        byline.textContent = bylineString;
+
+        // Description
+        const description = document.getElementById('projectDescription');
+        description.textContent = d['Description'];
+
+        // Context, Industry and Interaction Style
+        var contextIndustryString = 'A ' + 
+                                    d['Context'].toLowerCase() +
+                                    ' example in the ' +
+                                    d['Industry'].toLowerCase() +
+                                    ' industry'
+        if (d['Interaction Style']) {
+            contextIndustryString += ' using ' + d['Interaction Style'].toLowerCase() + ' interaction.'
+        } else {
+            contextIndustryString += '.'
+        }
+
+        const contextAndIndustry = document.getElementById('projectContextIndustry');
+        contextAndIndustry.textContent = contextIndustryString;
+
+        // Purposes
+        const primaryPurposeTag = document.createElement('span');
+        primaryPurposeTag.classList.add('purposeTag');
+        primaryPurposeTag.classList.add('primPurposeTag');
+        primaryPurposeTag.textContent = d['Primary Purpose'];
+        
+        const purposes = document.getElementById('projectPurposes');
+        purposes.textContent = 'Purposes:';
+        purposes.appendChild(primaryPurposeTag);
+
+        if (d['Secondary Purposes']) {
+            d['Secondary Purposes'].forEach(function(purpose){
+                const purposeTag = document.createElement('span');
+                purposeTag.classList.add('purposeTag');
+                purposeTag.textContent = purpose;
+                purposes.appendChild(purposeTag);
+            });                        
+        }
+
+        // Technologies
+        const technologies = document.getElementById('projectTech');
+        technologies.textContent = 'Technologies:';
+
+        d['Technologies Used'].forEach(function(tech){
+            const techTag = document.createElement('span');
+            techTag.classList.add('techTag');
+            techTag.textContent = tech;
+            technologies.appendChild(techTag);
+        });
+
+        // Pictures
+        const image = document.getElementById('projectImg');
+        if (d['Picture']) {
+            image.src = d['Picture'];
+            image.classList.remove('hidden');
+        } else {
+            image.classList.add('hidden');
+        }
+
+        // Video
+        const videoP = document.getElementById('projectVideo');
+        const videoLink = document.getElementById('projectVideoLink');
+        if (d['Video']) {
+            videoLink.textContent = 'Watch a video here ';
+            videoLink.href = d['Video'];
+            videoP.classList.remove('hidden');
+        } else {
+            videoP.classList.add('hidden');
+        }
 };
 
 fetchData();
