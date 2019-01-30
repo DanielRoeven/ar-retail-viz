@@ -158,11 +158,11 @@ var plotData = function(examples){
                                 throw new Error('Theme does not exist!');
                         };
                     })
-                .on("click", function(d){ 
+                .on("click", function(d, i){ 
                     showMoreInfo(d); 
+                    var prevElem, prevColor;
+                    d3.select(this).classed('selected', !d3.select(this).classed("selected"));
 
-                    d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
-                  
                        
                     
                 
