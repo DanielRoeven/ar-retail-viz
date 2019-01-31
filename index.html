@@ -9,133 +9,127 @@
         <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
         <link rel="stylesheet" href='./style.css'>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        
 
 
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
         <script src="./visualisation.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
     </head>
     <body>
             <div class="container">
                 <div class="row">
-                <div class="col-6">
-                    <h1>Mixed Reality within Retail</h1>
-                    <h3><i class="fas fa-vr-cardboard"></i> Industry and Academia Examples</h3>
-                </div>
-                <div class="col-6 pull-right" style="text-align: right;">
-                    <p>&copy; 2019 | <a href="http://www.ajlacano.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i> </a>Ajla Cano
-                        & <a href="http://www.danielroeven.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i></a> Daniel Roeven  for</p>
-                    <img src="thetechnocreatives.png" width="30%">
-                </div>
+                    <div class="col-6">
+                        <h1>Mixed Reality within Retail</h1>
+                        <h3><i class="fas fa-vr-cardboard"></i> Industry and Academia Examples</h3>
+                    </div>
+                    <div class="col-6 pull-right" style="text-align: right;">
+                        <p>&copy; 2019 | <a href="http://www.ajlacano.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i> </a>Ajla Cano
+                            & <a href="http://www.danielroeven.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i></a> Daniel Roeven  for</p>
+                        <img src="thetechnocreatives.png" width="30%"/>
+                    </div>
                 </div>
             </div>
             
-            <div class="container">
-                    <div class="row" style="padding: 2em;">
-                        <div>
-                                <div id="themeButtonsContainer" class="btn-group mr-2 btn-group-toggle" data-toggle="buttons" role="group" aria-label="First group" >
-<!--                                     <button id="AR-Presentation" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARpres">AR Presentation</button>
-                                        <button id="AR-Catalog" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARcat">AR Catalog</button>
-                                        <button id="AR-Try-on" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARtry">AR Try-on</button>
-                                        <button id="Digital-Fit-Determination" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#digifit">Digital Fit Determ.</button>
-                                        <button id="VR-Catalog" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#VRcat">VR Catalog</button>
-                                        <button id="Appealing-to-the-Senses" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#senses">Appealing to Senses</button>
-                                        <button id="Virtual-Preview" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#virtprev">Virtual Preview</button>
-                                        <button id="AR-More-Info" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARinfo">AR More info</button>
-                                        <button id="Attract-Through-AR" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#ARattr">AR Attract</button>
-                                        <button id="Grab-Attention" type="button" class="btn btn-outline-secondary buttonthemes" data-toggle="collapse" data-target="#attention">Grab Attention</button>
- -->                            </div>
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons" role="group" aria-label="Second group">
-                                    <button type="button" class="btn btn-outline-primary buttonthemes">Including TTC</button>
-                                </div>
-                            </div>
-                        
+            <div class="container-fluid">
+                <div class="row" style="padding: 2em 0;">
+                    <div class="col">
+                        <div id="themeButtonsContainer"
+                             class="btn-group btn-group-toggle"
+                             data-toggle="buttons"
+                             role="group"
+                             aria-label="First group" >
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="btn-group btn-group-toggle"
+                             data-toggle="buttons"
+                             role="group"
+                             aria-label="Second group">
+                            <button id="buttonTTC"
+                                    class="btn btn-outline-secondary"
+                                    type="button">
+                                TTC Only
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-8" >        
+                        <h3 style="font-size: 1.5em;">Division by Context and Purpose</h3>
+                        <div class='grid'>
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-12 col-sm-6 col-lg-8" >        
-                            <h3 style="font-size: 1.5em;">Division by Context and Purpose</h3>
-                            <div class='grid'>
+                    <div class="col-6 col-lg-4 infobox">
+                        <h3 style="font-size: 1.5em;">More Info</h3>
+                        <div id="themesinfo">  
+                            <div id="AR-Presentation-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>AR Presentation</b> - showcasing concepts through different AR technologies such as screens, pepper's ghost, hololens, projection mapping.
                             </div>
-                        </div>
-                        
-                        <div class="col-6 col-lg-4 infobox">
-                            <h3 style="font-size: 1.5em;">More Info</h3>
-                            <div id="themesinfo">  
-                                <div id="AR-Presentation-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>AR Presentation</b> - showcasing concepts through different AR technologies such as screens, pepper's ghost, hololens, projection mapping.
-                                </div>
-                                
-                                <div id="AR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>AR Catalog</b> - preview what the item from the store's catalog would look like in your own environment.
-                                </div>
-
-                                <div id="AR-Try-on-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>AR Try-on</b> - preview items on your own body.
-                                </div>
-
-                                <div id="Digital-Fit-Determination-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>Digital Fit Determination</b> - solutions to determine fit without trying on the item.
-                                </div>
-
-                                <div id="VR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>VR Catalog</b> - preview what the item from the store's catalog would look like in a VR environment.
-                                </div>
-
-                                <div id="Appealing-to-the-Senses-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>Appealing to the Senses</b> - creating the experience by addressing many different senses, this helps engagement, emerson, imagination and therefore purchasing confidence.
-                                </div>
-
-                                <div id="Virtual-Preview-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>Virtual Preview</b> - preview interactive 3D rendered models.
-                                </div>
-
-                                <div id="AR-More-Info-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>AR More Info</b> - explanatory information overlaid on the real world using.
-                                </div>
-
-                                <div id="Attract-Through-AR-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>Attract through AR</b> - get people into your store with an AR experience.
-                                </div>
-
-                                <div id="Grab-Attention-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                    <b>Grab Attention</b> - raise people's interest in the brand through engaging interactive AR installations and apps.
-                                </div>
-                                <hr>
-                            </div> 
-
-                            <div id="projectsinfo">
-                                <a href="#" id="projectLink">
-                                    <h2 style="font-size: 1.5em;" id="projectTitle"></h2>
-                                </a>
-                                <p id="projectByline"></p>
-                                <p id="projectDescription"></p>
-                                <p id="projectContextIndustry"></p>
-                                <p id="projectVideo" class="hidden">
-                                    <i class="fab fa-youtube"></i>
-                                    <a href=# target="_blank" id="projectVideoLink">
-                                    </a>
-                                </p>
-                                <p id="projectPurposes"></p>
-                                <p id="projectTech"></p>
-                                <img id="projectImg"></img>
+                            
+                            <div id="AR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>AR Catalog</b> - preview what the item from the store's catalog would look like in your own environment.
                             </div>
 
+                            <div id="AR-Try-on-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>AR Try-on</b> - preview items on your own body.
+                            </div>
 
+                            <div id="Digital-Fit-Determination-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>Digital Fit Determination</b> - solutions to determine fit without trying on the item.
+                            </div>
+
+                            <div id="VR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>VR Catalog</b> - preview what the item from the store's catalog would look like in a VR environment.
+                            </div>
+
+                            <div id="Appealing-to-the-Senses-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>Appealing to the Senses</b> - creating the experience by addressing many different senses, this helps engagement, emerson, imagination and therefore purchasing confidence.
+                            </div>
+
+                            <div id="Virtual-Preview-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>Virtual Preview</b> - preview interactive 3D rendered models.
+                            </div>
+
+                            <div id="AR-More-Info-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>AR More Info</b> - explanatory information overlaid on the real world using.
+                            </div>
+
+                            <div id="Attract-Through-AR-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>Attract through AR</b> - get people into your store with an AR experience.
+                            </div>
+
+                            <div id="Grab-Attention-Description" class="collapse" style="padding-top: 0.5em;"> 
+                                <b>Grab Attention</b> - raise people's interest in the brand through engaging interactive AR installations and apps.
+                            </div>
+                            <hr>
+                        </div> 
+
+                        <div id="projectsinfo">
+                            <a href="#" id="projectLink">
+                                <h2 style="font-size: 1.5em;" id="projectTitle"></h2>
+                            </a>
+                            <p id="projectByline"></p>
+                            <p id="projectDescription"></p>
+                            <p id="projectContextIndustry"></p>
+                            <p id="projectVideo" class="hidden">
+                                <i class="fab fa-youtube"></i>
+                                <a href=# target="_blank" id="projectVideoLink"></a>
+                            </p>
+                            <p id="projectPurposes"></p>
+                            <p id="projectTech"></p>
+                            <img id="projectImg"/>
                         </div>
                     </div>
+                </div>
             </div>
-       
-
-        <!-- <svg width="1000" height="1000">
-        </svg> -->
-        
     </body>
 </html>

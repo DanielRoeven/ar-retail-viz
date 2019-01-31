@@ -8,8 +8,7 @@ h1, h3 {
      color: #334348;
 }
 
-
-.buttonthemes {
+.buttonthemes, #buttonTTC {
     font-size: 12px;
 }
 
@@ -19,7 +18,7 @@ h1, h3 {
     min-height: 700px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .cell {
@@ -52,9 +51,13 @@ h1, h3 {
 	display: none !important;
 }
 
-.exampleLabel.selected {
+.exampleLabel.selectedExample {
     background: rgb(241, 172, 93)!important;
     cursor: pointer;
+}
+
+.hideNotTTC {
+	display: none;
 }
 
 .buttonthemes.active, .buttonthemes:hover {
@@ -69,7 +72,7 @@ h1, h3 {
 	color: #212E48;
 }
 
-.fa-external-link-alt, .fa-youtube {
+.fa-external-link-alt, .fa-youtube, .fa-info-circle {
 	color: #8995AE;
 }
 

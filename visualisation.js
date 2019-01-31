@@ -45,7 +45,9 @@ var plotData = function(examples){
     // Then make array unique, stripping out duplicate primary purposes
     const primaryPurposes = _.uniq(examples.map(example => example['Primary Purpose']));
     
-    // Make a list of contexts:
+
+    
+      // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
     const contexts = _.uniq(examples.map(example => example['Context']));
@@ -55,8 +57,7 @@ var plotData = function(examples){
     // Then make array unique, stripping out duplicate contexts
     const themes = _.uniq(examples.map(example => example['Theme']));
     // Save list of themes to show
-    var themesToShow = _.uniq(examples.map(example => example['Theme']));;
-
+    var themesToShow = [];
 
     const colors = [
         d3.schemePastel1[0],
@@ -75,8 +76,6 @@ var plotData = function(examples){
     themes.forEach(function(theme, i){
         themeColors[theme] = colors[i];
     });
-
-    console.log(themeColors);
 
     // Give the theme filter buttons a color
     colorButtons(themes, themeColors);
@@ -104,8 +103,11 @@ var plotData = function(examples){
             })
                 .append('p')                            // Create paragraph inside div
                     .text(function(d){                  // Set text to data (primary purpose name)
-                        return d;
+                        return d + ' ';
                     });
+                //.append('i')
+                 //   .attr('class', 'fas fa-info-circle')
+                 //   .attr('title', 'lalalalal')
 
     // Create the context labels
     // Start by selecting all the context labels (none) so the selection set is empty
@@ -143,52 +145,82 @@ var plotData = function(examples){
                 return d;
             })
             .on('click', function(d){
-                // Create classnname for theme examples without spaces
-                themeClassName = d.replace(/ /g,"-") + '-Example';
-
-                if (themesToShow.length == 10) {
-                    // If all themes are shown, hide all
-
-                    // Themes to show is empty
-                    themesToShow = [];
-
-                    // Get all example labels
-                    const examplesToHide = document.getElementsByClassName('exampleLabel');
-
-                    // Hide all example labels
-                    Array.prototype.forEach.call(examplesToHide, function(example){
-                        example.classList.add('hidden');
-                    });
-                }
 
                 if (_.contains(themesToShow, d)) {
-                    // Hide theme
-
                     // If theme is in list of themes to show, remove it
                     themesToShow = _.without(themesToShow, d)
-
-                    // Find the example labels for this theme
-                    const exampleLabels = document.getElementsByClassName(themeClassName);
-
-                    // Hide them
-                    Array.prototype.forEach.call(exampleLabels, function(example){
-                        example.classList.add('hidden');
-                    });
                 } else {
-                    // Show theme
-
                     // If theme is not in list of themes to show, add it
                     themesToShow.push(d);
+                }
 
-                    // Find the example labels for this theme
-                    const exampleLabels = document.getElementsByClassName(themeClassName);
+                if (themesToShow.length > 0) {
+                    // If there are themes to show, hide the examples to hide and show the examples to show
 
-                    // Unhide (show) them
-                    Array.prototype.forEach.call(exampleLabels, function(example){
-                        example.classList.remove('hidden');
+                    // Create an array of the themes to be hidden
+                    const themesToHide = _.difference(themes, themesToShow);
+                    // Hide all lables belonging to themes to hide
+                    themesToHide.forEach(function(themeToHide){
+
+                        // Create class name for theme to hide (without spaces, with -Example)
+                        const themeToHideClassName = themeToHide.replace(/ /g,"-") + '-Example';
+                        // Get all the labels belonging to theme to hide
+                        const themeToHideLabels = document.getElementsByClassName(themeToHideClassName);
+                        // Hide each label belonging to theme to hide
+                        Array.prototype.forEach.call(themeToHideLabels, function(exampleToHide){
+                            // Only add the hidden class if it isn't already there
+                            if (!exampleToHide.classList.contains('hidden')) {
+                                exampleToHide.classList.add('hidden');
+                            }
+                        });
+                    });
+
+                    // Show all labels belonging to themes to show
+                    themesToShow.forEach(function(themeToShow){
+
+                        // Create class name for theme to show (without spaces, with -Example)
+                        const themeToShowClassName = themeToShow.replace(/ /g,"-") + '-Example';
+                        // Get all the labels belonging to theme to show
+                        const themeToShowLabels = document.getElementsByClassName(themeToShowClassName);
+                        // Show each label belonging to a theme to show
+                        Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                            // Remove the hiddden class
+                            exampleToShow.classList.remove('hidden');
+                        });
+                    })
+                } else {
+                    // If there are no themes to show, show all themes
+
+                    // Get all the example labels
+                    const themeToShowLabels = document.getElementsByClassName('exampleLabel');
+                    // Show each label
+                    Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                        // Remove the hidden class
+                        exampleToShow.classList.remove('hidden');
                     });
                 }
             })
+
+    var showOnlyTTC = false;
+    const notTTCExamples = document.getElementsByClassName('notTTCExample');
+    const ttcButton = document.getElementById('buttonTTC');
+    ttcButton.addEventListener('click', function(){
+        if (showOnlyTTC) {
+            // Show other examples
+            showOnlyTTC = false;
+
+            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
+                notTTCExample.classList.remove('hideNotTTC');
+            });
+        } else {
+            // Show only TTC examples
+            showOnlyTTC = true;
+
+            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
+                notTTCExample.classList.add('hideNotTTC');
+            });
+        }
+    });
 
     fillGrid(contexts, primaryPurposes, examples, themeColors);
 };
@@ -221,8 +253,13 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
             selection.enter()
                 .append('p')
                     .attr('class', function(d){
+                        var classString = 'exampleLabel';
                         const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        return 'exampleLabel ' + themeNoSpaces + '-Example';
+                        classString += ' ' + themeNoSpaces + '-Example';
+                        if (d['Creators'] !== 'The Techno Creatives') {
+                            classString += ' notTTCExample'
+                        }
+                        return classString;
                     })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
@@ -232,7 +269,13 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                     })
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
-                    d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
+                    selectedExamples = document.getElementsByClassName('selectedExample');
+                    
+                    Array.prototype.forEach.call(selectedExamples, function(selectedExample){
+                        selectedExample.classList.remove('selectedExample');
+                    });
+
+                    d3.select(this).classed('selectedExample', d3.select(this).classed('selectedExample') ? false : true);
                 })
         });
     });
