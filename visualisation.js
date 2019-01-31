@@ -177,7 +177,7 @@ var plotData = function(examples){
 
                     // Show all labels belonging to themes to show
                     themesToShow.forEach(function(themeToShow){
-                        
+
                         // Create class name for theme to show (without spaces, with -Example)
                         const themeToShowClassName = themeToShow.replace(/ /g,"-") + '-Example';
                         // Get all the labels belonging to theme to show
@@ -200,6 +200,27 @@ var plotData = function(examples){
                     });
                 }
             })
+
+    var showOnlyTTC = false;
+    const notTTCExamples = document.getElementsByClassName('notTTCExample');
+    const ttcButton = document.getElementById('buttonTTC');
+    ttcButton.addEventListener('click', function(){
+        if (showOnlyTTC) {
+            // Show other examples
+            showOnlyTTC = false;
+
+            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
+                notTTCExample.classList.remove('hideNotTTC');
+            });
+        } else {
+            // Show only TTC examples
+            showOnlyTTC = true;
+
+            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
+                notTTCExample.classList.add('hideNotTTC');
+            });
+        }
+    });
 
     fillGrid(contexts, primaryPurposes, examples, themeColors);
 };
@@ -232,8 +253,13 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
             selection.enter()
                 .append('p')
                     .attr('class', function(d){
+                        var classString = 'exampleLabel';
                         const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        return 'exampleLabel ' + themeNoSpaces + '-Example';
+                        classString += ' ' + themeNoSpaces + '-Example';
+                        if (d['Creators'] !== 'The Techno Creatives') {
+                            classString += ' notTTCExample'
+                        }
+                        return classString;
                     })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
@@ -243,7 +269,13 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                     })
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
-                    d3.select(this).classed('selected', d3.select(this).classed("selected") ? false : true);
+                    selectedExamples = document.getElementsByClassName('selectedExample');
+                    
+                    Array.prototype.forEach.call(selectedExamples, function(selectedExample){
+                        selectedExample.classList.remove('selectedExample');
+                    });
+
+                    d3.select(this).classed('selectedExample', d3.select(this).classed('selectedExample') ? false : true);
                 })
         });
     });

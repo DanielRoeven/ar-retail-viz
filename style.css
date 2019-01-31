@@ -51,9 +51,13 @@ h1, h3 {
 	display: none !important;
 }
 
-.exampleLabel.selected {
+.exampleLabel.selectedExample {
     background: rgb(241, 172, 93)!important;
     cursor: pointer;
+}
+
+.hideNotTTC {
+	display: none;
 }
 
 .buttonthemes.active, .buttonthemes:hover {
