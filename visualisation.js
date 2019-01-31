@@ -75,8 +75,6 @@ var plotData = function(examples){
         themeColors[theme] = colors[i];
     });
 
-    console.log(themeColors);
-
     // Give the theme filter buttons a color
     colorButtons(themes, themeColors);
 
@@ -142,49 +140,60 @@ var plotData = function(examples){
                 return d;
             })
             .on('click', function(d){
-                // Create classnname for theme examples without spaces
-                themeClassName = d.replace(/ /g,"-") + '-Example';
 
-                if (themesToShow.length == 10 || themesToShow.length == 0) {
-                    themesToShow = [];
-                    console.log('a');
-                    // Find the example labels for this theme
-                    const exampleLabels = document.getElementsByClassName('exampleLabel');
-
-                    // Hide them
-                    Array.prototype.forEach.call(exampleLabels, function(example){
-                        example.classList.remove('hidden');
-                    });
-                }
-                else if (_.contains(themesToShow, d)) {
-                    // Hide theme
-
+                if (_.contains(themesToShow, d)) {
                     // If theme is in list of themes to show, remove it
                     themesToShow = _.without(themesToShow, d)
-
-                    // Find the example labels for this theme
-                    const exampleLabels = document.getElementsByClassName(themeClassName);
-
-                    // Hide them
-                    Array.prototype.forEach.call(exampleLabels, function(example){
-                        example.classList.add('hidden');
-                    });
                 } else {
-                    // Show theme
-
                     // If theme is not in list of themes to show, add it
                     themesToShow.push(d);
-
-                    // Find the example labels for this theme
-                    const exampleLabels = document.getElementsByClassName(themeClassName);
-
-                    // Unhide (show) them
-                    Array.prototype.forEach.call(exampleLabels, function(example){
-                        example.classList.remove('hidden');
-                    });
                 }
 
-                console.log(themesToShow);
+                if (themesToShow.length > 0) {
+                    // If there are themes to show, hide the examples to hide and show the examples to show
+
+                    // Create an array of the themes to be hidden
+                    const themesToHide = _.difference(themes, themesToShow);
+                    // Hide all lables belonging to themes to hide
+                    themesToHide.forEach(function(themeToHide){
+
+                        // Create class name for theme to hide (without spaces, with -Example)
+                        const themeToHideClassName = themeToHide.replace(/ /g,"-") + '-Example';
+                        // Get all the labels belonging to theme to hide
+                        const themeToHideLabels = document.getElementsByClassName(themeToHideClassName);
+                        // Hide each label belonging to theme to hide
+                        Array.prototype.forEach.call(themeToHideLabels, function(exampleToHide){
+                            // Only add the hidden class if it isn't already there
+                            if (!exampleToHide.classList.contains('hidden')) {
+                                exampleToHide.classList.add('hidden');
+                            }
+                        });
+                    });
+
+                    // Show all labels belonging to themes to show
+                    themesToShow.forEach(function(themeToShow){
+                        
+                        // Create class name for theme to show (without spaces, with -Example)
+                        const themeToShowClassName = themeToShow.replace(/ /g,"-") + '-Example';
+                        // Get all the labels belonging to theme to show
+                        const themeToShowLabels = document.getElementsByClassName(themeToShowClassName);
+                        // Show each label belonging to a theme to show
+                        Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                            // Remove the hiddden class
+                            exampleToShow.classList.remove('hidden');
+                        });
+                    })
+                } else {
+                    // If there are no themes to show, show all themes
+
+                    // Get all the example labels
+                    const themeToShowLabels = document.getElementsByClassName('exampleLabel');
+                    // Show each label
+                    Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                        // Remove the hidden class
+                        exampleToShow.classList.remove('hidden');
+                    });
+                }
             })
 
     fillGrid(contexts, primaryPurposes, examples, themeColors);
@@ -219,7 +228,7 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                 .append('p')
                     .attr('class', function(d){
                         const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        return 'hidden exampleLabel ' + themeNoSpaces + '-Example';
+                        return 'exampleLabel ' + themeNoSpaces + '-Example';
                     })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
