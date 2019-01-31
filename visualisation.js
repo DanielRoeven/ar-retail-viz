@@ -55,8 +55,7 @@ var plotData = function(examples){
     // Then make array unique, stripping out duplicate contexts
     const themes = _.uniq(examples.map(example => example['Theme']));
     // Save list of themes to show
-    var themesToShow = _.uniq(examples.map(example => example['Theme']));;
-
+    var themesToShow = [];
 
     const colors = [
         d3.schemePastel1[0],
@@ -146,22 +145,18 @@ var plotData = function(examples){
                 // Create classnname for theme examples without spaces
                 themeClassName = d.replace(/ /g,"-") + '-Example';
 
-                if (themesToShow.length == 10) {
-                    // If all themes are shown, hide all
-
-                    // Themes to show is empty
+                if (themesToShow.length == 10 || themesToShow.length == 0) {
                     themesToShow = [];
+                    console.log('a');
+                    // Find the example labels for this theme
+                    const exampleLabels = document.getElementsByClassName('exampleLabel');
 
-                    // Get all example labels
-                    const examplesToHide = document.getElementsByClassName('exampleLabel');
-
-                    // Hide all example labels
-                    Array.prototype.forEach.call(examplesToHide, function(example){
-                        example.classList.add('hidden');
+                    // Hide them
+                    Array.prototype.forEach.call(exampleLabels, function(example){
+                        example.classList.remove('hidden');
                     });
                 }
-
-                if (_.contains(themesToShow, d)) {
+                else if (_.contains(themesToShow, d)) {
                     // Hide theme
 
                     // If theme is in list of themes to show, remove it
@@ -188,6 +183,8 @@ var plotData = function(examples){
                         example.classList.remove('hidden');
                     });
                 }
+
+                console.log(themesToShow);
             })
 
     fillGrid(contexts, primaryPurposes, examples, themeColors);
@@ -222,7 +219,7 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                 .append('p')
                     .attr('class', function(d){
                         const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        return 'exampleLabel ' + themeNoSpaces + '-Example';
+                        return 'hidden exampleLabel ' + themeNoSpaces + '-Example';
                     })
                     .text(function(d){return d['Title of product/project']})
                     // .style('border-width', '2px')
