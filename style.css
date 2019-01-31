@@ -19,7 +19,7 @@ h1, h3 {
     min-height: 700px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .cell {
@@ -69,7 +69,7 @@ h1, h3 {
 	color: #212E48;
 }
 
-.fa-external-link-alt, .fa-youtube {
+.fa-external-link-alt, .fa-youtube, .fa-info-circle {
 	color: #8995AE;
 }
 

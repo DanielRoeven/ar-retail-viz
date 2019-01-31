@@ -45,7 +45,9 @@ var plotData = function(examples){
     // Then make array unique, stripping out duplicate primary purposes
     const primaryPurposes = _.uniq(examples.map(example => example['Primary Purpose']));
     
-    // Make a list of contexts:
+
+    
+      // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
     const contexts = _.uniq(examples.map(example => example['Context']));
@@ -103,8 +105,11 @@ var plotData = function(examples){
             })
                 .append('p')                            // Create paragraph inside div
                     .text(function(d){                  // Set text to data (primary purpose name)
-                        return d;
-                    });
+                        return d + ' ';
+                    })
+                .append('i')
+                    .attr('class', 'fas fa-info-circle')
+                    .attr('title', 'lalalalal');
 
     // Create the context labels
     // Start by selecting all the context labels (none) so the selection set is empty
