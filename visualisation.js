@@ -104,10 +104,10 @@ var plotData = function(examples){
                 .append('p')                            // Create paragraph inside div
                     .text(function(d){                  // Set text to data (primary purpose name)
                         return d + ' ';
-                    })
-                .append('i')
-                    .attr('class', 'fas fa-info-circle')
-                    .attr('title', 'lalalalal');
+                    });
+                //.append('i')
+                 //   .attr('class', 'fas fa-info-circle')
+                 //   .attr('title', 'lalalalal')
 
     // Create the context labels
     // Start by selecting all the context labels (none) so the selection set is empty
