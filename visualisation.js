@@ -83,6 +83,17 @@ var plotData = function(examples){
     // Make d3 look at the div with a css grid
     const grid = d3.select('.grid');
 
+    const primaryPurposeDescriptions = {
+        'General Marketing': "Using MR to raise awareness of a brand or product.",
+        'B&M Store Traffic': "Using MR to increase traffic to a physical store.",
+        'Purchasing Confidence': "Using MR to increase customer's confidence in buying a particular item.",
+        'Launch': "Using MR to support product or store launches.",
+        'Convenience': "Using MR to try on items on own body without physically having to change.",
+        'Personalisation': "Customize items through MR according to own preferences.",
+        'Demo Features / Explain Concept': "Using MR to spread more information about a product or concept.",
+        'Stand Out': "Using MR to create a unique or engaging experience to differentiate yourself from competitors.",
+    }
+
     // Create the primary purpose labels
     // Start by selecting all the existing primary purpose labels (none) so selection set is empty
     const primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
@@ -104,10 +115,18 @@ var plotData = function(examples){
                 .append('p')                            // Create paragraph inside div
                     .text(function(d){                  // Set text to data (primary purpose name)
                         return d + ' ';
-                    });
-                //.append('i')
-                 //   .attr('class', 'fas fa-info-circle')
-                 //   .attr('title', 'lalalalal')
+                    })
+                .append('i')
+                 .attr('class', 'fas fa-info-circle')
+                 .attr('title', function(d){
+                     return primaryPurposeDescriptions[d];
+                 })
+                 .attr('data-toggle', 'tooltip')
+                 .attr('data-trigger', 'hover');
+
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                  });
 
     // Create the context labels
     // Start by selecting all the context labels (none) so the selection set is empty
@@ -404,5 +423,6 @@ var showMoreInfo = function(d){
             videoP.classList.add('hidden');
         }
 };
+
 
 fetchData();
