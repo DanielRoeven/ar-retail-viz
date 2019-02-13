@@ -24,6 +24,7 @@ h1, h3 {
 .cell {
     overflow: scroll;
     display: block;
+    text-align: center;
 }
 
 .cell.odd, .primaryPurposeLabel.odd {
@@ -62,6 +63,19 @@ h1, h3 {
 
 .contextButton.active, .contextButton:hover {
 	color: #2F2F2F !important;
+}
+
+.loadMoreButton {
+	background: none;
+	/*border: 1px solid #8995AE;*/
+	border: none;
+	border-radius: 16px;
+	color: #8995AE;
+	padding: 3px 6px 2px;
+	text-align: center;
+	text-decoration: underline;
+	font-size: 12px;
+	opacity: .66;
 }
 
 .infobox {

@@ -47,7 +47,6 @@ var plotData = function(examples){
     const primUserValues = examples.map(example => example['Primary User Value']);
     const otherUserValues = _.flatten(examples.map(example => example['Other User Values']));
     const userValues = _.without(_.uniq(_.union(primUserValues, otherUserValues)), undefined);
-    console.log(userValues);
     
     // Make a list of biz values:
     // Map all examples to array with only the field primary biz value
@@ -128,25 +127,26 @@ var plotData = function(examples){
                     return d;
                 });
 
-    const contextButtonsContainer = d3.select('#contextButtonsContainer');
-    const contextButtons = contextButtonsContainer.selectAll('.contextButtons');
+    // Create the context buttons
+    // Start by selecting the context buttons
+    const contextButtons = d3.select('#contextButtonsContainer').selectAll('.contextButtons');
     contextButtons
-        .data(contexts)
-        .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary contextButton')
+        .data(contexts)                                 // Bind data
+        .enter()                                        // Prepare selection set
+        .append('button')                               // Create buttons for everything not in selection set (everything)
+            .attr('class', 'btn btn-outline-secondary contextButton')   // Set class (bootstrap + custom)
             .attr('id', function(d){
-                return d.replace(/ /g,"-").replace('&','-');
+                return d.replace(/ /g,"-").replace('&','-');                        // Give it a unique, sanitized id
             })
             .attr('type', 'button')
-            .attr('data-toggle', 'collapse')
+            .attr('data-toggle', 'collapse')                                        // Add collapse toggle for more info
             .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-").replace('&','-') + '-Description';
+                return '#' + d.replace(/ /g,"-").replace('&','-') + '-Description'; // Give it a collapse target for more info
             })
             .text(function(d){
-                return d;
+                return d;                               // Set button text
             })
-            .on('click', function(d){
+            .on('click', function(d){                   // On click, hide or show examples
                 if (_.contains(contextsToShow, d)) {
                     // If context is in list of contexts to show, remove it
                     contextsToShow = _.without(contextsToShow, d)
@@ -231,19 +231,21 @@ var fillGrid = function(bizValues, userValues, examples, contextColors){
 
     bizValues.forEach(function(bizValue, indexBizValue){
         const bizValueExamples = _.filter(examples, function(bizValueExample){
-            const columnIsPrimBizValue = bizValueExample['Primary Business Value'] === bizValue;
-            const columnIsOtherBizValue = _.contains(bizValueExample['Other Business Values'], bizValue);
-            return columnIsPrimBizValue || columnIsOtherBizValue;
+            return _.contains(bizValueExample['Value Intersection'], bizValue);
+            //const columnIsPrimBizValue = bizValueExample['Primary Business Value'] === bizValue;
+            //const columnIsOtherBizValue = _.contains(bizValueExample['Other Business Values'], bizValue);
+            //return columnIsPrimBizValue || columnIsOtherBizValue;
         });
 
         userValues.forEach(function(userValue, ip){
             const bizValueAndUserValueExamples = _.filter(bizValueExamples, function(bizValueAndUserValueExample){
-                const columnIsPrimUserValue = bizValueAndUserValueExample['Primary User Value'] === userValue;
-                const columnIsOtherUserValue = _.contains(bizValueAndUserValueExample['Other User Values'], userValue);
-                return columnIsPrimUserValue || columnIsOtherUserValue;
+                return _.contains(bizValueAndUserValueExample['Value Intersection'], userValue);
+                //const columnIsPrimUserValue = bizValueAndUserValueExample['Primary User Value'] === userValue;
+                //const columnIsOtherUserValue = _.contains(bizValueAndUserValueExample['Other User Values'], userValue);
+                //return columnIsPrimUserValue || columnIsOtherUserValue;
             });
 
-            var cell = document.createElement('div')
+            var cell = document.createElement('div');
             cell.style['grid-column'] = (indexBizValue + 2);
             cell.style['grid-row'] = (ip + 2);
             cell.classList.add('cell');
@@ -252,6 +254,14 @@ var fillGrid = function(bizValues, userValues, examples, contextColors){
             } else {
                 cell.classList.add('even')
             }
+
+            // const loadMore = document.createElement('button');
+            // loadMore.textContent = 'More Examples';
+            // loadMore.type = 'button';
+            // loadMore.classList.add('loadMoreButton');
+            // loadMore.classList.add('btn');
+            // loadMore.classList.add('btn-outline-secondary');
+            // cell.append(loadMore);
 
             document.getElementsByClassName('grid')[0].appendChild(cell);
 
@@ -283,6 +293,11 @@ var fillGrid = function(bizValues, userValues, examples, contextColors){
 
                     d3.select(this).classed('selectedExample', d3.select(this).classed('selectedExample') ? false : true);
                 })
+
+            selection.enter()
+                .append('button')
+                    .attr('class', 'loadMoreButton')
+                    .text('More');
         });
     });
 };
