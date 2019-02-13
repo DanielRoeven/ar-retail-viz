@@ -7,7 +7,7 @@ var fetchData = function(){
     var examples = [];
 
     // Get all the records from the Examples table in Airtable
-    base('Examples').select({
+    base('Examples by Value').select({
         // Selecting the grid view (tabular layout)
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
@@ -40,24 +40,29 @@ var fetchData = function(){
 // Plot examples we retrieved from Airtable
 var plotData = function(examples){
 
-    // Make a list of primary purposes:
-    // Map all examples to array with only the field primary purpose
-    // Then make array unique, stripping out duplicate primary purposes
-    const primaryPurposes = _.uniq(examples.map(example => example['Primary Purpose']));
+    // Make a list of user values:
+    // Map all examples to array with only the field primary user value
+    // Map all examples to array with only the field other user values and flatten it
+    // Then make join arrays, make unique, and remove undefined
+    const primUserValues = examples.map(example => example['Primary User Value']);
+    const otherUserValues = _.flatten(examples.map(example => example['Other User Values']));
+    const userValues = _.without(_.uniq(_.union(primUserValues, otherUserValues)), undefined);
+    console.log(userValues);
     
+    // Make a list of biz values:
+    // Map all examples to array with only the field primary biz value
+    // Map all examples to array with only the field other biz values and flatten it
+    // Then make join arrays, make unique, and remove undefined
+    const primBizValues = examples.map(example => example['Primary Business Value']);
+    const otherBizValues = _.flatten(examples.map(example => example['Other Business Values']));
+    const bizValues = _.without(_.uniq(_.union(primBizValues, otherBizValues)), undefined);
 
-    
-      // Make a list of contexts:
+    // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
     const contexts = _.uniq(examples.map(example => example['Context']));
-
-    // Make a list of themes:
-    // Map all examples to array with only the field theme
-    // Then make array unique, stripping out duplicate contexts
-    const themes = _.uniq(examples.map(example => example['Theme']));
-    // Save list of themes to show
-    var themesToShow = [];
+    // Save list of contexts to show
+    var contextsToShow = [];
 
     const colors = [
         d3.schemePastel1[0],
@@ -72,29 +77,29 @@ var plotData = function(examples){
         d3.schemePastel2[0],
     ];
 
-    var themeColors = {};
-    themes.forEach(function(theme, i){
-        themeColors[theme] = colors[i];
+    var contextColors = {};
+    contexts.forEach(function(context, i){
+        contextColors[context] = colors[i];
     });
 
-    // Give the theme filter buttons a color
-    colorButtons(themes, themeColors);
+    // Give the context filter buttons a color
+    colorButtons(contexts, contextColors);
 
     // Make d3 look at the div with a css grid
     const grid = d3.select('.grid');
 
-    // Create the primary purpose labels
-    // Start by selecting all the existing primary purpose labels (none) so selection set is empty
-    const primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
-    primaryPurposeLabels
-        .data(primaryPurposes)                          // Bind the data
+    // Create the user value labels
+    // Start by selecting all the existing user value labels (none) so selection set is empty
+    const userValueLabels = grid.selectAll('.userValueLabel');
+    userValueLabels
+        .data(userValues)                               // Bind the data
         .enter()                                        // Prepare selection set
         .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', function(d, i){              // Set classes to primaryPurposeLabel and odd/even for zebra stripes
+            .attr('class', function(d, i){              // Set classes to userValueLabel and odd/even for zebra stripes
                 if (i % 2 == 0) {
-                    return 'primaryPurposeLabel odd';
+                    return 'userValueLabel odd';
                 } else {
-                    return 'primaryPurposeLabel even';
+                    return 'userValueLabel even';
                 }
             })
             .style('grid-column', 1)                    // Labels are all in the first column
@@ -102,72 +107,69 @@ var plotData = function(examples){
                 return i+2;
             })
                 .append('p')                            // Create paragraph inside div
-                    .text(function(d){                  // Set text to data (primary purpose name)
+                    .text(function(d){                  // Set text to data (user value)
                         return d + ' ';
                     });
-                //.append('i')
-                 //   .attr('class', 'fas fa-info-circle')
-                 //   .attr('title', 'lalalalal')
 
-    // Create the context labels
-    // Start by selecting all the context labels (none) so the selection set is empty
-    const contextLabels = grid.selectAll('.contextLabel');
-    contextLabels
-        .data(contexts)                                 // Bind the data
+    // Create the biz value labels
+    // Start by selecting all the biz value labels (none) so the selection set is empty
+    const bizValueLabels = grid.selectAll('.bizValueLabels');
+    bizValueLabels
+        .data(bizValues)                                // Bind the data
         .enter()                                        // Prepare selection set
         .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', 'contextLabel')              // Set class to context label
+            .attr('class', 'bizValueLabel')             // Set class to bizValueLabel
             .style('grid-column', function(d, i){       // Columns start at 2 (+1 because index start at 0 but css grid at 1, +1 because first column is other labels)
                 return i+2;
             })
             .style('grid-row', 1)                       // Labels are all in first column
             .append('p')                                // Create paragraph inside div
-                .text(function(d){                      // Set text to data (context name)
+                .text(function(d){                      // Set text to data (biz value)
                     return d;
                 });
 
-    const themeButtonsContainer = d3.select('#themeButtonsContainer');
-    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
-    themeButtons
-        .data(themes)
+    const contextButtonsContainer = d3.select('#contextButtonsContainer');
+    const contextButtons = contextButtonsContainer.selectAll('.contextButtons');
+    contextButtons
+        .data(contexts)
         .enter()
         .append('button')
-            .attr('class', 'btn btn-outline-secondary buttonthemes')
+            .attr('class', 'btn btn-outline-secondary contextButton')
             .attr('id', function(d){
-                return d.replace(/ /g,"-");
+                return d.replace(/ /g,"-").replace('&','-');
             })
             .attr('type', 'button')
             .attr('data-toggle', 'collapse')
             .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-") + '-Description';
+                return '#' + d.replace(/ /g,"-").replace('&','-') + '-Description';
             })
             .text(function(d){
                 return d;
             })
             .on('click', function(d){
-
-                if (_.contains(themesToShow, d)) {
-                    // If theme is in list of themes to show, remove it
-                    themesToShow = _.without(themesToShow, d)
+                if (_.contains(contextsToShow, d)) {
+                    // If context is in list of contexts to show, remove it
+                    contextsToShow = _.without(contextsToShow, d)
                 } else {
-                    // If theme is not in list of themes to show, add it
-                    themesToShow.push(d);
+                    // If context is not in list of contexts to show, add it
+                    contextsToShow.push(d);
                 }
 
-                if (themesToShow.length > 0) {
-                    // If there are themes to show, hide the examples to hide and show the examples to show
+                if (contextsToShow.length > 0) {
+                    // If there are contexts to show, hide the examples to hide and show the examples to show
 
-                    // Create an array of the themes to be hidden
-                    const themesToHide = _.difference(themes, themesToShow);
-                    // Hide all lables belonging to themes to hide
-                    themesToHide.forEach(function(themeToHide){
+                    // Create an array of the contexts to be hidden
+                    const contextsToHide = _.difference(contexts, contextsToShow);
+                    // Hide all examples belonging to contexts to hide
+                    contextsToHide.forEach(function(contextToHide){
 
-                        // Create class name for theme to hide (without spaces, with -Example)
-                        const themeToHideClassName = themeToHide.replace(/ /g,"-") + '-Example';
-                        // Get all the labels belonging to theme to hide
-                        const themeToHideLabels = document.getElementsByClassName(themeToHideClassName);
-                        // Hide each label belonging to theme to hide
-                        Array.prototype.forEach.call(themeToHideLabels, function(exampleToHide){
+                        // Create class name for context to hide (without spaces, with -Example)
+                        const contextToHideClassName = contextToHide.replace(/ /g,"-").replace('&','-') + '-Example';
+
+                        // Get all the examples belonging to context to hide
+                        const contextToHideExamples = document.getElementsByClassName(contextToHideClassName);
+                        // Hide each examples belonging to context to hide
+                        Array.prototype.forEach.call(contextToHideExamples, function(exampleToHide){
                             // Only add the hidden class if it isn't already there
                             if (!exampleToHide.classList.contains('hidden')) {
                                 exampleToHide.classList.add('hidden');
@@ -175,31 +177,31 @@ var plotData = function(examples){
                         });
                     });
 
-                    // Show all labels belonging to themes to show
-                    themesToShow.forEach(function(themeToShow){
+                    // Show all example belonging to contexts to show
+                    contextsToShow.forEach(function(contextToShow){
 
-                        // Create class name for theme to show (without spaces, with -Example)
-                        const themeToShowClassName = themeToShow.replace(/ /g,"-") + '-Example';
-                        // Get all the labels belonging to theme to show
-                        const themeToShowLabels = document.getElementsByClassName(themeToShowClassName);
-                        // Show each label belonging to a theme to show
-                        Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                        // Create class name for context to show (without spaces, with -Example)
+                        const contextToShowClassName = contextToShow.replace(/ /g,"-").replace('&','-') + '-Example';
+                        // Get all the example belonging to context to show
+                        const contextToShowExamples = document.getElementsByClassName(contextToShowClassName);
+                        // Show each example belonging to a context to show
+                        Array.prototype.forEach.call(contextToShowExamples, function(exampleToShow){
                             // Remove the hiddden class
                             exampleToShow.classList.remove('hidden');
                         });
                     })
                 } else {
-                    // If there are no themes to show, show all themes
+                    // If there are no contexts to show, show all contexts
 
-                    // Get all the example labels
-                    const themeToShowLabels = document.getElementsByClassName('exampleLabel');
-                    // Show each label
-                    Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
+                    // Get all the examples
+                    const contextToShowExamples = document.getElementsByClassName('exampleLabel');
+                    // Show each examples
+                    Array.prototype.forEach.call(contextToShowExamples, function(exampleToShow){
                         // Remove the hidden class
                         exampleToShow.classList.remove('hidden');
                     });
                 }
-            })
+            });
 
     var showOnlyTTC = false;
     const notTTCExamples = document.getElementsByClassName('notTTCExample');
@@ -222,23 +224,27 @@ var plotData = function(examples){
         }
     });
 
-    fillGrid(contexts, primaryPurposes, examples, themeColors);
+    fillGrid(bizValues, userValues, examples, contextColors);
 };
 
-var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
+var fillGrid = function(bizValues, userValues, examples, contextColors){
 
-    contexts.forEach(function(context, ic){
-        const contextExamples = _.filter(examples, function(contextExample){
-            return contextExample.Context === context;
+    bizValues.forEach(function(bizValue, indexBizValue){
+        const bizValueExamples = _.filter(examples, function(bizValueExample){
+            const columnIsPrimBizValue = bizValueExample['Primary Business Value'] === bizValue;
+            const columnIsOtherBizValue = _.contains(bizValueExample['Other Business Values'], bizValue);
+            return columnIsPrimBizValue || columnIsOtherBizValue;
         });
 
-        primaryPurposes.forEach(function(primaryPurpose, ip){
-            const contextAndPrimaryPurposeExamples = _.filter(contextExamples, function(contextAndPrimaryPurposeExample){
-              return contextAndPrimaryPurposeExample['Primary Purpose'] === primaryPurpose;
+        userValues.forEach(function(userValue, ip){
+            const bizValueAndUserValueExamples = _.filter(bizValueExamples, function(bizValueAndUserValueExample){
+                const columnIsPrimUserValue = bizValueAndUserValueExample['Primary User Value'] === userValue;
+                const columnIsOtherUserValue = _.contains(bizValueAndUserValueExample['Other User Values'], userValue);
+                return columnIsPrimUserValue || columnIsOtherUserValue;
             });
 
             var cell = document.createElement('div')
-            cell.style['grid-column'] = (ic + 2);
+            cell.style['grid-column'] = (indexBizValue + 2);
             cell.style['grid-row'] = (ip + 2);
             cell.classList.add('cell');
             if (ip % 2 == 0) {
@@ -249,13 +255,13 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
 
             document.getElementsByClassName('grid')[0].appendChild(cell);
 
-            selection = d3.select(cell).selectAll('.exampleLabel').data(contextAndPrimaryPurposeExamples);
+            selection = d3.select(cell).selectAll('.exampleLabel').data(bizValueAndUserValueExamples);
             selection.enter()
                 .append('p')
                     .attr('class', function(d){
                         var classString = 'exampleLabel';
-                        const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        classString += ' ' + themeNoSpaces + '-Example';
+                        const contextNoSpaces = d['Context'].replace(/ /g,"-").replace('&','-');
+                        classString += ' ' + contextNoSpaces + '-Example';
                         if (d['Creators'] !== 'The Techno Creatives') {
                             classString += ' notTTCExample'
                         }
@@ -265,7 +271,7 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
                     // .style('border-width', '2px')
                     // .style('border-style', 'solid')
                     .style('background-color', function(d){
-                        return themeColors[d['Theme']];
+                        return contextColors[d['Context']];
                     })
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
@@ -281,10 +287,10 @@ var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
     });
 };
 
-var colorButtons = function(themes, colors){
-    themes.forEach(function(theme){
-        const themeNoSpaces = theme.replace(/ /g,"-");
-        const css = generateActiveButtonCSS(themeNoSpaces, colors[theme]);
+var colorButtons = function(contexts, colors){
+    contexts.forEach(function(context){
+        const contextSanitized = context.replace(/ /g,'-').replace('&','-');
+        const css = generateActiveButtonCSS(contextSanitized, colors[context]);
 
         const styleEl = document.createElement('style');
         document.head.appendChild(styleEl);
@@ -293,8 +299,8 @@ var colorButtons = function(themes, colors){
     });
 };
 
-var generateActiveButtonCSS = function(theme, color) {
-    const css = '#' + theme + '.active, ' + '#' + theme + ':hover {' +
+var generateActiveButtonCSS = function(context, color) {
+    const css = '#' + context + '.active, ' + '#' + context + ':hover {' +
                     'background-color: ' + color + ' !important;' +
                 '}'
     return css;

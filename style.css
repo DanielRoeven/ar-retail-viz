@@ -8,7 +8,7 @@ h1, h3 {
      color: #334348;
 }
 
-.buttonthemes, #buttonTTC {
+.contextButton, #buttonTTC {
     font-size: 12px;
 }
 
@@ -60,7 +60,7 @@ h1, h3 {
 	display: none;
 }
 
-.buttonthemes.active, .buttonthemes:hover {
+.contextButton.active, .contextButton:hover {
 	color: #2F2F2F !important;
 }
 
