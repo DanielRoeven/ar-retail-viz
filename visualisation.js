@@ -1,10 +1,23 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
+var allExamples = [];
+var activeExamples = [];
+const colors = [
+    d3.schemePastel1[0],
+    d3.schemePastel1[1],
+    d3.schemePastel1[2],
+    d3.schemePastel1[3],
+    d3.schemePastel1[4],
+    d3.schemePastel1[5],
+    d3.schemePastel1[6],
+    d3.schemePastel1[7],
+    d3.schemePastel1[8],
+    d3.schemePastel2[0],
+];
+displayMode = 'highlight';
 
 // Get data from Airtable
 var fetchData = function(){
-    // Create array to load in examples
-    var examples = [];
 
     // Get all the records from the Examples table in Airtable
     base('Examples by Value').select({
@@ -15,7 +28,7 @@ var fetchData = function(){
         // Called for each 'page' (~50 records)
         records.forEach(function(record) {
             // Add all fields of records (examples) to examples array
-            examples.push(record.fields);
+            allExamples.push(record.fields);
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -32,49 +45,45 @@ var fetchData = function(){
         }
         else {
             // Nothing went wrong, start plotting our examples
-            plotData(examples)
+            activeExamples = allExamples;
+            renderFramework();
         }
     });   
 };
 
 // Plot examples we retrieved from Airtable
-var plotData = function(examples){
+var renderFramework = function(){
 
     // Make a list of user values:
     // Map all examples to array with only the field primary user value
     // Map all examples to array with only the field other user values and flatten it
     // Then make join arrays, make unique, and remove undefined
-    const primUserValues = examples.map(example => example['Primary User Value']);
-    const otherUserValues = _.flatten(examples.map(example => example['Other User Values']));
+    const primUserValues = allExamples.map(example => example['Primary User Value']);
+    const otherUserValues = _.flatten(allExamples.map(example => example['Other User Values']));
     const userValues = _.without(_.uniq(_.union(primUserValues, otherUserValues)), undefined);
     
+    // Create copy of list of user values with header element at beginning
+    const userValuesWithHeader = userValues.slice();
+    userValuesWithHeader.unshift('Column Header')
+
     // Make a list of biz values:
     // Map all examples to array with only the field primary biz value
     // Map all examples to array with only the field other biz values and flatten it
     // Then make join arrays, make unique, and remove undefined
-    const primBizValues = examples.map(example => example['Primary Business Value']);
-    const otherBizValues = _.flatten(examples.map(example => example['Other Business Values']));
+    const primBizValues = allExamples.map(example => example['Primary Business Value']);
+    const otherBizValues = _.flatten(allExamples.map(example => example['Other Business Values']));
     const bizValues = _.without(_.uniq(_.union(primBizValues, otherBizValues)), undefined);
 
+    // Create list of biz values with header element at beginning
+    const bizValuesWithHeader = bizValues.slice();
+    bizValuesWithHeader.unshift('Row Header')
+    
     // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
-    const contexts = _.uniq(examples.map(example => example['Context']));
+    const contexts = _.uniq(allExamples.map(example => example['Context']));
     // Save list of contexts to show
     var contextsToShow = [];
-
-    const colors = [
-        d3.schemePastel1[0],
-        d3.schemePastel1[1],
-        d3.schemePastel1[2],
-        d3.schemePastel1[3],
-        d3.schemePastel1[4],
-        d3.schemePastel1[5],
-        d3.schemePastel1[6],
-        d3.schemePastel1[7],
-        d3.schemePastel1[8],
-        d3.schemePastel2[0],
-    ];
 
     var contextColors = {};
     contexts.forEach(function(context, i){
@@ -84,226 +93,156 @@ var plotData = function(examples){
     // Give the context filter buttons a color
     colorButtons(contexts, contextColors);
 
-    // Make d3 look at the div with a css grid
+    // Create flattened matrix with index tuples for cells
+    var cellTuples = [];
+    bizValuesWithHeader.forEach(function(bizValue, bizValueIndex){
+        userValuesWithHeader.forEach(function(userValue, userValueIndex){
+            const column = bizValueIndex + 1;
+            const row = userValueIndex + 1;
+            const cellTuple = {bizValue, column, userValue, row}
+            cellTuples.push(cellTuple);
+        });
+    });
+    // Remove header/header tuple, maybe replace with axis labels?
+    cellTuples.shift();
+
+    const columnHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['row'] === 1});
+    const rowHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] === 1});
+    const contentCellTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] !== 1 && cellTuple['row'] !== 1});
+
+    // Save the d3 grid selection
     const grid = d3.select('.grid');
 
-    // Create the user value labels
-    // Start by selecting all the existing user value labels (none) so selection set is empty
-    const userValueLabels = grid.selectAll('.userValueLabel');
-    userValueLabels
-        .data(userValues)                               // Bind the data
-        .enter()                                        // Prepare selection set
-        .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', function(d, i){              // Set classes to userValueLabel and odd/even for zebra stripes
-                if (i % 2 == 0) {
-                    return 'userValueLabel odd';
-                } else {
-                    return 'userValueLabel even';
-                }
-            })
-            .style('grid-column', 1)                    // Labels are all in the first column
-            .style('grid-row', function(d, i){          // Rows start at 2 (+1 because index starts at 0 but css grid at 1, +1 because top row is other labels)
-                return i+2;
-            })
-                .append('p')                            // Create paragraph inside div
-                    .text(function(d){                  // Set text to data (user value)
-                        return d + ' ';
-                    });
+    // Create the column header labels
+    const columnHeaderLabels = grid.selectAll('.columnHeaderLabel');
+    columnHeaderLabels
+        .data(columnHeaderTuples)
+        .enter()
+        .append('div')
+            .attr('class', 'columnHeaderLabel')
+            .style('grid-column', function(d){return d['column']})
+            .style('grid-row', 1)
+            .append('p')
+                .text(function(d){return d['bizValue']});
 
-    // Create the biz value labels
-    // Start by selecting all the biz value labels (none) so the selection set is empty
-    const bizValueLabels = grid.selectAll('.bizValueLabels');
-    bizValueLabels
-        .data(bizValues)                                // Bind the data
-        .enter()                                        // Prepare selection set
-        .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', 'bizValueLabel')             // Set class to bizValueLabel
-            .style('grid-column', function(d, i){       // Columns start at 2 (+1 because index start at 0 but css grid at 1, +1 because first column is other labels)
-                return i+2;
+    // Create the row header labels
+    const rowHeaderLabels = grid.selectAll('.rowHeaderLabel');
+    rowHeaderLabels
+        .data(rowHeaderTuples)
+        .enter()
+        .append('div')
+            .attr('class', function(d){
+                    const parity = (d['row'] % 2 ? 'even' : 'odd');
+                    return 'rowHeaderLabel' + ' ' + parity;
+                })
+            .style('grid-column', 1)
+            .style('grid-row', function(d){return d['row']})
+            .append('p')
+                .text(function(d){return d['userValue']});
+
+    // Create the cell divs containing the labels
+    const cells = grid.selectAll('.cell');
+    cells
+        .data(contentCellTuples)
+        .enter()
+        .append('div')
+            .attr('class', function(d){
+                const parity = (d['row'] % 2 ? 'even' : 'odd');
+                return 'cell' + ' ' + parity;
             })
-            .style('grid-row', 1)                       // Labels are all in first column
-            .append('p')                                // Create paragraph inside div
-                .text(function(d){                      // Set text to data (biz value)
-                    return d;
-                });
+            .attr('id', function(d){
+                return strip(d['bizValue']) + '-' + strip(d['userValue']);
+            })
+            .style('grid-column', function(d){return d['column']})
+            .style('grid-row', function(d){return d['row']})
 
     // Create the context buttons
     // Start by selecting the context buttons
     const contextButtons = d3.select('#contextButtonsContainer').selectAll('.contextButtons');
     contextButtons
-        .data(contexts)                                 // Bind data
-        .enter()                                        // Prepare selection set
-        .append('button')                               // Create buttons for everything not in selection set (everything)
+        .data(contexts)                                                 // Bind data
+        .enter()                                                        // Prepare selection set
+        .append('button')                                               // Create buttons for everything not in selection set (everything)
             .attr('class', 'btn btn-outline-secondary contextButton')   // Set class (bootstrap + custom)
             .attr('id', function(d){
-                return d.replace(/ /g,"-").replace('&','-');                        // Give it a unique, sanitized id
+                return d.replace(/ /g,"-").replace('&','-');            // Give it a unique, sanitized id
             })
             .attr('type', 'button')
-            .attr('data-toggle', 'collapse')                                        // Add collapse toggle for more info
+            .attr('data-toggle', 'collapse')                            // Add collapse toggle for more info
             .attr('data-target', function(d){
                 return '#' + d.replace(/ /g,"-").replace('&','-') + '-Description'; // Give it a collapse target for more info
             })
             .text(function(d){
                 return d;                               // Set button text
             })
-            .on('click', function(d){                   // On click, hide or show examples
-                if (_.contains(contextsToShow, d)) {
-                    // If context is in list of contexts to show, remove it
-                    contextsToShow = _.without(contextsToShow, d)
-                } else {
-                    // If context is not in list of contexts to show, add it
-                    contextsToShow.push(d);
-                }
-
-                if (contextsToShow.length > 0) {
-                    // If there are contexts to show, hide the examples to hide and show the examples to show
-
-                    // Create an array of the contexts to be hidden
-                    const contextsToHide = _.difference(contexts, contextsToShow);
-                    // Hide all examples belonging to contexts to hide
-                    contextsToHide.forEach(function(contextToHide){
-
-                        // Create class name for context to hide (without spaces, with -Example)
-                        const contextToHideClassName = contextToHide.replace(/ /g,"-").replace('&','-') + '-Example';
-
-                        // Get all the examples belonging to context to hide
-                        const contextToHideExamples = document.getElementsByClassName(contextToHideClassName);
-                        // Hide each examples belonging to context to hide
-                        Array.prototype.forEach.call(contextToHideExamples, function(exampleToHide){
-                            // Only add the hidden class if it isn't already there
-                            if (!exampleToHide.classList.contains('hidden')) {
-                                exampleToHide.classList.add('hidden');
-                            }
-                        });
-                    });
-
-                    // Show all example belonging to contexts to show
-                    contextsToShow.forEach(function(contextToShow){
-
-                        // Create class name for context to show (without spaces, with -Example)
-                        const contextToShowClassName = contextToShow.replace(/ /g,"-").replace('&','-') + '-Example';
-                        // Get all the example belonging to context to show
-                        const contextToShowExamples = document.getElementsByClassName(contextToShowClassName);
-                        // Show each example belonging to a context to show
-                        Array.prototype.forEach.call(contextToShowExamples, function(exampleToShow){
-                            // Remove the hiddden class
-                            exampleToShow.classList.remove('hidden');
-                        });
-                    })
-                } else {
-                    // If there are no contexts to show, show all contexts
-
-                    // Get all the examples
-                    const contextToShowExamples = document.getElementsByClassName('exampleLabel');
-                    // Show each examples
-                    Array.prototype.forEach.call(contextToShowExamples, function(exampleToShow){
-                        // Remove the hidden class
-                        exampleToShow.classList.remove('hidden');
-                    });
-                }
+            .on('click', function(d){
+                activeExamples = _.filter(activeExamples, function(example){return example['Context'] === d});
+                renderExamples(bizValues, userValues);
             });
 
     var showOnlyTTC = false;
     const notTTCExamples = document.getElementsByClassName('notTTCExample');
     const ttcButton = document.getElementById('buttonTTC');
     ttcButton.addEventListener('click', function(){
-        if (showOnlyTTC) {
-            // Show other examples
-            showOnlyTTC = false;
-
-            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
-                notTTCExample.classList.remove('hideNotTTC');
-            });
-        } else {
-            // Show only TTC examples
-            showOnlyTTC = true;
-
-            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
-                notTTCExample.classList.add('hideNotTTC');
-            });
-        }
     });
 
-    fillGrid(bizValues, userValues, examples, contextColors);
+    renderExamples(bizValues, userValues);
 };
 
-var fillGrid = function(bizValues, userValues, examples, contextColors){
+var renderExamples = function(bizValues, userValues){
+    bizValues.forEach(function(bizValue){
+        userValues.forEach(function(userValue){
+            const id = '#' + strip(bizValue) + '-' + strip(userValue);
+            const cell = d3.select(id);
 
-    bizValues.forEach(function(bizValue, indexBizValue){
-        const bizValueExamples = _.filter(examples, function(bizValueExample){
-            return _.contains(bizValueExample['Value Intersection'], bizValue);
-            //const columnIsPrimBizValue = bizValueExample['Primary Business Value'] === bizValue;
-            //const columnIsOtherBizValue = _.contains(bizValueExample['Other Business Values'], bizValue);
-            //return columnIsPrimBizValue || columnIsOtherBizValue;
-        });
-
-        userValues.forEach(function(userValue, ip){
-            const bizValueAndUserValueExamples = _.filter(bizValueExamples, function(bizValueAndUserValueExample){
-                return _.contains(bizValueAndUserValueExample['Value Intersection'], userValue);
-                //const columnIsPrimUserValue = bizValueAndUserValueExample['Primary User Value'] === userValue;
-                //const columnIsOtherUserValue = _.contains(bizValueAndUserValueExample['Other User Values'], userValue);
-                //return columnIsPrimUserValue || columnIsOtherUserValue;
+            cellExamples = _.filter(activeExamples, function(example){
+                switch (displayMode) {
+                    case 'all':
+                        primaryFitsColumn = example['Primary Business Value'] === bizValue;
+                        otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+                        primaryFitsRow = example['Primary User Value'] === userValue;
+                        otherFitsRow = _.contains(example['Other User Values'], userValue);
+                        return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
+                    case 'primary':
+                        primaryFitsColumn = example['Primary Business Value'] === bizValue;
+                        primaryFitsRow = example['Primary User Value'] === userValue;
+                        return (primaryFitsColumn && primaryFitsRow);
+                    case 'highlight':
+                        highlightFitsColumn = _.contains(example['Value Intersection'], bizValue);
+                        highlightFitsRow = _.contains(example['Value Intersection'], userValue);
+                        return (highlightFitsColumn && highlightFitsRow);
+                    default:
+                        throw new Error('No display mode chosen!');
+                        break;
+                }
             });
 
-            var cell = document.createElement('div');
-            cell.style['grid-column'] = (indexBizValue + 2);
-            cell.style['grid-row'] = (ip + 2);
-            cell.classList.add('cell');
-            if (ip % 2 == 0) {
-                cell.classList.add('odd')
-            } else {
-                cell.classList.add('even')
-            }
-
-            // const loadMore = document.createElement('button');
-            // loadMore.textContent = 'More Examples';
-            // loadMore.type = 'button';
-            // loadMore.classList.add('loadMoreButton');
-            // loadMore.classList.add('btn');
-            // loadMore.classList.add('btn-outline-secondary');
-            // cell.append(loadMore);
-
-            document.getElementsByClassName('grid')[0].appendChild(cell);
-
-            selection = d3.select(cell).selectAll('.exampleLabel').data(bizValueAndUserValueExamples);
-            selection.enter()
-                .append('p')
-                    .attr('class', function(d){
-                        var classString = 'exampleLabel';
-                        const contextNoSpaces = d['Context'].replace(/ /g,"-").replace('&','-');
-                        classString += ' ' + contextNoSpaces + '-Example';
-                        if (d['Creators'] !== 'The Techno Creatives') {
-                            classString += ' notTTCExample'
-                        }
-                        return classString;
-                    })
-                    .text(function(d){return d['Title of product/project']})
-                    // .style('border-width', '2px')
-                    // .style('border-style', 'solid')
-                    .style('background-color', function(d){
-                        return contextColors[d['Context']];
-                    })
-                .on("click", function(d, i){ 
-                    showMoreInfo(d); 
-                    selectedExamples = document.getElementsByClassName('selectedExample');
-                    
-                    Array.prototype.forEach.call(selectedExamples, function(selectedExample){
-                        selectedExample.classList.remove('selectedExample');
+            cellExampleLabels = cell.selectAll('.exampleLabel')
+            //console.log(cellExampleLabels.size());
+            cellExampleLabels
+                .data(cellExamples)
+                .enter()
+                    .append('p')
+                        .attr('class', 'exampleLabel')
+                        .text(function(d){return d['Title of product/project']})
+                    .on("click", function(d, i){ 
+                        showMoreInfo(d); 
+                        selectedExamples = document.getElementsByClassName('selectedExample');
+                        
+                        Array.prototype.forEach.call(selectedExamples, function(selectedExample){
+                            selectedExample.classList.remove('selectedExample');
+                        });
+                        this.classList.add('selectedExample');
                     });
 
-                    d3.select(this).classed('selectedExample', d3.select(this).classed('selectedExample') ? false : true);
-                })
-
-            selection.enter()
-                .append('button')
-                    .attr('class', 'loadMoreButton')
-                    .text('More');
+            //console.log(cellExampleLabels.exit().size());
+            //cellExampleLabels.exit().remove();
         });
     });
 };
 
-var colorButtons = function(contexts, colors){
-    contexts.forEach(function(context){
+var colorButtons = function(contexts, contextColors){
+    contexts.forEach(function(context, contextColors){
         const contextSanitized = context.replace(/ /g,'-').replace('&','-');
         const css = generateActiveButtonCSS(contextSanitized, colors[context]);
 
@@ -425,5 +364,9 @@ var showMoreInfo = function(d){
             videoP.classList.add('hidden');
         }
 };
+
+const strip = function(string){
+    return string.replace(/ /g,"-").replace('&','-').replace('(', '').replace(')', '');
+}
 
 fetchData();
