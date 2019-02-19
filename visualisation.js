@@ -172,7 +172,7 @@ var renderFramework = function(){
                     filters.push(d);
                 }
 
-                filterContentCellTuples('highlight');
+                filterContentCellTuples('all');
                 renderExamples();
             });
 
@@ -182,7 +182,7 @@ var renderFramework = function(){
     // ttcButton.addEventListener('click', function(){
     // });
 
-    filterContentCellTuples('highlight');
+    filterContentCellTuples('all');
     renderExamples();
 };
 
@@ -191,39 +191,41 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
     var cellTuples = [];
     bizValuesWithHeader.forEach(function(bizValue, bizValueIndex){
         userValuesWithHeader.forEach(function(userValue, userValueIndex){
-            const cellExamples = _.filter(allExamples, function(example){
-                const primaryFitsColumn = example['Primary Business Value'] === bizValue;
-                const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
-                const primaryFitsRow = example['Primary User Value'] === userValue;
-                const otherFitsRow = _.contains(example['Other User Values'], userValue);
-                return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
-            })
-
-            // var cellExamples = [];
-            // allExamples.forEach(function(example){    
-                
+            // const cellExamples = _.filter(allExamples, function(example){
             //     const primaryFitsColumn = example['Primary Business Value'] === bizValue;
             //     const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
             //     const primaryFitsRow = example['Primary User Value'] === userValue;
             //     const otherFitsRow = _.contains(example['Other User Values'], userValue);
+            //     return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
+            // })
 
-            //     if (primaryFitsColumn && primaryFitsRow) {
-            //         example.relevance = 1;
-            //     }
-            //     else if (primaryFitsColumn || primaryFitsRow) {
-            //         example.relevance = .67
-            //     }
-            //     else if (otherFitsColumn || otherFitsRow) {
-            //         example.relevance = .33;
-            //     }
-            //     else {
-            //         example.relevance = 0;
-            //     }
+            var cellExamples = [];
+            allExamples.forEach(function(sourceExample){    
+                
+                var example = _.clone(sourceExample);
 
-            //     if (example.relevance > 0) {
-            //         cellExamples.push(example);
-            //     }
-            // });
+                const primaryFitsColumn = example['Primary Business Value'] === bizValue;
+                const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+                const primaryFitsRow = example['Primary User Value'] === userValue;
+                const otherFitsRow = _.contains(example['Other User Values'], userValue);
+
+                if (primaryFitsColumn && primaryFitsRow) {
+                    example.relevance = 1;
+                }
+                else if ((primaryFitsColumn && otherFitsRow) || (otherFitsColumn && primaryFitsRow)) {
+                    example.relevance = .5;
+                }
+                else if (otherFitsColumn && otherFitsRow) {
+                    example.relevance = .5;
+                }
+                else {
+                    example.relevance = 0;
+                }
+
+                if (example.relevance > 0) {
+                    cellExamples.push(example);
+                }
+            });
             const column = bizValueIndex + 1;
             const row = userValueIndex + 1;
             const cellTuple = {bizValue, column, userValue, row, cellExamples, selectedExamples: cellExamples}
@@ -241,23 +243,23 @@ var filterContentCellTuples = function(filter){
 
         cellTuple.selectedExamples = cellTuple.cellExamples
 
-        cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
-            switch (filter) {
-                case 'all':
-                    return true;
-                case 'primary':
-                    primaryFitsColumn = example['Primary Business Value'] === cellTuple.bizValue;
-                    primaryFitsRow = example['Primary User Value'] === cellTuple.userValue;
-                    return (primaryFitsColumn && primaryFitsRow);
-                case 'highlight':
-                    highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
-                    highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
-                    return (highlightFitsColumn && highlightFitsRow);
-                default:
-                    throw new Error('No filter chosen!');
-                    break;
-            }
-        });
+        // cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
+        //     switch (filter) {
+        //         case 'all':
+        //             return true;
+        //         case 'primary':
+        //             primaryFitsColumn = example['Primary Business Value'] === cellTuple.bizValue;
+        //             primaryFitsRow = example['Primary User Value'] === cellTuple.userValue;
+        //             return (primaryFitsColumn && primaryFitsRow);
+        //         case 'highlight':
+        //             highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
+        //             highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
+        //             return (highlightFitsColumn && highlightFitsRow);
+        //         default:
+        //             throw new Error('No filter chosen!');
+        //             break;
+        //     }
+        // });
 
         cellTuple.selectedExamples = _.filter(cellTuple.selectedExamples, function(example){
             if (filters.length == 0) {
@@ -283,8 +285,10 @@ var renderExamples = function() {
                 .append('p')
                     .attr('class', 'exampleLabel')
                     .style('opacity', function(d){
-                        console.log(d);
-                        return 1;
+                        // const relevancePercentage = d.relevance * 100;
+                        // const background = 'hsla(0, 0%, 50%, ' + d.relevance + ')';
+                        // console.log(background);
+                        return d.relevance;
                     })
                     .text(function(d){return d['Title of product/project']})
                 .on("click", function(d, i){ 
