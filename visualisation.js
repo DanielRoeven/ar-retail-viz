@@ -1,7 +1,8 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 var allExamples = [];
-var activeExamples = [];
+var contentCellTuples = [];
+var filters = [];
 const colors = [
     d3.schemePastel1[0],
     d3.schemePastel1[1],
@@ -14,7 +15,6 @@ const colors = [
     d3.schemePastel1[8],
     d3.schemePastel2[0],
 ];
-displayMode = 'highlight';
 
 // Get data from Airtable
 var fetchData = function(){
@@ -45,7 +45,6 @@ var fetchData = function(){
         }
         else {
             // Nothing went wrong, start plotting our examples
-            activeExamples = allExamples;
             renderFramework();
         }
     });   
@@ -91,25 +90,15 @@ var renderFramework = function(){
     });
 
     // Give the context filter buttons a color
-    colorButtons(contexts, contextColors);
+    colorButtons(contexts, contextColors);    
 
-    // Create flattened matrix with index tuples for cells
-    var cellTuples = [];
-    bizValuesWithHeader.forEach(function(bizValue, bizValueIndex){
-        userValuesWithHeader.forEach(function(userValue, userValueIndex){
-            const column = bizValueIndex + 1;
-            const row = userValueIndex + 1;
-            const cellTuple = {bizValue, column, userValue, row}
-            cellTuples.push(cellTuple);
-        });
-    });
-    // Remove header/header tuple, maybe replace with axis labels?
-    cellTuples.shift();
-
+    const cellTuples = makeCellTuples(bizValuesWithHeader, userValuesWithHeader);
     const columnHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['row'] === 1});
     const rowHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] === 1});
-    const contentCellTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] !== 1 && cellTuple['row'] !== 1});
-
+    contentCellTuples = _.filter(cellTuples, function(cellTuple){
+        return cellTuple['column'] !== 1 && cellTuple['row'] !== 1
+    });
+    
     // Save the d3 grid selection
     const grid = d3.select('.grid');
 
@@ -176,68 +165,149 @@ var renderFramework = function(){
                 return d;                               // Set button text
             })
             .on('click', function(d){
-                activeExamples = _.filter(activeExamples, function(example){return example['Context'] === d});
-                renderExamples(bizValues, userValues);
+                if (_.contains(filters, d)){
+                    filters = _.without(filters, d);
+                }
+                else {
+                    filters.push(d);
+                }
+
+                filterContentCellTuples('highlight');
+                renderExamples();
             });
 
-    var showOnlyTTC = false;
-    const notTTCExamples = document.getElementsByClassName('notTTCExample');
-    const ttcButton = document.getElementById('buttonTTC');
-    ttcButton.addEventListener('click', function(){
-    });
+    // var showOnlyTTC = false;
+    // const notTTCExamples = document.getElementsByClassName('notTTCExample');
+    // const ttcButton = document.getElementById('buttonTTC');
+    // ttcButton.addEventListener('click', function(){
+    // });
 
-    renderExamples(bizValues, userValues);
+    filterContentCellTuples('highlight');
+    renderExamples();
 };
 
-var renderExamples = function(bizValues, userValues){
-    bizValues.forEach(function(bizValue){
-        userValues.forEach(function(userValue){
-            const id = '#' + strip(bizValue) + '-' + strip(userValue);
-            const cell = d3.select(id);
+var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
+    // Create flattened matrix with index tuples for cells
+    var cellTuples = [];
+    bizValuesWithHeader.forEach(function(bizValue, bizValueIndex){
+        userValuesWithHeader.forEach(function(userValue, userValueIndex){
+            const cellExamples = _.filter(allExamples, function(example){
+                const primaryFitsColumn = example['Primary Business Value'] === bizValue;
+                const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+                const primaryFitsRow = example['Primary User Value'] === userValue;
+                const otherFitsRow = _.contains(example['Other User Values'], userValue);
+                return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
+            })
 
-            cellExamples = _.filter(activeExamples, function(example){
-                switch (displayMode) {
-                    case 'all':
-                        primaryFitsColumn = example['Primary Business Value'] === bizValue;
-                        otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
-                        primaryFitsRow = example['Primary User Value'] === userValue;
-                        otherFitsRow = _.contains(example['Other User Values'], userValue);
-                        return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
-                    case 'primary':
-                        primaryFitsColumn = example['Primary Business Value'] === bizValue;
-                        primaryFitsRow = example['Primary User Value'] === userValue;
-                        return (primaryFitsColumn && primaryFitsRow);
-                    case 'highlight':
-                        highlightFitsColumn = _.contains(example['Value Intersection'], bizValue);
-                        highlightFitsRow = _.contains(example['Value Intersection'], userValue);
-                        return (highlightFitsColumn && highlightFitsRow);
-                    default:
-                        throw new Error('No display mode chosen!');
-                        break;
-                }
-            });
+            // var cellExamples = [];
+            // allExamples.forEach(function(example){    
+                
+            //     const primaryFitsColumn = example['Primary Business Value'] === bizValue;
+            //     const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+            //     const primaryFitsRow = example['Primary User Value'] === userValue;
+            //     const otherFitsRow = _.contains(example['Other User Values'], userValue);
 
-            cellExampleLabels = cell.selectAll('.exampleLabel')
-            //console.log(cellExampleLabels.size());
-            cellExampleLabels
-                .data(cellExamples)
-                .enter()
-                    .append('p')
-                        .attr('class', 'exampleLabel')
-                        .text(function(d){return d['Title of product/project']})
-                    .on("click", function(d, i){ 
-                        showMoreInfo(d); 
-                        selectedExamples = document.getElementsByClassName('selectedExample');
-                        
-                        Array.prototype.forEach.call(selectedExamples, function(selectedExample){
-                            selectedExample.classList.remove('selectedExample');
-                        });
-                        this.classList.add('selectedExample');
-                    });
+            //     if (primaryFitsColumn && primaryFitsRow) {
+            //         example.relevance = 1;
+            //     }
+            //     else if (primaryFitsColumn || primaryFitsRow) {
+            //         example.relevance = .67
+            //     }
+            //     else if (otherFitsColumn || otherFitsRow) {
+            //         example.relevance = .33;
+            //     }
+            //     else {
+            //         example.relevance = 0;
+            //     }
 
-            //console.log(cellExampleLabels.exit().size());
-            //cellExampleLabels.exit().remove();
+            //     if (example.relevance > 0) {
+            //         cellExamples.push(example);
+            //     }
+            // });
+            const column = bizValueIndex + 1;
+            const row = userValueIndex + 1;
+            const cellTuple = {bizValue, column, userValue, row, cellExamples, selectedExamples: cellExamples}
+            cellTuples.push(cellTuple);
         });
+    });
+
+    // Remove header/header tuple, maybe replace with axis labels?
+    cellTuples.shift();
+    return cellTuples;
+}
+
+var filterContentCellTuples = function(filter){
+    contentCellTuples.forEach(function(cellTuple){
+
+        cellTuple.selectedExamples = cellTuple.cellExamples
+
+        cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
+            switch (filter) {
+                case 'all':
+                    return true;
+                case 'primary':
+                    primaryFitsColumn = example['Primary Business Value'] === cellTuple.bizValue;
+                    primaryFitsRow = example['Primary User Value'] === cellTuple.userValue;
+                    return (primaryFitsColumn && primaryFitsRow);
+                case 'highlight':
+                    highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
+                    highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
+                    return (highlightFitsColumn && highlightFitsRow);
+                default:
+                    throw new Error('No filter chosen!');
+                    break;
+            }
+        });
+
+        cellTuple.selectedExamples = _.filter(cellTuple.selectedExamples, function(example){
+            if (filters.length == 0) {
+                return true;
+            }
+            else {
+                return _.contains(filters, example['Context']);
+            }
+        });
+    });
+}
+
+var renderExamples = function() {
+    contentCellTuples.forEach(function(cellTuple){
+        const id = '#' + strip(cellTuple.bizValue) + '-' + strip(cellTuple.userValue);
+        const cell = d3.select(id);
+        var exampleLabels = cell.selectAll('.exampleLabel');
+        
+        var selection = exampleLabels.data(cellTuple.selectedExamples);
+
+        selection
+            .enter()
+                .append('p')
+                    .attr('class', 'exampleLabel')
+                    .style('opacity', function(d){
+                        console.log(d);
+                        return 1;
+                    })
+                    .text(function(d){return d['Title of product/project']})
+                .on("click", function(d, i){ 
+                    showMoreInfo(d); 
+                    selectedExamples = document.getElementsByClassName('selectedExample');
+                    
+                    Array.prototype.forEach.call(selectedExamples, function(selectedExample){
+                        selectedExample.classList.remove('selectedExample');
+                    });
+                    this.classList.add('selectedExample');
+                })
+
+        // buttons = document.getElementsByClassName('showMoreButton');
+        // Array.prototype.forEach.call(buttons, function(button){
+        //     button.remove();
+        // });
+        // if (cellTuple.cellExamples.length > 0) {
+        //     cell.append('button')
+        //         .attr('class', 'showMoreButton')
+        //         .text('show more')
+        // }
+
+        selection.exit().remove();
     });
 };
 
