@@ -5,7 +5,6 @@ var contentCellTuples = [];
 var contextFilters = [];
 var interactionStyleFilters = [];
 var creatorsFilters = [];
-
 // Get data from Airtable
 var fetchData = function(){
 
@@ -203,11 +202,18 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
             allExamples.forEach(function(sourceExample){    
                 
                 var example = _.clone(sourceExample);
-
+                
+                const highlightFitsColumn = _.contains(example['Value Intersection'], bizValue);
                 const primaryFitsColumn = example['Primary Business Value'] === bizValue;
                 const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+                
+                const highlightFitsRow = _.contains(example['Value Intersection'], userValue);
                 const primaryFitsRow = example['Primary User Value'] === userValue;
                 const otherFitsRow = _.contains(example['Other User Values'], userValue);
+                
+                if (highlightFitsColumn && highlightFitsRow) {
+                    example.valueHighlight = 1;
+                }
 
                 if (primaryFitsColumn && primaryFitsRow) {
                     example.relevance = 1;
@@ -228,7 +234,7 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
             });
             const column = bizValueIndex + 1;
             const row = userValueIndex + 1;
-            const cellTuple = {bizValue, column, userValue, row, cellExamples, selectedExamples: cellExamples}
+            const cellTuple = {bizValue, column, userValue, row, cellExamples, selectedExamples: cellExamples, expanded: false}
             cellTuples.push(cellTuple);
         });
     });
@@ -247,11 +253,7 @@ var filterContentCellTuples = function(){
                                     interactionStyleFilters.length +
                                     creatorsFilters.length;
         if (activeFiltersCount == 0) {
-            cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
-                const highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
-                const highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
-                return (highlightFitsColumn && highlightFitsRow);
-            });
+            cellTuple.selectedExamples = cellTuple.cellExamples;
         }
         else {
             cellTuple.selectedExamples = cellTuple.cellExamples;
@@ -283,9 +285,13 @@ var filterContentCellTuples = function(){
                 }
             });
         }
-
+        
         cellTuple.selectedExamples = _.sortBy(cellTuple.selectedExamples, function(example){
-            return 1 - example.relevance;
+            if (example.valueHighlight) {
+                return 0;
+            } else {
+                return 2 - example.relevance;
+            }
         });
     });
 
@@ -296,9 +302,17 @@ var renderExamples = function() {
     contentCellTuples.forEach(function(cellTuple){
         const id = '#' + strip(cellTuple.bizValue) + '-' + strip(cellTuple.userValue);
         const cell = d3.select(id);
-        var exampleLabels = cell.selectAll('.exampleLabel');
         
-        var selection = exampleLabels.data(cellTuple.selectedExamples);
+        var cellData = [];
+
+        if (cellTuple.expanded) {
+            cellData = cellTuple.selectedExamples;
+        } else if (cellTuple.selectedExamples.length > 0) {
+            cellData.push(cellTuple.selectedExamples[0]);
+        }
+        console.log(cellData.length);
+        var exampleLabels = cell.selectAll('.exampleLabel');
+        var selection = exampleLabels.data(cellData);
         
         selection.exit().remove();
         
@@ -320,15 +334,21 @@ var renderExamples = function() {
                     this.classList.add('selectedExample');
                 })
 
-        // buttons = document.getElementsByClassName('showMoreButton');
-        // Array.prototype.forEach.call(buttons, function(button){
-        //     button.remove();
-        // });
-        // if (cellTuple.cellExamples.length > 0) {
-        //     cell.append('button')
-        //         .attr('class', 'showMoreButton')
-        //         .text('show more')
-        // }
+        if (cellTuple.showMoreButton) {
+            cellTuple.showMoreButton.remove();
+        }
+        if (cellTuple.selectedExamples.length > 1) {
+            cell.append('button')
+                .attr('class', 'showMoreButton')
+                .text(function(d){
+                    return cellTuple.expanded ? 'show less' : 'show more';
+                })
+                .on('click', function(d){
+                    cellTuple.expanded ? cellTuple.expanded = false : cellTuple.expanded = true;
+                    renderExamples();
+                });
+            cellTuple.showMoreButton = cell.select('.showMoreButton');
+        }
     });
 };
 
