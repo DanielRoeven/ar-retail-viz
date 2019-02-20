@@ -1,10 +1,12 @@
+@import url("https://use.typekit.net/vhp3qnp.css");
+
 body {
-    font-family: Raleway;
+    font-family: objektiv-mk3;
     padding: 2em;
 }
 
 h1, h3 {
-     font-family: 'Raleway'; 
+     font-family: objektiv-mk1;
      color: #334348;
 }
 
