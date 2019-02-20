@@ -1,15 +1,21 @@
+@import url("https://use.typekit.net/vhp3qnp.css");
+
 body {
     font-family: Raleway;
     padding: 1em;
 }
 
 h1, h3 {
-     font-family: 'Raleway'; 
+     font-family: objektiv-mk1;
      color: #334348;
 }
 
-.contextButton, .interactionStyleButton, #ttcButton {
-    font-size: 12px;
+.dropdown-menu {
+	width: 20rem;
+}
+
+a:focus {
+	outline: none !important;
 }
 
 .grid {

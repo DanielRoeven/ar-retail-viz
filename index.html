@@ -3,25 +3,38 @@
     <head>
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
         <title>Mixed Reality within Retail | Industry & Research Examples</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-        <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-        <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
-        <link rel="stylesheet" href='./style.css'>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+        <!-- JS -->
         
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-
+        <!-- JQuery -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-        <script src="./visualisation.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
-
+        <!-- Popper -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        <!-- Bootstrap Multiselect -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js" integrity="sha256-qoj3D1oB1r2TAdqKTYuWObh01rIVC1Gmw9vWp1+q5xw=" crossorigin="anonymous"></script>
+        <!-- Airtable -->
+        <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
+        <!-- D3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+        <!-- Underscore -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>        
+        <!-- Custom JS -->
+        <script src="./visualisation.js"></script>
 
+        <!-- CSS -->
+        
+        <!-- Bootstrap Multiselect -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" integrity="sha256-7stu7f6AB+1rx5IqD8I+XuIcK4gSnpeGeSjqsODU+Rk=" crossorigin="anonymous" />
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href='./style.css'>
     </head>
     <body>
 
@@ -48,32 +61,23 @@
         <!----------FILTERS-------------->
             <div class="container-fluid">
                 <div class="row" style="padding: 2em 0;">
-                    <div class="col">
-                        <div id="contextButtonsContainer"
-                             class="btn-group btn-group-toggle"
-                             data-toggle="buttons"
-                             role="group"
-                             aria-label="First group" >
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div id="interactionStyleButtonsContainer"
-                             class="btn-group btn-group-toggle"
-                             data-toggle="buttons"
-                             role="group"
-                             aria-label="First group" >
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="btn-group btn-group-toggle"
-                             data-toggle="buttons"
-                             role="group"
-                             aria-label="Second group">
-                            <button id="ttcButton"
-                                    class="btn btn-outline-secondary"
-                                    type="button">
-                                TTC Only
-                            </button>
+                        <select id="contextDropdown" class="filterControl" multiple="multiple">
+                        </select>
+                        <select id="inputDropdown" class="filterControl" multiple="multiple">
+                        </select>
+                        <select id="contentDropdown" class="filterControl" multiple="multiple">
+                        </select>
+                        <select id="typeOfMRDropdown" class="filterControl" multiple="multiple">
+                        </select>
+                        <select id="outputDropdown" class="filterControl" multiple="multiple">
+                        </select>
+                        <select id="interactionStyleDropdown" multiple="multiple">
+                        </select>
+                        <button id="ttcButton"
+                                class="btn btn-outline-secondary filtercontrol"
+                                type="button">
+                            TTC Only
+                        </button>
                         </div>
                     </div>
                 </div>
