@@ -14,8 +14,12 @@ h1, h3 {
 	width: 20rem;
 }
 
-a:focus {
+.multiselect-container>li>a:focus {
 	outline: none !important;
+}
+
+.multiselect-container>li>a>label {
+	padding: .25rem .5rem !important;
 }
 
 .grid {

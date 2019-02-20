@@ -1,6 +1,8 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 var allExamples = [];
+var tagDescriptions = [];
+var valueDescriptions = [];
 var contentCellTuples = [];
 var contextFilters = [];
 var inputFilters = [];
@@ -40,7 +42,67 @@ var fetchData = function(){
             // Nothing went wrong, start plotting our examples
             renderFramework();
         }
-    });   
+    });
+
+    // Get all the records from the Examples table in Airtable
+    base('Tag Descriptions').select({
+        // Selecting the grid view (tabular layout)
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        
+        // Called for each 'page' (~50 records)
+        records.forEach(function(record) {
+            // Add all fields of records (examples) to examples array
+            tagDescriptions.push(record.fields);
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        // There are no more records
+        if (err) {
+            // Something went wrong when or after calling the last page
+            console.error(err);
+            return;
+        }
+        else {
+            // Nothing went wrong, start plotting our examples
+            console.log(tagDescriptions);
+        }
+    });
+
+        // Get all the records from the Examples table in Airtable
+    base('Value Descriptions').select({
+        // Selecting the grid view (tabular layout)
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        
+        // Called for each 'page' (~50 records)
+        records.forEach(function(record) {
+            // Add all fields of records (examples) to examples array
+            valueDescriptions.push(record.fields);
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        // There are no more records
+        if (err) {
+            // Something went wrong when or after calling the last page
+            console.error(err);
+            return;
+        }
+        else {
+            // Nothing went wrong, start plotting our examples
+            console.log(tagDescriptions);
+        }
+    });
 };
 
 // Plot examples we retrieved from Airtable
@@ -87,7 +149,6 @@ var renderFramework = function(){
     inputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['MR Input']))), undefined);
     contents = _.without(_.uniq(_.flatten(allExamples.map(example => example['Content']))), undefined);
     typesOfMR = _.without(_.uniq(_.flatten(allExamples.map(example => example['Type of MR']))), undefined);
-    console.log(typesOfMR)
     outputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['Output']))), undefined);
 
     // Make cell Tuples
@@ -531,7 +592,6 @@ const toggle = function(array, value){
     else {
         return _.union(array, [value]);
     }
-    console.log(array);
 }
 
 $(document).ready(function() {
