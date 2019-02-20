@@ -5,7 +5,7 @@ body {
     padding: 1em;
 }
 
-h1, h3 {
+h1, h2, h3 {
      font-family: objektiv-mk1;
      color: #334348;
 }
@@ -144,10 +144,6 @@ body{
 
 .activefilters{
     height: 50vh;
-}
-
-.matrixbox{
-    
 }
 
 .whitecards{
