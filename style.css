@@ -10,8 +10,12 @@ h1, h3 {
      color: #334348;
 }
 
-.contextButton, .interactionStyleButton, #ttcButton {
-    font-size: 12px;
+.dropdown-menu {
+	width: 20rem;
+}
+
+a:focus {
+	outline: none !important;
 }
 
 .grid {

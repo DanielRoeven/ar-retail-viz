@@ -3,6 +3,10 @@ var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX
 var allExamples = [];
 var contentCellTuples = [];
 var contextFilters = [];
+var inputFilters = [];
+var contentFilters = [];
+var typeOfMRFilters = [];
+var outputFilters = [];
 var interactionStyleFilters = [];
 var creatorsFilters = [];
 // Get data from Airtable
@@ -77,15 +81,14 @@ var renderFramework = function(){
     const userValuesWithHeader = userValues.slice();
     userValuesWithHeader.unshift('Column Header')
     
-    // Make a list of contexts:
-    // Map all examples to array with only the field context
-    // Then make array unique, stripping out duplicate contexts
+    // Make a unique lists of categories
     contexts = _.uniq(allExamples.map(example => example['Context']));
-
-    // Make a list of contexts:
-    // Map all examples to array with only the field context
-    // Then make array unique, stripping out duplicate contexts
     interactionStyles = _.without(_.uniq(allExamples.map(example => example['Interaction Style'])), undefined);
+    inputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['MR Input']))), undefined);
+    contents = _.without(_.uniq(_.flatten(allExamples.map(example => example['Content']))), undefined);
+    typesOfMR = _.without(_.uniq(_.flatten(allExamples.map(example => example['Type of MR']))), undefined);
+    console.log(typesOfMR)
+    outputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['Output']))), undefined);
 
     // Make cell Tuples
     const cellTuples = makeCellTuples(bizValuesWithHeader, userValuesWithHeader);
@@ -141,39 +144,13 @@ var renderFramework = function(){
             .style('grid-column', function(d){return d['column']})
             .style('grid-row', function(d){return d['row']})
 
-    // Create the context buttons
-    // Start by selecting the context buttons
-    const contextButtons = d3.select('#contextButtonsContainer').selectAll('.contextButtons');
-    contextButtons
-        .data(contexts)
-        .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary contextButton')
-            .attr('type', 'button')
-            .text(function(d){
-                return d;
-            })
-            .on('click', function(d){
-                contextFilters = toggle(contextFilters, d);
-                filterContentCellTuples();
-            });
-
-    // Create the context buttons
-    // Start by selecting the context buttons
-    const interactionStyleButtons = d3.select('#interactionStyleButtonsContainer').selectAll('.interactionStyleButton');
-    interactionStyleButtons
-        .data(interactionStyles)
-        .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary interactionStyleButton')
-            .attr('type', 'button')
-            .text(function(d){
-                return d;
-            })
-            .on('click', function(d){
-                interactionStyleFilters = toggle(interactionStyleFilters, d);
-                filterContentCellTuples();
-            });
+    // Make filter dropdowns
+    makeFilterDropdown('#contextDropdown', contexts, 'Context');
+    makeFilterDropdown('#inputDropdown', inputs, 'Input');
+    makeFilterDropdown('#contentDropdown', contents, 'Content');
+    makeFilterDropdown('#typeOfMRDropdown', typesOfMR, 'Type of MR');
+    makeFilterDropdown('#outputDropdown', outputs, 'Output');
+    makeFilterDropdown('#interactionStyleDropdown', interactionStyles, 'Interaction Style');
 
     // Make the TTC filter button
     const ttcButton = d3.select('#ttcButton');
@@ -183,6 +160,27 @@ var renderFramework = function(){
     });
 
     filterContentCellTuples();
+};
+
+var makeFilterDropdown = function(id, options, name){
+    const optionElements = d3.select(id).selectAll('option');
+    optionElements
+        .data(options)
+        .enter()
+        .append('option')
+            .text(function(d){return d})
+            .attr('value', function(d){
+                return d;
+            })
+
+    $(id).multiselect({
+        buttonClass: 'btn btn-outline-secondary ' + id,
+        buttonText: function(){return name},
+        onChange: function(option){
+            toggleFilters(name, $(option).val());
+            filterContentCellTuples();
+        }
+    });
 };
 
 var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
@@ -250,6 +248,10 @@ var filterContentCellTuples = function(){
         cellTuple.selectedExamples = cellTuple.cellExamples;
 
         const activeFiltersCount = contextFilters.length +
+                                    inputFilters.length +
+                                    contentFilters.length +
+                                    typeOfMRFilters.length +
+                                    outputFilters.length +
                                     interactionStyleFilters.length +
                                     creatorsFilters.length;
         if (activeFiltersCount == 0) {
@@ -264,6 +266,42 @@ var filterContentCellTuples = function(){
                     return true;
                 } else {
                     return _.contains(contextFilters, example['Context']);
+                }
+            });
+
+            // Filter on input
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (inputFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(inputFilters, example['MR Input']).length > 0;
+                }
+            });
+
+            // Filter on content
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (contentFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(contentFilters, example['Content']).length > 0;
+                }
+            });
+
+            // Filter on type of MR
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (typeOfMRFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(typeOfMRFilters, example['Type of MR']);
+                }
+            });
+
+            // Filter on output
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (outputFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(outputFilters, example['Output']).length > 0;
                 }
             });
 
@@ -310,7 +348,6 @@ var renderExamples = function() {
         } else if (cellTuple.selectedExamples.length > 0) {
             cellData.push(cellTuple.selectedExamples[0]);
         }
-        console.log(cellData.length);
         var exampleLabels = cell.selectAll('.exampleLabel');
         var selection = exampleLabels.data(cellData);
         
@@ -461,6 +498,32 @@ const strip = function(string){
     return string.replace(/ /g,"-").replace('&','-').replace('(', '').replace(')', '');
 }
 
+const toggleFilters = function(name, value){
+    switch (name) {
+        case 'Context':
+            contextFilters = toggle(contextFilters, value);
+            break;
+        case 'Input':
+            inputFilters = toggle(inputFilters, value);
+            break;
+        case 'Content':
+            contentFilters = toggle(contentFilters, value);
+            break;
+        case 'Type of MR':
+            typeOfMRFilters = toggle(typeOfMRFilters, value);
+            break;
+        case 'Output':
+            outputFilters = toggle(outputFilters, value);
+            break;
+        case 'Interaction Style':
+            interactionStyleFilters = toggle(interactionStyleFilters, value);
+            break;
+        default:
+            throw new Error('Not a valid filter array!');
+            break;
+    }
+}
+
 const toggle = function(array, value){
     if (_.contains(array, value)){
         return _.without(array, value);
@@ -468,6 +531,9 @@ const toggle = function(array, value){
     else {
         return _.union(array, [value]);
     }
+    console.log(array);
 }
 
-fetchData();
+$(document).ready(function() {
+    fetchData();
+});
