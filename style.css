@@ -149,6 +149,8 @@ body{
 
 .activefilters{
     height: calc(50vh - 1.5em);
+    overflow: scroll;
+    padding: 1em 0;
 }
 
 .whitecards{
