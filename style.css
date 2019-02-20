@@ -1,6 +1,6 @@
 body {
     font-family: Raleway;
-    padding: 2em;
+    padding: 1em;
 }
 
 h1, h3 {
@@ -14,7 +14,6 @@ h1, h3 {
 
 .grid {
     width: 100%;
-    height: 75vh;
     min-height: 700px;
     display: grid;
     grid-auto-columns: 1fr;
@@ -119,3 +118,54 @@ h1, h3 {
 #projectVideoLink:hover {
 	text-decoration: underline;
 }
+
+
+body{
+    background: #9ac3de;
+    background: -moz-linear-gradient(45deg, #9ac3de 29%, #9ac3de 29%, #9fd3d2 76%, #9fd3d2 76%);
+    background: -webkit-linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    background: linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9ac3de', endColorstr='#9fd3d2',GradientType=1 );
+}
+
+
+
+
+.titlefilterbox{
+    height: 200px;
+}
+
+
+.activefilters{
+    height: 50vh;
+}
+
+.matrixbox{
+    
+}
+
+.whitecards{
+	margin-bottom: 1em;
+	background: white;
+	border-radius: 5px;
+}
+
+
+/* Create two equal columns that floats next to each other */
+.mycolumn {
+	float: left;
+	width: 50%;
+	padding: 10px;
+  }
+  
+
+  .colleft {
+	width: 65%;
+  }
+  
+  .colright {
+	width: 35%;
+  }
+
+
+  .myrow{display: flex;}
