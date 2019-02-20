@@ -2,19 +2,9 @@ var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 var allExamples = [];
 var contentCellTuples = [];
-var filters = [];
-const colors = [
-    d3.schemePastel1[0],
-    d3.schemePastel1[1],
-    d3.schemePastel1[2],
-    d3.schemePastel1[3],
-    d3.schemePastel1[4],
-    d3.schemePastel1[5],
-    d3.schemePastel1[6],
-    d3.schemePastel1[7],
-    d3.schemePastel1[8],
-    d3.schemePastel2[0],
-];
+var contextFilters = [];
+var interactionStyleFilters = [];
+var creatorsFilters = [];
 
 // Get data from Airtable
 var fetchData = function(){
@@ -53,45 +43,52 @@ var fetchData = function(){
 // Plot examples we retrieved from Airtable
 var renderFramework = function(){
 
+    // Make a list of biz values:
+    // Take predetermined (hardcoded) biz values for standard order
+    // Map all examples to array with only the field primary biz value
+    // Map all examples to array with only the field other biz values and flatten it
+    // Then make join arrays, make unique, and remove undefined
+    const predeterminedBizValues = ['Awareness', 'Engagement', 'Conversion', 'Loyalty'];
+    const primBizValues = allExamples.map(example => example['Primary Business Value']);
+    const otherBizValues = _.flatten(allExamples.map(example => example['Other Business Values']));
+    const bizValues = _.without(_.uniq(_.union(predeterminedBizValues, primBizValues, otherBizValues)), undefined);
+
+    // Create list of biz values with header element at beginning
+    const bizValuesWithHeader = bizValues.slice();
+    bizValuesWithHeader.unshift('Row Header');
+
     // Make a list of user values:
     // Map all examples to array with only the field primary user value
     // Map all examples to array with only the field other user values and flatten it
     // Then make join arrays, make unique, and remove undefined
+    const predeterminedUserValues = ['Appropriateness',
+                                    'Physical Compatibility',
+                                    'Accessibility',
+                                    'Time Management',
+                                    'Fun',
+                                    'Purchase Economy',
+                                    'Avoidance of Sensory Unpleasantness',
+                                    'Impression Management',
+                                    'Group Belongingness'];
     const primUserValues = allExamples.map(example => example['Primary User Value']);
     const otherUserValues = _.flatten(allExamples.map(example => example['Other User Values']));
-    const userValues = _.without(_.uniq(_.union(primUserValues, otherUserValues)), undefined);
+    const userValues = _.without(_.uniq(_.union(predeterminedUserValues, primUserValues, otherUserValues)), undefined);
     
     // Create copy of list of user values with header element at beginning
     const userValuesWithHeader = userValues.slice();
     userValuesWithHeader.unshift('Column Header')
-
-    // Make a list of biz values:
-    // Map all examples to array with only the field primary biz value
-    // Map all examples to array with only the field other biz values and flatten it
-    // Then make join arrays, make unique, and remove undefined
-    const primBizValues = allExamples.map(example => example['Primary Business Value']);
-    const otherBizValues = _.flatten(allExamples.map(example => example['Other Business Values']));
-    const bizValues = _.without(_.uniq(_.union(primBizValues, otherBizValues)), undefined);
-
-    // Create list of biz values with header element at beginning
-    const bizValuesWithHeader = bizValues.slice();
-    bizValuesWithHeader.unshift('Row Header')
     
     // Make a list of contexts:
     // Map all examples to array with only the field context
     // Then make array unique, stripping out duplicate contexts
-    const contexts = _.uniq(allExamples.map(example => example['Context']));
-    // Save list of contexts to show
-    var contextsToShow = [];
+    contexts = _.uniq(allExamples.map(example => example['Context']));
 
-    var contextColors = {};
-    contexts.forEach(function(context, i){
-        contextColors[context] = colors[i];
-    });
+    // Make a list of contexts:
+    // Map all examples to array with only the field context
+    // Then make array unique, stripping out duplicate contexts
+    interactionStyles = _.without(_.uniq(allExamples.map(example => example['Interaction Style'])), undefined);
 
-    // Give the context filter buttons a color
-    colorButtons(contexts, contextColors);    
-
+    // Make cell Tuples
     const cellTuples = makeCellTuples(bizValuesWithHeader, userValuesWithHeader);
     const columnHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['row'] === 1});
     const rowHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] === 1});
@@ -149,41 +146,44 @@ var renderFramework = function(){
     // Start by selecting the context buttons
     const contextButtons = d3.select('#contextButtonsContainer').selectAll('.contextButtons');
     contextButtons
-        .data(contexts)                                                 // Bind data
-        .enter()                                                        // Prepare selection set
-        .append('button')                                               // Create buttons for everything not in selection set (everything)
-            .attr('class', 'btn btn-outline-secondary contextButton')   // Set class (bootstrap + custom)
-            .attr('id', function(d){
-                return d.replace(/ /g,"-").replace('&','-');            // Give it a unique, sanitized id
-            })
+        .data(contexts)
+        .enter()
+        .append('button')
+            .attr('class', 'btn btn-outline-secondary contextButton')
             .attr('type', 'button')
-            .attr('data-toggle', 'collapse')                            // Add collapse toggle for more info
-            .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-").replace('&','-') + '-Description'; // Give it a collapse target for more info
-            })
             .text(function(d){
-                return d;                               // Set button text
+                return d;
             })
             .on('click', function(d){
-                if (_.contains(filters, d)){
-                    filters = _.without(filters, d);
-                }
-                else {
-                    filters.push(d);
-                }
-
-                filterContentCellTuples('all');
-                renderExamples();
+                contextFilters = toggle(contextFilters, d);
+                filterContentCellTuples();
             });
 
-    // var showOnlyTTC = false;
-    // const notTTCExamples = document.getElementsByClassName('notTTCExample');
-    // const ttcButton = document.getElementById('buttonTTC');
-    // ttcButton.addEventListener('click', function(){
-    // });
+    // Create the context buttons
+    // Start by selecting the context buttons
+    const interactionStyleButtons = d3.select('#interactionStyleButtonsContainer').selectAll('.interactionStyleButton');
+    interactionStyleButtons
+        .data(interactionStyles)
+        .enter()
+        .append('button')
+            .attr('class', 'btn btn-outline-secondary interactionStyleButton')
+            .attr('type', 'button')
+            .text(function(d){
+                return d;
+            })
+            .on('click', function(d){
+                interactionStyleFilters = toggle(interactionStyleFilters, d);
+                filterContentCellTuples();
+            });
 
-    filterContentCellTuples('all');
-    renderExamples();
+    // Make the TTC filter button
+    const ttcButton = d3.select('#ttcButton');
+    ttcButton.on('click', function(){
+        creatorsFilters = toggle(creatorsFilters, 'The Techno Creatives')
+        filterContentCellTuples();
+    });
+
+    filterContentCellTuples();
 };
 
 var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
@@ -213,10 +213,10 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
                     example.relevance = 1;
                 }
                 else if ((primaryFitsColumn && otherFitsRow) || (otherFitsColumn && primaryFitsRow)) {
-                    example.relevance = .5;
+                    example.relevance = .31;
                 }
                 else if (otherFitsColumn && otherFitsRow) {
-                    example.relevance = .5;
+                    example.relevance = .3;
                 }
                 else {
                     example.relevance = 0;
@@ -238,38 +238,58 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
     return cellTuples;
 }
 
-var filterContentCellTuples = function(filter){
+var filterContentCellTuples = function(){
     contentCellTuples.forEach(function(cellTuple){
 
-        cellTuple.selectedExamples = cellTuple.cellExamples
+        cellTuple.selectedExamples = cellTuple.cellExamples;
 
-        // cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
-        //     switch (filter) {
-        //         case 'all':
-        //             return true;
-        //         case 'primary':
-        //             primaryFitsColumn = example['Primary Business Value'] === cellTuple.bizValue;
-        //             primaryFitsRow = example['Primary User Value'] === cellTuple.userValue;
-        //             return (primaryFitsColumn && primaryFitsRow);
-        //         case 'highlight':
-        //             highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
-        //             highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
-        //             return (highlightFitsColumn && highlightFitsRow);
-        //         default:
-        //             throw new Error('No filter chosen!');
-        //             break;
-        //     }
-        // });
+        const activeFiltersCount = contextFilters.length +
+                                    interactionStyleFilters.length +
+                                    creatorsFilters.length;
+        if (activeFiltersCount == 0) {
+            cellTuple.selectedExamples = _.filter(cellTuple.cellExamples, function(example){
+                const highlightFitsColumn = _.contains(example['Value Intersection'], cellTuple.bizValue);
+                const highlightFitsRow = _.contains(example['Value Intersection'], cellTuple.userValue);
+                return (highlightFitsColumn && highlightFitsRow);
+            });
+        }
+        else {
+            cellTuple.selectedExamples = cellTuple.cellExamples;
 
-        cellTuple.selectedExamples = _.filter(cellTuple.selectedExamples, function(example){
-            if (filters.length == 0) {
-                return true;
-            }
-            else {
-                return _.contains(filters, example['Context']);
-            }
+            // Filter on context
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (contextFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(contextFilters, example['Context']);
+                }
+            });
+
+            // Filter on interaction style
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (interactionStyleFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(interactionStyleFilters, example['Interaction Style']);
+                }
+            });
+
+            // Filter on creators
+            cellTuple.selectedExamples = _.filter(cellTuple.selectedExamples, function(example){
+                if (creatorsFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(creatorsFilters, example['Creators']);
+                }
+            });
+        }
+
+        cellTuple.selectedExamples = _.sortBy(cellTuple.selectedExamples, function(example){
+            return 1 - example.relevance;
         });
     });
+
+    renderExamples();
 }
 
 var renderExamples = function() {
@@ -279,22 +299,21 @@ var renderExamples = function() {
         var exampleLabels = cell.selectAll('.exampleLabel');
         
         var selection = exampleLabels.data(cellTuple.selectedExamples);
-
-        selection
-            .enter()
-                .append('p')
-                    .attr('class', 'exampleLabel')
-                    .style('opacity', function(d){
-                        // const relevancePercentage = d.relevance * 100;
-                        // const background = 'hsla(0, 0%, 50%, ' + d.relevance + ')';
-                        // console.log(background);
-                        return d.relevance;
-                    })
-                    .text(function(d){return d['Title of product/project']})
+        
+        selection.exit().remove();
+        
+        selection.enter()
+            .append('p')
+            .merge(selection)
+                .attr('class', 'exampleLabel')
+                .style('background-color', function(d){
+                    return 'hsla(0, 0%, 75%, ' + d.relevance + ')';
+                })
+                .text(function(d){return d['Title of product/project']})
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
                     selectedExamples = document.getElementsByClassName('selectedExample');
-                    
+
                     Array.prototype.forEach.call(selectedExamples, function(selectedExample){
                         selectedExample.classList.remove('selectedExample');
                     });
@@ -310,28 +329,7 @@ var renderExamples = function() {
         //         .attr('class', 'showMoreButton')
         //         .text('show more')
         // }
-
-        selection.exit().remove();
     });
-};
-
-var colorButtons = function(contexts, contextColors){
-    contexts.forEach(function(context, contextColors){
-        const contextSanitized = context.replace(/ /g,'-').replace('&','-');
-        const css = generateActiveButtonCSS(contextSanitized, colors[context]);
-
-        const styleEl = document.createElement('style');
-        document.head.appendChild(styleEl);
-        const styleSheet = styleEl.sheet;
-        styleSheet.insertRule(css);
-    });
-};
-
-var generateActiveButtonCSS = function(context, color) {
-    const css = '#' + context + '.active, ' + '#' + context + ':hover {' +
-                    'background-color: ' + color + ' !important;' +
-                '}'
-    return css;
 };
 
 var showMoreInfo = function(d){
@@ -441,6 +439,15 @@ var showMoreInfo = function(d){
 
 const strip = function(string){
     return string.replace(/ /g,"-").replace('&','-').replace('(', '').replace(')', '');
+}
+
+const toggle = function(array, value){
+    if (_.contains(array, value)){
+        return _.without(array, value);
+    }
+    else {
+        return _.union(array, [value]);
+    }
 }
 
 fetchData();
