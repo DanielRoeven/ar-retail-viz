@@ -1,8 +1,8 @@
 @import url("https://use.typekit.net/vhp3qnp.css");
 
 body {
-    font-family: Raleway;
-    padding: 1em;
+    font-family: objektiv-mk3;
+    padding: 1em 1em 0;
 }
 
 h1, h2, h3 {
@@ -24,10 +24,11 @@ h1, h2, h3 {
 
 .grid {
     width: 100%;
-    min-height: 700px;
+    /*min-height: 700px;*/
     display: grid;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
+    height: calc(100vh - 250px - 3em);
 }
 
 .columnHeaderLabel, .rowHeaderLabel {
@@ -147,7 +148,7 @@ body{
 
 
 .activefilters{
-    height: 50vh;
+    height: calc(50vh - 1.5em);
 }
 
 .whitecards{
@@ -156,6 +157,9 @@ body{
 	border-radius: 5px;
 }
 
+.matrixbox {
+	height: calc(100vh - 200px - 3em);
+}
 
 /* Create two equal columns that floats next to each other */
 .mycolumn {
