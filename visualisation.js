@@ -64,7 +64,7 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong, start plotting our examples
+            // // Nothing went wrong, start plotting our examples
             renderFramework();
         }
     });
@@ -94,8 +94,7 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong, start plotting our examples
-            console.log(tagDescriptions);
+            // Nothing went wrong
         }
     });
 
@@ -124,8 +123,7 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong, start plotting our examples
-            console.log(tagDescriptions);
+            // Nothing went wrong
         }
     });
 };
@@ -419,7 +417,84 @@ var filterContentCellTuples = function(){
         });
     });
 
+    renderDescriptions();
     renderExamples();
+}
+
+var renderDescriptions = function(){
+
+    // var activeFilterCategories = [];
+    // if (contextFilters.length > 0) {activeFilterCategories.push('Context')};
+    // if (inputFilters.length > 0) {activeFilterCategories.push('MR Input')};
+    // if (contentFilters.length > 0) {activeFilterCategories.push('Content')};
+    // if (typeOfMRFilters.length > 0) {activeFilterCategories.push('Type of MR')};
+    // if (outputFilters.length > 0) {activeFilterCategories.push('Output')};
+    // if (interactionStyleFilters.length > 0) {activeFilterCategories.push('Interaction Style')};
+
+    // activeFilterCategories = _.uniq(activeFilterCategories);
+
+    // var filterCategoryBoxes = d3.select('#activeFiltersContainer').selectAll('.filterCategoryBox');
+    // var selection = filterCategoryBoxes.data(activeFilterCategories);
+    
+    // selection.exit().remove();
+    // selection
+    //     .enter()
+    //         .append('div')
+    //             .attr('class', 'filterCategoryBox')
+    //             .attr('id', function(d){return strip(d) + '-box'});
+    //         // .append('h4')
+    //         //     .text(function(d){return d})
+
+    // activeFilterCategories.forEach(function(activeFilterCategory){
+    //     console.log(activeFilterCategory);
+    //     const activeFilters = getFiltersForCategory(activeFilterCategory);
+        
+    //     const activeFilterDescriptions = d3.select('#' + strip(activeFilterCategory) + '-box').selectAll('p');
+        
+    //     var selection2 = activeFilterDescriptions.data(activeFilters);
+        
+    //     selection2.exit().remove();
+        
+    //     selection2
+    //         .enter()
+    //             .append('p')
+    //         .merge(selection2)
+    //             .text(function(d){return d})
+    // });
+
+    const activeFilters = _.union(contextFilters,
+                                    inputFilters,
+                                    contentFilters,
+                                    typeOfMRFilters,
+                                    outputFilters,
+                                    interactionStyleFilters)
+    const activeFilterDescriptions = d3.select('.filterCategoryBox').selectAll('.filterText');
+    var selection = activeFilterDescriptions.data(activeFilters);
+    
+    selection.exit().remove();
+    selection
+        .enter()
+            .append('p')
+        .merge(selection)
+            .attr('class', 'filterText')
+            .html(function(d){
+                var string = '<span class="activeFilterTag">';
+                string += d + '</span> ';
+                const tagDescriptionRecord = _.find(tagDescriptions, function(tagDescription){
+                    return tagDescription['Tag'] === d;
+                })
+                if (tagDescriptionRecord) {
+                    string += ' ' + tagDescriptionRecord['Description'];
+                }
+                if (tagDescriptionRecord['Good Example']) {
+                    console.log(tagDescriptionRecord);
+                    string += ' A good example is ';
+                    string += '<span class="goodExampleTag">';
+                    string += tagDescriptionRecord['Good Example'];
+                    string += '</span>';
+                }
+                return string;
+            })
 }
 
 var renderExamples = function() {
@@ -616,6 +691,27 @@ const toggle = function(array, value){
     }
     else {
         return _.union(array, [value]);
+    }
+}
+
+const getFiltersForCategory = function(category) {
+    switch (category) {
+        case 'Context':
+            return contextFilters;
+        case 'Input':
+            return inputFilters;
+            break;
+        case 'Content':
+            return contentFilters;
+        case 'Type of MR':
+            return typeOfMRFilters;
+        case 'Output':
+            return outputFilters;
+        case 'Interaction Style':
+            return interactionStyleFilters;
+        default:
+            throw new Error(category + ' is not a valid filter category!');
+            break;
     }
 }
 

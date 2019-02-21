@@ -84,6 +84,7 @@ p {
 
 .multiselect-container>li>a>label {
 	padding: .25rem .5rem !important;
+	font-size: 1.2rem;
 }
 
 .grid {
@@ -243,7 +244,7 @@ p {
     overflow-y: scroll !important;
 }
 
-#filterCategoryBox {
+.filterCategoryBox {
 	background: var(--mrorange1);
 	margin: 0 -.5rem 1rem;
 	padding: .5rem;
