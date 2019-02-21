@@ -5,6 +5,37 @@ body {
     padding: 1em 1em 0;
 }
 
+
+
+/********* CUSTOM COLORS **********/
+:root {
+	--mrorange1: #000011;
+	--mrorange3: #000012;
+	--mrorange5: #000011;
+	--mrorange7: #000012;
+	--mrorange9: #000011;
+
+	--mrteal1: #000011;
+	--mrteal3: #000012;
+	--mrteal5: #000011;
+	--mrteal7: #000012;
+	--mrteal9: #000011;
+
+	--mrblue1: #000011;
+	--mrblue3: #000012;
+	--mrblue5: #000011;
+	--mrblue7: #000012;
+	--mrblue9: #000011;
+
+	--mrgrey1: #000011;
+	--mrgrey3: #000012;
+	--mrgrey5: #000011;
+	--mrgrey7: #000012;
+	--mrgrey9: #000011;
+}
+
+
+
 h1, h2, h3 {
      font-family: objektiv-mk1;
      color: #334348;

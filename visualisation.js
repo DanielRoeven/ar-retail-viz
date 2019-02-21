@@ -11,6 +11,31 @@ var typeOfMRFilters = [];
 var outputFilters = [];
 var interactionStyleFilters = [];
 var creatorsFilters = [];
+
+// Colors for matrix
+var cardsbackground = [ 'hsla(2, 15, 92, ',     //redish
+                        'hsla(54, 13, 92, ',    //yellowish
+                        'hsla(155, 14, 93, ',   //greenish
+                        'hsla(220, 14, 93, ',   //blueish
+                        'hsla(276, 13, 91, ',   //purpleish
+                        'hsla(26, 14, 93, ',    //orangeish
+                        'hsla(95, 14, 93, ',    //greenish2
+                        'hsla(190, 13, 93, ',   //blueish2
+                        'hsla(251, 14, 93, ',   //purpleish2
+                        'hsla(310, 13, 91, ',   //pinkish
+                    ];
+var cardsdarkercolors = [   'hsla(2, 87, 42, ',     //darkredish
+                            'hsla(55, 78, 35, ',    //darkyellowish
+                            'hsla(154, 85, 32, ',   //darkgreenish
+                            'hsla(220, 89, 35, ',   //darkblueish
+                            'hsla(279, 85, 34, ',   //darkpurpleish
+                            'hsla(26, 72, 36, ',    //darkorangeish
+                            'hsla(94, 71, 23, ',    //darkgreenish2
+                            'hsla(190, 78, 27, ',   //darkblueish2
+                            'hsla(251, 73, 30, ',   //darkpurpleish2
+                            'hsla(310, 80, 27, ',   //darkpinkish
+                        ];
+
 // Get data from Airtable
 var fetchData = function(){
 
