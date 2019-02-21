@@ -146,6 +146,11 @@ p {
 	background-color: #F0F2F6;
 }
 
+
+#projectTitle {
+	font-size: 2rem;
+}
+
 #projectLink {
 	color: #212E48;
 }
@@ -176,6 +181,7 @@ p {
 	border: 1px solid #909090;
 }
 
+
 #projectImg {
 	display: block;
 	width: 100%;
@@ -202,7 +208,8 @@ p {
 #infobox{
     height: calc(60vh - 1.5em);
     overflow: scroll;
-    padding: 1em 0;
+	padding: 1em 0;
+	
 }
 
 .whitecards{
