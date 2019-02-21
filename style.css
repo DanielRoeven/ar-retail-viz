@@ -3,6 +3,11 @@
 body {
     font-family: objektiv-mk3;
     padding: 1em 1em 0;
+    background: #9ac3de;
+    background: -moz-linear-gradient(45deg, #9ac3de 29%, #9ac3de 29%, #9fd3d2 76%, #9fd3d2 76%);
+    background: -webkit-linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    background: linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9ac3de', endColorstr='#9fd3d2',GradientType=1 );
 }
 
 h1, h2, h3 {
@@ -32,7 +37,7 @@ h1, h2, h3 {
 }
 
 .columnHeaderLabel, .rowHeaderLabel {
-	font-size: .7rem;
+	font-size: .8rem;
 }
 
 .cell {
@@ -46,7 +51,7 @@ h1, h2, h3 {
 }
 
 .exampleLabel {
-    font-size: 12px;
+    font-size: .8em;
     border-radius: 8px;
     padding: 2px 4px;
     margin: 4px;
@@ -66,7 +71,6 @@ h1, h2, h3 {
 
 .showMoreButton {
 	background: none;
-	/*border: 1px solid #8995AE;*/
 	border: none;
 	border-radius: 16px;
 	color: #8995AE;
@@ -130,25 +134,12 @@ h1, h2, h3 {
 	text-decoration: underline;
 }
 
-
-body{
-    background: #9ac3de;
-    background: -moz-linear-gradient(45deg, #9ac3de 29%, #9ac3de 29%, #9fd3d2 76%, #9fd3d2 76%);
-    background: -webkit-linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
-    background: linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9ac3de', endColorstr='#9fd3d2',GradientType=1 );
-}
-
-
-
-
 .titlefilterbox{
     height: 200px;
 }
 
-
-.activefilters{
-    height: calc(50vh - 1.5em);
+#infobox{
+    height: calc(63vh - 1.5em);
     overflow: scroll;
     padding: 1em 0;
 }
@@ -168,16 +159,66 @@ body{
 	float: left;
 	width: 50%;
 	padding: 10px;
-  }
-  
+}
 
-  .colleft {
+
+.colleft {
 	width: 65%;
-  }
-  
-  .colright {
+}
+
+.colright {
 	width: 35%;
-  }
+}
+
+.myrow{display: flex;}
+
+/* Active Filter Box */
+
+#activefilters{
+    height: calc(37vh - 1.5em);
+    overflow: scroll;
+    padding: 1em 0;
+    font-size: 0.8rem;
+    font-weight: 900;
+    overflow: visible !important;
+}
+
+#filterCategoryBox {
+	background: green;
+	margin: 0 -.5rem;
+	padding: .5rem;
+	border-radius: 5px;
+}
+
+h4 {
+	font-size: 0.8rem;
+	font-weight: bold;
+}
+
+.activeFilterTag, .goodExampleTag {
+	background: hotpink;
+	padding: 0 .5rem;
+	border-radius: 100px;
+}
+
+.activeFilterTag > i {
+	padding: 0 .25rem 0 0;
+}
 
 
-  .myrow{display: flex;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
