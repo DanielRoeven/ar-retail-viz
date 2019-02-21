@@ -73,6 +73,9 @@ p {
 
 .dropdown-toggle, #ttcButton {
 	font-size: 1.6rem;
+	background-color: var(--mrorange1);
+	border: 1px solid var(--mrorange7);
+	color: var(--mrorange5);
 }
 
 .multiselect-container>li>a:focus {
@@ -89,7 +92,7 @@ p {
     display: grid;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
-    height: calc(100vh - 250px - 3em);
+    height: calc(100vh - 22rem - 3rem);
 }
 
 .columnHeaderLabel, .rowHeaderLabel {
@@ -105,7 +108,7 @@ p {
 }
 
 .cell.odd, .rowHeaderLabel.odd, .columnHeaderLabel.odd {
-	background-color: #F0F2F6;
+	background-color: var(--mrblue1);
 }
 
 .exampleLabel {
@@ -193,7 +196,7 @@ p {
 }
 
 .titlefilterbox{
-    height: 200px;
+    height: 17rem;
 }
 
 #infobox{
@@ -203,32 +206,31 @@ p {
 }
 
 .whitecards{
-	margin-bottom: 1em;
+	margin-bottom: 1rem;
 	background: white;
 	border-radius: 5px;
 }
 
 .matrixbox {
-	height: calc(100vh - 200px - 3em);
+	height: calc(100vh - 17rem - 3rem);
+    padding: 1em 0;
 }
 
 /* Create two equal columns that floats next to each other */
-.mycolumn {
-	float: left;
-	width: 50%;
-	padding: 10px;
+.myrow{
+	display: flex;
+	height: 10rem;
 }
 
-
 .colleft {
+	padding: 1rem 0;
 	width: 65%;
 }
 
 .colright {
+	padding: 1rem 0;
 	width: 35%;
 }
-
-.myrow{display: flex;}
 
 /* Active Filter Box */
 
