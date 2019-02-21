@@ -604,7 +604,7 @@ var showMoreInfo = function(d){
         const contextAndIndustry = document.getElementById('projectContextIndustry');
         contextAndIndustry.textContent = contextIndustryString;
 
-        // Purposes
+        /* // Purposes
         const primaryPurposeTag = document.createElement('span');
         primaryPurposeTag.classList.add('purposeTag');
         primaryPurposeTag.classList.add('primPurposeTag');
@@ -621,18 +621,39 @@ var showMoreInfo = function(d){
                 purposeTag.textContent = purpose;
                 purposes.appendChild(purposeTag);
             });                        
-        }
+        } */
 
         // Technologies
         const technologies = document.getElementById('projectTech');
         technologies.textContent = 'Technologies:';
-
-        d['Technologies Used'].forEach(function(tech){
+        
+        d['MR Input'].forEach(function(tech){
             const techTag = document.createElement('span');
             techTag.classList.add('techTag');
             techTag.textContent = tech;
             technologies.appendChild(techTag);
         });
+
+        d['Content'].forEach(function(tech){
+            const techTag = document.createElement('span');
+            techTag.classList.add('techTag');
+            techTag.textContent = tech;
+            technologies.appendChild(techTag);
+        });
+
+        d['Output'].forEach(function(tech){
+            const techTag = document.createElement('span');
+            techTag.classList.add('techTag');
+            techTag.textContent = tech;
+            technologies.appendChild(techTag);
+        });
+
+       
+        const techTag = document.createElement('span');
+        techTag.classList.add('techTag');
+        techTag.textContent = d['Type of MR'];
+        technologies.appendChild(techTag);
+      
 
         // Pictures
         const image = document.getElementById('projectImg');
