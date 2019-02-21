@@ -1,5 +1,37 @@
 @import url("https://use.typekit.net/vhp3qnp.css");
 
+/********* CUSTOM COLORS **********/
+:root {
+	--mrorange1: #FFF9F5;
+	--mrorange2: #FFEBDF;
+	--mrorange3: #FDC09A;
+	--mrorange5: #F8853E;
+	--mrorange7: #DD671E;
+	--mrorange9: #924211;
+
+	--mrteal1: #F6FCFC;
+	--mrteal3: #C2E5E5;
+	--mrteal5: #82C4C3;
+	--mrteal7: #408685;
+	--mrteal9: #1B4D4C;
+
+	--mrblue1: #F5FBFF;
+	--mrblue3: #B2D6EE;
+	--mrblue5: #85AFCA;
+	--mrblue7: #45718E;
+	--mrblue9: #0B3856;
+
+	--mrgrey1: #FAFAFA;
+	--mrgrey3: #D5D5D5;
+	--mrgrey5: #A0A0A0;
+	--mrgrey7: #6B6B6B;
+	--mrgrey9: #353535;
+}
+
+html {
+	font-size: 10px !important;
+}
+
 body {
     font-family: objektiv-mk3;
     padding: 1em 1em 0;
@@ -10,44 +42,37 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9ac3de', endColorstr='#9fd3d2',GradientType=1 );
 }
 
-
-
-/********* CUSTOM COLORS **********/
-:root {
-	--mrorange1: #000011;
-	--mrorange3: #000012;
-	--mrorange5: #000011;
-	--mrorange7: #000012;
-	--mrorange9: #000011;
-
-	--mrteal1: #000011;
-	--mrteal3: #000012;
-	--mrteal5: #000011;
-	--mrteal7: #000012;
-	--mrteal9: #000011;
-
-	--mrblue1: #000011;
-	--mrblue3: #000012;
-	--mrblue5: #000011;
-	--mrblue7: #000012;
-	--mrblue9: #000011;
-
-	--mrgrey1: #000011;
-	--mrgrey3: #000012;
-	--mrgrey5: #000011;
-	--mrgrey7: #000012;
-	--mrgrey9: #000011;
-}
-
-
-
-h1, h2, h3 {
+h1, h2 {
      font-family: objektiv-mk1;
-     color: #334348;
+     font-size: 4rem;
+     color: var(--mrblue9);
 }
+
+h3 {
+     font-family: objektiv-mk1;
+	font-size: 1.6rem;
+	font-weight: 100;
+	font-style: italic;
+	color: var(--mrblue5);
+}
+
+h4 {
+	font-size: 1.6rem;
+	font-weight: bold;
+	color: var(--mrblue7);
+}
+
+p {
+	font-size: 1.6rem;
+}
+
 
 .dropdown-menu {
 	width: 20rem;
+}
+
+.dropdown-toggle, #ttcButton {
+	font-size: 1.6rem;
 }
 
 .multiselect-container>li>a:focus {
@@ -68,7 +93,9 @@ h1, h2, h3 {
 }
 
 .columnHeaderLabel, .rowHeaderLabel {
-	font-size: .8rem;
+	font-size: 1.6rem;
+	font-weight: bold;
+	color: var(--mrblue7);
 }
 
 .cell {
@@ -82,7 +109,7 @@ h1, h2, h3 {
 }
 
 .exampleLabel {
-    font-size: .8em;
+    font-size: 1.2rem;
     border-radius: 8px;
     padding: 2px 4px;
     margin: 4px;
@@ -108,7 +135,7 @@ h1, h2, h3 {
 	padding: 3px 6px 2px;
 	text-align: center;
 	text-decoration: underline;
-	font-size: 12px;
+	font-size: 1.2rem;
 	opacity: .66;
 }
 
@@ -170,7 +197,7 @@ h1, h2, h3 {
 }
 
 #infobox{
-    height: calc(63vh - 1.5em);
+    height: calc(60vh - 1.5em);
     overflow: scroll;
     padding: 1em 0;
 }
@@ -206,36 +233,41 @@ h1, h2, h3 {
 /* Active Filter Box */
 
 #activefilters{
-    height: calc(37vh - 1.5em);
+    height: calc(40vh - 1.5em);
     overflow: scroll;
     padding: 1em 0;
-    font-size: 0.8rem;
-    font-weight: 900;
+    font-weight: 100;
     overflow: visible !important;
+    overflow-y: scroll !important;
 }
 
 #filterCategoryBox {
-	background: green;
-	margin: 0 -.5rem;
+	background: var(--mrorange1);
+	margin: 0 -.5rem 1rem;
 	padding: .5rem;
 	border-radius: 5px;
 }
 
-h4 {
-	font-size: 0.8rem;
-	font-weight: bold;
-}
-
 .activeFilterTag, .goodExampleTag {
-	background: hotpink;
+	background: var(--mrteal3);
 	padding: 0 .5rem;
 	border-radius: 100px;
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
+
+.activeFilterTag {
+	font-weight: bold;
 }
 
 .activeFilterTag > i {
 	padding: 0 .25rem 0 0;
 }
 
+.filterText {
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
 
 
 
