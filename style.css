@@ -1,40 +1,119 @@
+@import url("https://use.typekit.net/vhp3qnp.css");
+
+/********* CUSTOM COLORS **********/
+:root {
+	--mrorange1: #FFF9F5;
+	--mrorange2: #FFEBDF;
+	--mrorange3: #FDC09A;
+	--mrorange5: #F8853E;
+	--mrorange7: #DD671E;
+	--mrorange9: #924211;
+
+	--mrteal1: #F6FCFC;
+	--mrteal3: #C2E5E5;
+	--mrteal5: #82C4C3;
+	--mrteal7: #408685;
+	--mrteal9: #1B4D4C;
+
+	--mrblue1: #F5FBFF;
+	--mrblue3: #B2D6EE;
+	--mrblue5: #85AFCA;
+	--mrblue7: #45718E;
+	--mrblue9: #0B3856;
+
+	--mrgrey1: #FAFAFA;
+	--mrgrey3: #D5D5D5;
+	--mrgrey5: #A0A0A0;
+	--mrgrey7: #6B6B6B;
+	--mrgrey9: #353535;
+}
+
+html {
+	font-size: 10px !important;
+}
+
 body {
-    font-family: Raleway;
-    padding: 2em;
+    font-family: objektiv-mk3;
+    padding: 1em 1em 0;
+    background: #9ac3de;
+    background: -moz-linear-gradient(45deg, #9ac3de 29%, #9ac3de 29%, #9fd3d2 76%, #9fd3d2 76%);
+    background: -webkit-linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    background: linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9ac3de', endColorstr='#9fd3d2',GradientType=1 );
 }
 
-h1, h3 {
-     font-family: 'Raleway'; 
-     color: #334348;
+h1, h2 {
+     font-family: objektiv-mk1;
+     font-size: 4rem;
+     color: var(--mrblue9);
 }
 
-.buttonthemes, #buttonTTC {
-    font-size: 12px;
+h3 {
+     font-family: objektiv-mk1;
+	font-size: 1.6rem;
+	font-weight: 100;
+	font-style: italic;
+	color: var(--mrblue5);
+}
+
+h4 {
+	font-size: 1.6rem;
+	font-weight: bold;
+	color: var(--mrblue7);
+}
+
+p {
+	font-size: 1.6rem;
+}
+
+
+.dropdown-menu {
+	width: 20rem;
+}
+
+.dropdown-toggle, #ttcButton {
+	font-size: 1.6rem;
+	background-color: var(--mrorange1);
+	border: 1px solid var(--mrorange7);
+	color: var(--mrorange5);
+}
+
+.multiselect-container>li>a:focus {
+	outline: none !important;
+}
+
+.multiselect-container>li>a>label {
+	padding: .25rem .5rem !important;
+	font-size: 1.2rem;
 }
 
 .grid {
     width: 100%;
-    height: 75vh;
-    min-height: 700px;
+    /*min-height: 700px;*/
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 40px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    height: calc(100vh - 22rem - 3rem);
+}
+
+.columnHeaderLabel, .rowHeaderLabel {
+	font-size: 1.6rem;
+	font-weight: bold;
+	color: var(--mrblue7);
 }
 
 .cell {
     overflow: scroll;
     display: block;
+    text-align: center;
 }
 
-.cell.odd, .primaryPurposeLabel.odd {
-	background-color: #F0F2F6;
-}
-
-.cell.even, .primaryPurposeLabel.even {
+.cell.odd, .rowHeaderLabel.odd, .columnHeaderLabel.odd {
+	background-color: var(--mrblue1);
 }
 
 .exampleLabel {
-    font-size: 12px;
+    font-size: 1.2rem;
     border-radius: 8px;
     padding: 2px 4px;
     margin: 4px;
@@ -47,25 +126,30 @@ h1, h3 {
     cursor: pointer;
 }
 
-.exampleLabel.hidden {
-	display: none !important;
-}
-
 .exampleLabel.selectedExample {
     background: rgb(241, 172, 93)!important;
     cursor: pointer;
 }
 
-.hideNotTTC {
-	display: none;
-}
-
-.buttonthemes.active, .buttonthemes:hover {
-	color: #2F2F2F !important;
+.showMoreButton {
+	background: none;
+	border: none;
+	border-radius: 16px;
+	color: #8995AE;
+	padding: 3px 6px 2px;
+	text-align: center;
+	text-decoration: underline;
+	font-size: 1.2rem;
+	opacity: .66;
 }
 
 .infobox {
 	background-color: #F0F2F6;
+}
+
+
+#projectTitle {
+	font-size: 2rem;
 }
 
 #projectLink {
@@ -98,6 +182,7 @@ h1, h3 {
 	border: 1px solid #909090;
 }
 
+
 #projectImg {
 	display: block;
 	width: 100%;
@@ -116,3 +201,97 @@ h1, h3 {
 #projectVideoLink:hover {
 	text-decoration: underline;
 }
+
+.titlefilterbox{
+    height: 17rem;
+}
+
+#infobox{
+    height: calc(60vh - 1.5em);
+    overflow: scroll;
+	padding: 1em 0;
+	
+}
+
+.whitecards{
+	margin-bottom: 1rem;
+	background: white;
+	border-radius: 5px;
+}
+
+.matrixbox {
+	height: calc(100vh - 17rem - 3rem);
+    padding: 1em 0;
+}
+
+/* Create two equal columns that floats next to each other */
+.myrow{
+	display: flex;
+	height: 10rem;
+}
+
+.colleft {
+	padding: 1rem 0;
+	width: 65%;
+}
+
+.colright {
+	padding: 1rem 0;
+	width: 35%;
+}
+
+/* Active Filter Box */
+
+#activefilters{
+    height: calc(40vh - 1.5em);
+    overflow: scroll;
+    padding: 1em 0;
+    font-weight: 100;
+    overflow: visible !important;
+    overflow-y: scroll !important;
+}
+
+.filterCategoryBox {
+	background: var(--mrorange1);
+	margin: 0 -.5rem 1rem;
+	padding: .5rem;
+	border-radius: 5px;
+}
+
+.activeFilterTag, .goodExampleTag {
+	background: var(--mrteal3);
+	padding: 0 .5rem;
+	border-radius: 100px;
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
+
+.activeFilterTag {
+	font-weight: bold;
+}
+
+.activeFilterTag > i {
+	padding: 0 .25rem 0 0;
+}
+
+.filterText {
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

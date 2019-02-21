@@ -3,133 +3,131 @@
     <head>
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
         <title>Mixed Reality within Retail | Industry & Research Examples</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-        <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-        <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
-        <link rel="stylesheet" href='./style.css'>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+        <!-- JS -->
         
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-
+        <!-- JQuery -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
-        <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-        <script src="./visualisation.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
-
+        <!-- Popper -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+        <!-- Bootstrap Multiselect -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js" integrity="sha256-qoj3D1oB1r2TAdqKTYuWObh01rIVC1Gmw9vWp1+q5xw=" crossorigin="anonymous"></script>
+        <!-- Airtable -->
+        <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
+        <!-- D3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+        <!-- Underscore -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>        
+        <!-- Custom JS -->
+        <script src="./visualisation.js"></script>
+
+        <!-- CSS -->
+        
+        <!-- Bootstrap Multiselect -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" integrity="sha256-7stu7f6AB+1rx5IqD8I+XuIcK4gSnpeGeSjqsODU+Rk=" crossorigin="anonymous" />
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href='./style.css'>
     </head>
     <body>
-            <div class="container">
-                <div class="row">
-                    <div class="col-6">
-                        <h1>Mixed Reality within Retail</h1>
-                        <h3><i class="fas fa-vr-cardboard"></i> Industry and Academia Examples</h3>
-                    </div>
-                    <div class="col-6 pull-right" style="text-align: right;">
-                        <p>&copy; 2019 | <a href="http://www.ajlacano.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i> </a>Ajla Cano
-                            & <a href="http://www.danielroeven.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i></a> Daniel Roeven  for</p>
-                        <img src="thetechnocreatives.png" width="30%"/>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="container-fluid">
-                <div class="row" style="padding: 2em 0;">
-                    <div class="col">
-                        <div id="themeButtonsContainer"
-                             class="btn-group btn-group-toggle"
-                             data-toggle="buttons"
-                             role="group"
-                             aria-label="First group" >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9">                        
+                    <div class="row">
+                        <div class="col-lg-12 whitecards">
+                            <div class="well well-sm titlefilterbox"> 
+                                <!-----------TITLE--------------->
+                                <div class="myrow">
+                                    <div class="mycolumn colleft">
+                                        <h2><img src="MRretail.png" style="height: 3.5rem; vertical-align: baseline;"> Mixed Reality within Retail </h2>
+                                    </div>
+                                    <div class="mycolumn colright text-right" >
+                                        <p>&copy; 2019 | <a href="http://www.ajlacano.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i> </a>Ajla Cano
+                                        & <a href="http://www.danielroeven.com" target="_blank" title="Website name"><i class="fas fa-globe" style="font-size: 12px; color: grey;"></i></a> Daniel Roeven  for : <img src="thetechnocreatives.png" width="25%"/>
+                                        </p>
+                                    </div>  
+                                </div>
+                                <!------------FILTERS------------->
+                                <div class="container-fluid">
+                                    <div class="row btn-group" role="group" style="padding: 2em 0;">
+                                        <select id="contextDropdown" class="filterControl" multiple="multiple">
+                                        </select>
+                                        <select id="inputDropdown" class="filterControl" multiple="multiple">
+                                        </select>
+                                        <select id="contentDropdown" class="filterControl" multiple="multiple">
+                                        </select>
+                                        <select id="typeOfMRDropdown" class="filterControl" multiple="multiple">
+                                        </select>
+                                        <select id="outputDropdown" class="filterControl" multiple="multiple">
+                                        </select>
+                                        <select id="interactionStyleDropdown" multiple="multiple">
+                                        </select>
+                                        <button id="ttcButton"
+                                                class="btn btn-outline-secondary filtercontrol"
+                                                type="button">
+                                            TTC Only
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="btn-group btn-group-toggle"
-                             data-toggle="buttons"
-                             role="group"
-                             aria-label="Second group">
-                            <button id="buttonTTC"
-                                    class="btn btn-outline-secondary"
-                                    type="button">
-                                TTC Only
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-lg-8" >        
-                        <h3 style="font-size: 1.5em;">Division by Context and Purpose</h3>
-                        <div class='grid'>
-                        </div>
-                    </div>
-                    
-                    <div class="col-6 col-lg-4 infobox">
-                        <h3 style="font-size: 1.5em;">More Info</h3>
-                        <div id="themesinfo">  
-                            <div id="AR-Presentation-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>AR Presentation</b> - showcasing concepts through different AR technologies such as screens, pepper's ghost, hololens, projection mapping.
+                    <!-------------------MATRIX------------------->
+                        <div class="col-lg-12 whitecards">
+                            <div class="well  matrixbox">      
+                                <h3>Division by Business and User Value</h3>
+                                <div class='grid'>
+                                </div>
                             </div>
-                            
-                            <div id="AR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>AR Catalog</b> - preview what the item from the store's catalog would look like in your own environment.
-                            </div>
-
-                            <div id="AR-Try-on-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>AR Try-on</b> - preview items on your own body.
-                            </div>
-
-                            <div id="Digital-Fit-Determination-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>Digital Fit Determination</b> - solutions to determine fit without trying on the item.
-                            </div>
-
-                            <div id="VR-Catalog-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>VR Catalog</b> - preview what the item from the store's catalog would look like in a VR environment.
-                            </div>
-
-                            <div id="Appealing-to-the-Senses-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>Appealing to the Senses</b> - creating the experience by addressing many different senses, this helps engagement, emerson, imagination and therefore purchasing confidence.
-                            </div>
-
-                            <div id="Virtual-Preview-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>Virtual Preview</b> - preview interactive 3D rendered models.
-                            </div>
-
-                            <div id="AR-More-Info-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>AR More Info</b> - explanatory information overlaid on the real world using.
-                            </div>
-
-                            <div id="Attract-Through-AR-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>Attract through AR</b> - get people into your store with an AR experience.
-                            </div>
-
-                            <div id="Grab-Attention-Description" class="collapse" style="padding-top: 0.5em;"> 
-                                <b>Grab Attention</b> - raise people's interest in the brand through engaging interactive AR installations and apps.
-                            </div>
-                            <hr>
-                        </div> 
-
-                        <div id="projectsinfo">
-                            <a href="#" id="projectLink">
-                                <h2 style="font-size: 1.5em;" id="projectTitle"></h2>
-                            </a>
-                            <p id="projectByline"></p>
-                            <p id="projectDescription"></p>
-                            <p id="projectContextIndustry"></p>
-                            <p id="projectVideo" class="hidden">
-                                <i class="fab fa-youtube"></i>
-                                <a href=# target="_blank" id="projectVideoLink"></a>
-                            </p>
-                            <p id="projectPurposes"></p>
-                            <p id="projectTech"></p>
-                            <img id="projectImg"/>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="col-lg-3">            
+                    <div class="row" style="margin-left: 0;">
+                         <!-------------------FILTER INFO-------------->
+                        <div class="col-lg-12 whitecards">
+                            <div class="well" id="activefilters">
+                                <h3>Active filters</h3>
+                                <div id="activeFiltersContainer">
+                                    <div class="filterCategoryBox">
+                                    <!--     <h4>Interaction Style</h4>
+                                        <p class="filterText">
+                                            <span class="activeFilterTag"><i class="fas fa-times"></i>Embodied / Tangible Interaction</span> These related interaction styles give the users the possibility to give input to the system through real world objects and draws upon user's preexisting knowledge of interaction with the physical world. A good example is: <span class="goodExampleTag">Coty Magic Mirror for Makeup</span>.
+                                        </p> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <!-------------------PROJECT INFO-------------->
+                        <div class="col-lg-12 whitecards infobox">
+                            <div class="well" id="infobox">
+                                <h3>More info</h3>
+                                <div id="projectsinfo">
+                                    <a href="#" id="projectLink">
+                                        <h2 id="projectTitle"></h2>
+                                    </a>
+                                    <p id="projectByline"></p>
+                                    <p id="projectDescription"></p>
+                                    <p id="projectContextIndustry"></p>
+                                    <p id="projectVideo" class="hidden">
+                                        <i class="fab fa-youtube"></i>
+                                        <a href=# target="_blank" id="projectVideoLink"></a>
+                                    </p>
+                                    <!-- <p id="projectPurposes"></p> -->
+                                    <p id="projectTech"></p>
+                                    <img id="projectImg"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--main row-->
+        </div> <!--container-fluid-->
     </body>
 </html>

@@ -1,13 +1,46 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
+var allExamples = [];
+var tagDescriptions = [];
+var valueDescriptions = [];
+var contentCellTuples = [];
+var contextFilters = [];
+var inputFilters = [];
+var contentFilters = [];
+var typeOfMRFilters = [];
+var outputFilters = [];
+var interactionStyleFilters = [];
+var creatorsFilters = [];
+
+// Colors for matrix
+var cardsbackground = [ 'hsla(2, 15, 92, ',     //redish
+                        'hsla(54, 13, 92, ',    //yellowish
+                        'hsla(155, 14, 93, ',   //greenish
+                        'hsla(220, 14, 93, ',   //blueish
+                        'hsla(276, 13, 91, ',   //purpleish
+                        'hsla(26, 14, 93, ',    //orangeish
+                        'hsla(95, 14, 93, ',    //greenish2
+                        'hsla(190, 13, 93, ',   //blueish2
+                        'hsla(251, 14, 93, ',   //purpleish2
+                        'hsla(310, 13, 91, ',   //pinkish
+                    ];
+var cardsdarkercolors = [   'hsla(2, 87, 42, ',     //darkredish
+                            'hsla(55, 78, 35, ',    //darkyellowish
+                            'hsla(154, 85, 32, ',   //darkgreenish
+                            'hsla(220, 89, 35, ',   //darkblueish
+                            'hsla(279, 85, 34, ',   //darkpurpleish
+                            'hsla(26, 72, 36, ',    //darkorangeish
+                            'hsla(94, 71, 23, ',    //darkgreenish2
+                            'hsla(190, 78, 27, ',   //darkblueish2
+                            'hsla(251, 73, 30, ',   //darkpurpleish2
+                            'hsla(310, 80, 27, ',   //darkpinkish
+                        ];
 
 // Get data from Airtable
 var fetchData = function(){
-    // Create array to load in examples
-    var examples = [];
 
     // Get all the records from the Examples table in Airtable
-    base('Examples').select({
+    base('Examples by Value').select({
         // Selecting the grid view (tabular layout)
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
@@ -15,7 +48,7 @@ var fetchData = function(){
         // Called for each 'page' (~50 records)
         records.forEach(function(record) {
             // Add all fields of records (examples) to examples array
-            examples.push(record.fields);
+            allExamples.push(record.fields);
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -31,292 +64,490 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong, start plotting our examples
-            plotData(examples)
+            // // Nothing went wrong, start plotting our examples
+            renderFramework();
         }
-    });   
+    });
+
+    // Get all the records from the Examples table in Airtable
+    base('Tag Descriptions').select({
+        // Selecting the grid view (tabular layout)
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        
+        // Called for each 'page' (~50 records)
+        records.forEach(function(record) {
+            // Add all fields of records (examples) to examples array
+            tagDescriptions.push(record.fields);
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        // There are no more records
+        if (err) {
+            // Something went wrong when or after calling the last page
+            console.error(err);
+            return;
+        }
+        else {
+            // Nothing went wrong
+        }
+    });
+
+        // Get all the records from the Examples table in Airtable
+    base('Value Descriptions').select({
+        // Selecting the grid view (tabular layout)
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        
+        // Called for each 'page' (~50 records)
+        records.forEach(function(record) {
+            // Add all fields of records (examples) to examples array
+            valueDescriptions.push(record.fields);
+        });
+
+        // To fetch the next page of records, call `fetchNextPage`.
+        // If there are more records, `page` will get called again.
+        // If there are no more records, `done` will get called.
+        fetchNextPage();
+
+    }, function done(err) {
+        // There are no more records
+        if (err) {
+            // Something went wrong when or after calling the last page
+            console.error(err);
+            return;
+        }
+        else {
+            // Nothing went wrong
+        }
+    });
 };
 
 // Plot examples we retrieved from Airtable
-var plotData = function(examples){
+var renderFramework = function(){
 
-    // Make a list of primary purposes:
-    // Map all examples to array with only the field primary purpose
-    // Then make array unique, stripping out duplicate primary purposes
-    const primaryPurposes = _.uniq(examples.map(example => example['Primary Purpose']));
+    // Make a list of biz values:
+    // Take predetermined (hardcoded) biz values for standard order
+    // Map all examples to array with only the field primary biz value
+    // Map all examples to array with only the field other biz values and flatten it
+    // Then make join arrays, make unique, and remove undefined
+    const predeterminedBizValues = ['Awareness', 'Engagement', 'Conversion', 'Loyalty'];
+    const primBizValues = allExamples.map(example => example['Primary Business Value']);
+    const otherBizValues = _.flatten(allExamples.map(example => example['Other Business Values']));
+    const bizValues = _.without(_.uniq(_.union(predeterminedBizValues, primBizValues, otherBizValues)), undefined);
+
+    // Create list of biz values with header element at beginning
+    const bizValuesWithHeader = bizValues.slice();
+    bizValuesWithHeader.unshift('Row Header');
+
+    // Make a list of user values:
+    // Map all examples to array with only the field primary user value
+    // Map all examples to array with only the field other user values and flatten it
+    // Then make join arrays, make unique, and remove undefined
+    const predeterminedUserValues = ['Appropriateness',
+                                    'Physical Compatibility',
+                                    'Accessibility',
+                                    'Time Management',
+                                    'Fun',
+                                    'Purchase Economy',
+                                    'Avoidance of Sensory Unpleasantness',
+                                    'Impression Management',
+                                    'Group Belongingness'];
+    const primUserValues = allExamples.map(example => example['Primary User Value']);
+    const otherUserValues = _.flatten(allExamples.map(example => example['Other User Values']));
+    const userValues = _.without(_.uniq(_.union(predeterminedUserValues, primUserValues, otherUserValues)), undefined);
     
-
+    // Create copy of list of user values with header element at beginning
+    const userValuesWithHeader = userValues.slice();
+    userValuesWithHeader.unshift('Column Header')
     
-      // Make a list of contexts:
-    // Map all examples to array with only the field context
-    // Then make array unique, stripping out duplicate contexts
-    const contexts = _.uniq(examples.map(example => example['Context']));
+    // Make a unique lists of categories
+    contexts = _.uniq(allExamples.map(example => example['Context']));
+    interactionStyles = _.without(_.uniq(allExamples.map(example => example['Interaction Style'])), undefined);
+    inputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['MR Input']))), undefined);
+    contents = _.without(_.uniq(_.flatten(allExamples.map(example => example['Content']))), undefined);
+    typesOfMR = _.without(_.uniq(_.flatten(allExamples.map(example => example['Type of MR']))), undefined);
+    outputs = _.without(_.uniq(_.flatten(allExamples.map(example => example['Output']))), undefined);
 
-    // Make a list of themes:
-    // Map all examples to array with only the field theme
-    // Then make array unique, stripping out duplicate contexts
-    const themes = _.uniq(examples.map(example => example['Theme']));
-    // Save list of themes to show
-    var themesToShow = [];
-
-    const colors = [
-        d3.schemePastel1[0],
-        d3.schemePastel1[1],
-        d3.schemePastel1[2],
-        d3.schemePastel1[3],
-        d3.schemePastel1[4],
-        d3.schemePastel1[5],
-        d3.schemePastel1[6],
-        d3.schemePastel1[7],
-        d3.schemePastel1[8],
-        d3.schemePastel2[0],
-    ];
-
-    var themeColors = {};
-    themes.forEach(function(theme, i){
-        themeColors[theme] = colors[i];
+    // Make cell Tuples
+    const cellTuples = makeCellTuples(bizValuesWithHeader, userValuesWithHeader);
+    const columnHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['row'] === 1});
+    const rowHeaderTuples = _.filter(cellTuples, function(cellTuple){return cellTuple['column'] === 1});
+    contentCellTuples = _.filter(cellTuples, function(cellTuple){
+        return cellTuple['column'] !== 1 && cellTuple['row'] !== 1
     });
-
-    // Give the theme filter buttons a color
-    colorButtons(themes, themeColors);
-
-    // Make d3 look at the div with a css grid
+    
+    // Save the d3 grid selection
     const grid = d3.select('.grid');
 
-    const primaryPurposeDescriptions = {
-        'General Marketing': "Using MR to raise awareness of a brand or product.",
-        'B&M Store Traffic': "Using MR to increase traffic to a physical store.",
-        'Purchasing Confidence': "Using MR to increase customer's confidence in buying a particular item.",
-        'Launch': "Using MR to support product or store launches.",
-        'Convenience': "Using MR to try on items on own body without physically having to change.",
-        'Personalisation': "Customize items through MR according to own preferences.",
-        'Demo Features / Explain Concept': "Using MR to spread more information about a product or concept.",
-        'Stand Out': "Using MR to create a unique or engaging experience to differentiate yourself from competitors.",
-    }
-
-    // Create the primary purpose labels
-    // Start by selecting all the existing primary purpose labels (none) so selection set is empty
-    const primaryPurposeLabels = grid.selectAll('.primaryPurposeLabel');
-    primaryPurposeLabels
-        .data(primaryPurposes)                          // Bind the data
-        .enter()                                        // Prepare selection set
-        .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', function(d, i){              // Set classes to primaryPurposeLabel and odd/even for zebra stripes
-                if (i % 2 == 0) {
-                    return 'primaryPurposeLabel odd';
-                } else {
-                    return 'primaryPurposeLabel even';
-                }
-            })
-            .style('grid-column', 1)                    // Labels are all in the first column
-            .style('grid-row', function(d, i){          // Rows start at 2 (+1 because index starts at 0 but css grid at 1, +1 because top row is other labels)
-                return i+2;
-            })
-                .append('p')                            // Create paragraph inside div
-                    .text(function(d){                  // Set text to data (primary purpose name)
-                        return d + ' ';
-                    })
-                .append('i')
-                 .attr('class', 'fas fa-info-circle')
-                 .attr('title', function(d){
-                     return primaryPurposeDescriptions[d];
-                 })
-                 .attr('data-toggle', 'tooltip')
-                 .attr('data-trigger', 'hover');
-
-                $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
-                  });
-
-    // Create the context labels
-    // Start by selecting all the context labels (none) so the selection set is empty
-    const contextLabels = grid.selectAll('.contextLabel');
-    contextLabels
-        .data(contexts)                                 // Bind the data
-        .enter()                                        // Prepare selection set
-        .append('div')                                  // Create a div for everything not in selection set (everything)
-            .attr('class', 'contextLabel')              // Set class to context label
-            .style('grid-column', function(d, i){       // Columns start at 2 (+1 because index start at 0 but css grid at 1, +1 because first column is other labels)
-                return i+2;
-            })
-            .style('grid-row', 1)                       // Labels are all in first column
-            .append('p')                                // Create paragraph inside div
-                .text(function(d){                      // Set text to data (context name)
-                    return d;
-                });
-
-    const themeButtonsContainer = d3.select('#themeButtonsContainer');
-    const themeButtons = themeButtonsContainer.selectAll('.buttonthemes');
-    themeButtons
-        .data(themes)
+    // Create the column header labels
+    const columnHeaderLabels = grid.selectAll('.columnHeaderLabel');
+    columnHeaderLabels
+        .data(columnHeaderTuples)
         .enter()
-        .append('button')
-            .attr('class', 'btn btn-outline-secondary buttonthemes')
+        .append('div')
+            .attr('class', 'columnHeaderLabel')
+            .style('grid-column', function(d){return d['column']})
+            .style('grid-row', 1)
+            .append('p')
+                .text(function(d){return d['bizValue']});
+
+    // Create the row header labels
+    const rowHeaderLabels = grid.selectAll('.rowHeaderLabel');
+    rowHeaderLabels
+        .data(rowHeaderTuples)
+        .enter()
+        .append('div')
+            .attr('class', function(d){
+                    const parity = (d['row'] % 2 ? 'even' : 'odd');
+                    return 'rowHeaderLabel' + ' ' + parity;
+                })
+            .style('grid-column', 1)
+            .style('grid-row', function(d){return d['row']})
+            .append('p')
+                .text(function(d){return d['userValue']});
+
+    // Create the cell divs containing the labels
+    const cells = grid.selectAll('.cell');
+    cells
+        .data(contentCellTuples)
+        .enter()
+        .append('div')
+            .attr('class', function(d){
+                const parity = (d['row'] % 2 ? 'even' : 'odd');
+                return 'cell' + ' ' + parity;
+            })
             .attr('id', function(d){
-                return d.replace(/ /g,"-");
+                return strip(d['bizValue']) + '-' + strip(d['userValue']);
             })
-            .attr('type', 'button')
-            .attr('data-toggle', 'collapse')
-            .attr('data-target', function(d){
-                return '#' + d.replace(/ /g,"-") + '-Description';
-            })
-            .text(function(d){
-                return d;
-            })
-            .on('click', function(d){
+            .style('grid-column', function(d){return d['column']})
+            .style('grid-row', function(d){return d['row']})
 
-                if (_.contains(themesToShow, d)) {
-                    // If theme is in list of themes to show, remove it
-                    themesToShow = _.without(themesToShow, d)
-                } else {
-                    // If theme is not in list of themes to show, add it
-                    themesToShow.push(d);
-                }
+    // Make filter dropdowns
+    makeFilterDropdown('#contextDropdown', contexts, 'Context');
+    makeFilterDropdown('#inputDropdown', inputs, 'Input');
+    makeFilterDropdown('#contentDropdown', contents, 'Content');
+    makeFilterDropdown('#typeOfMRDropdown', typesOfMR, 'Type of MR');
+    makeFilterDropdown('#outputDropdown', outputs, 'Output');
+    makeFilterDropdown('#interactionStyleDropdown', interactionStyles, 'Interaction Style');
 
-                if (themesToShow.length > 0) {
-                    // If there are themes to show, hide the examples to hide and show the examples to show
-
-                    // Create an array of the themes to be hidden
-                    const themesToHide = _.difference(themes, themesToShow);
-                    // Hide all lables belonging to themes to hide
-                    themesToHide.forEach(function(themeToHide){
-
-                        // Create class name for theme to hide (without spaces, with -Example)
-                        const themeToHideClassName = themeToHide.replace(/ /g,"-") + '-Example';
-                        // Get all the labels belonging to theme to hide
-                        const themeToHideLabels = document.getElementsByClassName(themeToHideClassName);
-                        // Hide each label belonging to theme to hide
-                        Array.prototype.forEach.call(themeToHideLabels, function(exampleToHide){
-                            // Only add the hidden class if it isn't already there
-                            if (!exampleToHide.classList.contains('hidden')) {
-                                exampleToHide.classList.add('hidden');
-                            }
-                        });
-                    });
-
-                    // Show all labels belonging to themes to show
-                    themesToShow.forEach(function(themeToShow){
-
-                        // Create class name for theme to show (without spaces, with -Example)
-                        const themeToShowClassName = themeToShow.replace(/ /g,"-") + '-Example';
-                        // Get all the labels belonging to theme to show
-                        const themeToShowLabels = document.getElementsByClassName(themeToShowClassName);
-                        // Show each label belonging to a theme to show
-                        Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
-                            // Remove the hiddden class
-                            exampleToShow.classList.remove('hidden');
-                        });
-                    })
-                } else {
-                    // If there are no themes to show, show all themes
-
-                    // Get all the example labels
-                    const themeToShowLabels = document.getElementsByClassName('exampleLabel');
-                    // Show each label
-                    Array.prototype.forEach.call(themeToShowLabels, function(exampleToShow){
-                        // Remove the hidden class
-                        exampleToShow.classList.remove('hidden');
-                    });
-                }
-            })
-
-    var showOnlyTTC = false;
-    const notTTCExamples = document.getElementsByClassName('notTTCExample');
-    const ttcButton = document.getElementById('buttonTTC');
-    ttcButton.addEventListener('click', function(){
-        if (showOnlyTTC) {
-            // Show other examples
-            showOnlyTTC = false;
-
-            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
-                notTTCExample.classList.remove('hideNotTTC');
-            });
-        } else {
-            // Show only TTC examples
-            showOnlyTTC = true;
-
-            Array.prototype.forEach.call(notTTCExamples, function(notTTCExample){
-                notTTCExample.classList.add('hideNotTTC');
-            });
-        }
+    // Make the TTC filter button
+    const ttcButton = d3.select('#ttcButton');
+    ttcButton.on('click', function(){
+        creatorsFilters = toggle(creatorsFilters, 'The Techno Creatives')
+        filterContentCellTuples();
     });
 
-    fillGrid(contexts, primaryPurposes, examples, themeColors);
+    filterContentCellTuples();
 };
 
-var fillGrid = function(contexts, primaryPurposes, examples, themeColors){
+var makeFilterDropdown = function(id, options, name){
+    const optionElements = d3.select(id).selectAll('option');
+    optionElements
+        .data(options)
+        .enter()
+        .append('option')
+            .text(function(d){return d})
+            .attr('value', function(d){
+                return d;
+            })
 
-    contexts.forEach(function(context, ic){
-        const contextExamples = _.filter(examples, function(contextExample){
-            return contextExample.Context === context;
+    $(id).multiselect({
+        buttonClass: 'btn btn-outline-secondary ' + id,
+        buttonText: function(){return name},
+        onChange: function(option){
+            toggleFilters(name, $(option).val());
+            filterContentCellTuples();
+        }
+    });
+};
+
+var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
+    // Create flattened matrix with index tuples for cells
+    var cellTuples = [];
+    bizValuesWithHeader.forEach(function(bizValue, bizValueIndex){
+        userValuesWithHeader.forEach(function(userValue, userValueIndex){
+            // const cellExamples = _.filter(allExamples, function(example){
+            //     const primaryFitsColumn = example['Primary Business Value'] === bizValue;
+            //     const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+            //     const primaryFitsRow = example['Primary User Value'] === userValue;
+            //     const otherFitsRow = _.contains(example['Other User Values'], userValue);
+            //     return ((primaryFitsColumn || otherFitsColumn) && (primaryFitsRow || otherFitsRow));
+            // })
+
+            var cellExamples = [];
+            allExamples.forEach(function(sourceExample){    
+                
+                var example = _.clone(sourceExample);
+                
+                const highlightFitsColumn = _.contains(example['Value Intersection'], bizValue);
+                const primaryFitsColumn = example['Primary Business Value'] === bizValue;
+                const otherFitsColumn = _.contains(example['Other Business Values'], bizValue);
+                
+                const highlightFitsRow = _.contains(example['Value Intersection'], userValue);
+                const primaryFitsRow = example['Primary User Value'] === userValue;
+                const otherFitsRow = _.contains(example['Other User Values'], userValue);
+                
+                if (highlightFitsColumn && highlightFitsRow) {
+                    example.valueHighlight = 1;
+                }
+
+                if (primaryFitsColumn && primaryFitsRow) {
+                    example.relevance = 1;
+                }
+                else if ((primaryFitsColumn && otherFitsRow) || (otherFitsColumn && primaryFitsRow)) {
+                    example.relevance = .31;
+                }
+                else if (otherFitsColumn && otherFitsRow) {
+                    example.relevance = .3;
+                }
+                else {
+                    example.relevance = 0;
+                }
+
+                if (example.relevance > 0) {
+                    cellExamples.push(example);
+                }
+            });
+            const column = bizValueIndex + 1;
+            const row = userValueIndex + 1;
+            const cellTuple = {bizValue, column, userValue, row, cellExamples, selectedExamples: cellExamples, expanded: false}
+            cellTuples.push(cellTuple);
         });
+    });
 
-        primaryPurposes.forEach(function(primaryPurpose, ip){
-            const contextAndPrimaryPurposeExamples = _.filter(contextExamples, function(contextAndPrimaryPurposeExample){
-              return contextAndPrimaryPurposeExample['Primary Purpose'] === primaryPurpose;
+    // Remove header/header tuple, maybe replace with axis labels?
+    cellTuples.shift();
+    return cellTuples;
+}
+
+var filterContentCellTuples = function(){
+    contentCellTuples.forEach(function(cellTuple){
+
+        cellTuple.selectedExamples = cellTuple.cellExamples;
+
+        const activeFiltersCount = contextFilters.length +
+                                    inputFilters.length +
+                                    contentFilters.length +
+                                    typeOfMRFilters.length +
+                                    outputFilters.length +
+                                    interactionStyleFilters.length +
+                                    creatorsFilters.length;
+        if (activeFiltersCount == 0) {
+            cellTuple.selectedExamples = cellTuple.cellExamples;
+        }
+        else {
+            cellTuple.selectedExamples = cellTuple.cellExamples;
+
+            // Filter on context
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (contextFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(contextFilters, example['Context']);
+                }
             });
 
-            var cell = document.createElement('div')
-            cell.style['grid-column'] = (ic + 2);
-            cell.style['grid-row'] = (ip + 2);
-            cell.classList.add('cell');
-            if (ip % 2 == 0) {
-                cell.classList.add('odd')
+            // Filter on input
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (inputFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(inputFilters, example['MR Input']).length > 0;
+                }
+            });
+
+            // Filter on content
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (contentFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(contentFilters, example['Content']).length > 0;
+                }
+            });
+
+            // Filter on type of MR
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (typeOfMRFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(typeOfMRFilters, example['Type of MR']);
+                }
+            });
+
+            // Filter on output
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (outputFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.intersection(outputFilters, example['Output']).length > 0;
+                }
+            });
+
+            // Filter on interaction style
+            cellTuple.selectedExamples =  _.filter(cellTuple.selectedExamples, function(example){
+                if (interactionStyleFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(interactionStyleFilters, example['Interaction Style']);
+                }
+            });
+
+            // Filter on creators
+            cellTuple.selectedExamples = _.filter(cellTuple.selectedExamples, function(example){
+                if (creatorsFilters.length == 0) {
+                    return true;
+                } else {
+                    return _.contains(creatorsFilters, example['Creators']);
+                }
+            });
+        }
+        
+        cellTuple.selectedExamples = _.sortBy(cellTuple.selectedExamples, function(example){
+            if (example.valueHighlight) {
+                return 0;
             } else {
-                cell.classList.add('even')
+                return 2 - example.relevance;
             }
+        });
+    });
 
-            document.getElementsByClassName('grid')[0].appendChild(cell);
+    renderDescriptions();
+    renderExamples();
+}
 
-            selection = d3.select(cell).selectAll('.exampleLabel').data(contextAndPrimaryPurposeExamples);
-            selection.enter()
-                .append('p')
-                    .attr('class', function(d){
-                        var classString = 'exampleLabel';
-                        const themeNoSpaces = d['Theme'].replace(/ /g,"-");
-                        classString += ' ' + themeNoSpaces + '-Example';
-                        if (d['Creators'] !== 'The Techno Creatives') {
-                            classString += ' notTTCExample'
-                        }
-                        return classString;
-                    })
-                    .text(function(d){return d['Title of product/project']})
-                    // .style('border-width', '2px')
-                    // .style('border-style', 'solid')
-                    .style('background-color', function(d){
-                        return themeColors[d['Theme']];
-                    })
+var renderDescriptions = function(){
+
+    // var activeFilterCategories = [];
+    // if (contextFilters.length > 0) {activeFilterCategories.push('Context')};
+    // if (inputFilters.length > 0) {activeFilterCategories.push('MR Input')};
+    // if (contentFilters.length > 0) {activeFilterCategories.push('Content')};
+    // if (typeOfMRFilters.length > 0) {activeFilterCategories.push('Type of MR')};
+    // if (outputFilters.length > 0) {activeFilterCategories.push('Output')};
+    // if (interactionStyleFilters.length > 0) {activeFilterCategories.push('Interaction Style')};
+
+    // activeFilterCategories = _.uniq(activeFilterCategories);
+
+    // var filterCategoryBoxes = d3.select('#activeFiltersContainer').selectAll('.filterCategoryBox');
+    // var selection = filterCategoryBoxes.data(activeFilterCategories);
+    
+    // selection.exit().remove();
+    // selection
+    //     .enter()
+    //         .append('div')
+    //             .attr('class', 'filterCategoryBox')
+    //             .attr('id', function(d){return strip(d) + '-box'});
+    //         // .append('h4')
+    //         //     .text(function(d){return d})
+
+    // activeFilterCategories.forEach(function(activeFilterCategory){
+    //     console.log(activeFilterCategory);
+    //     const activeFilters = getFiltersForCategory(activeFilterCategory);
+        
+    //     const activeFilterDescriptions = d3.select('#' + strip(activeFilterCategory) + '-box').selectAll('p');
+        
+    //     var selection2 = activeFilterDescriptions.data(activeFilters);
+        
+    //     selection2.exit().remove();
+        
+    //     selection2
+    //         .enter()
+    //             .append('p')
+    //         .merge(selection2)
+    //             .text(function(d){return d})
+    // });
+
+    const activeFilters = _.union(contextFilters,
+                                    inputFilters,
+                                    contentFilters,
+                                    typeOfMRFilters,
+                                    outputFilters,
+                                    interactionStyleFilters)
+    const activeFilterDescriptions = d3.select('.filterCategoryBox').selectAll('.filterText');
+    var selection = activeFilterDescriptions.data(activeFilters);
+    
+    selection.exit().remove();
+    selection
+        .enter()
+            .append('p')
+        .merge(selection)
+            .attr('class', 'filterText')
+            .html(function(d){
+                var string = '<span class="activeFilterTag">';
+                string += d + '</span> ';
+                const tagDescriptionRecord = _.find(tagDescriptions, function(tagDescription){
+                    return tagDescription['Tag'] === d;
+                })
+                if (tagDescriptionRecord) {
+                    string += ' ' + tagDescriptionRecord['Description'];
+                }
+                if (tagDescriptionRecord['Good Example']) {
+                    console.log(tagDescriptionRecord);
+                    string += ' A good example is ';
+                    string += '<span class="goodExampleTag">';
+                    string += tagDescriptionRecord['Good Example'];
+                    string += '</span>';
+                }
+                return string;
+            })
+}
+
+var renderExamples = function() {
+    contentCellTuples.forEach(function(cellTuple){
+        const id = '#' + strip(cellTuple.bizValue) + '-' + strip(cellTuple.userValue);
+        const cell = d3.select(id);
+        
+        var cellData = [];
+
+        if (cellTuple.expanded) {
+            cellData = cellTuple.selectedExamples;
+        } else if (cellTuple.selectedExamples.length > 0) {
+            cellData.push(cellTuple.selectedExamples[0]);
+        }
+        var exampleLabels = cell.selectAll('.exampleLabel');
+        var selection = exampleLabels.data(cellData);
+        
+        selection.exit().remove();
+        
+        selection.enter()
+            .append('p')
+            .merge(selection)
+                .attr('class', 'exampleLabel')
+                .style('background-color', function(d){
+                    return 'hsla(0, 0%, 75%, ' + d.relevance + ')';
+                })
+                .text(function(d){return d['Title of product/project']})
                 .on("click", function(d, i){ 
                     showMoreInfo(d); 
                     selectedExamples = document.getElementsByClassName('selectedExample');
-                    
+
                     Array.prototype.forEach.call(selectedExamples, function(selectedExample){
                         selectedExample.classList.remove('selectedExample');
                     });
-
-                    d3.select(this).classed('selectedExample', d3.select(this).classed('selectedExample') ? false : true);
+                    this.classList.add('selectedExample');
                 })
-        });
+
+        if (cellTuple.showMoreButton) {
+            cellTuple.showMoreButton.remove();
+        }
+        if (cellTuple.selectedExamples.length > 1) {
+            cell.append('button')
+                .attr('class', 'showMoreButton')
+                .text(function(d){
+                    return cellTuple.expanded ? 'show less' : 'show more';
+                })
+                .on('click', function(d){
+                    cellTuple.expanded ? cellTuple.expanded = false : cellTuple.expanded = true;
+                    renderExamples();
+                });
+            cellTuple.showMoreButton = cell.select('.showMoreButton');
+        }
     });
-};
-
-var colorButtons = function(themes, colors){
-    themes.forEach(function(theme){
-        const themeNoSpaces = theme.replace(/ /g,"-");
-        const css = generateActiveButtonCSS(themeNoSpaces, colors[theme]);
-
-        const styleEl = document.createElement('style');
-        document.head.appendChild(styleEl);
-        const styleSheet = styleEl.sheet;
-        styleSheet.insertRule(css);
-    });
-};
-
-var generateActiveButtonCSS = function(theme, color) {
-    const css = '#' + theme + '.active, ' + '#' + theme + ':hover {' +
-                    'background-color: ' + color + ' !important;' +
-                '}'
-    return css;
 };
 
 var showMoreInfo = function(d){
@@ -373,7 +604,7 @@ var showMoreInfo = function(d){
         const contextAndIndustry = document.getElementById('projectContextIndustry');
         contextAndIndustry.textContent = contextIndustryString;
 
-        // Purposes
+        /* // Purposes
         const primaryPurposeTag = document.createElement('span');
         primaryPurposeTag.classList.add('purposeTag');
         primaryPurposeTag.classList.add('primPurposeTag');
@@ -390,18 +621,39 @@ var showMoreInfo = function(d){
                 purposeTag.textContent = purpose;
                 purposes.appendChild(purposeTag);
             });                        
-        }
+        } */
 
         // Technologies
         const technologies = document.getElementById('projectTech');
         technologies.textContent = 'Technologies:';
-
-        d['Technologies Used'].forEach(function(tech){
+        
+        d['MR Input'].forEach(function(tech){
             const techTag = document.createElement('span');
             techTag.classList.add('techTag');
             techTag.textContent = tech;
             technologies.appendChild(techTag);
         });
+
+        d['Content'].forEach(function(tech){
+            const techTag = document.createElement('span');
+            techTag.classList.add('techTag');
+            techTag.textContent = tech;
+            technologies.appendChild(techTag);
+        });
+
+        d['Output'].forEach(function(tech){
+            const techTag = document.createElement('span');
+            techTag.classList.add('techTag');
+            techTag.textContent = tech;
+            technologies.appendChild(techTag);
+        });
+
+       
+        const techTag = document.createElement('span');
+        techTag.classList.add('techTag');
+        techTag.textContent = d['Type of MR'];
+        technologies.appendChild(techTag);
+      
 
         // Pictures
         const image = document.getElementById('projectImg');
@@ -424,5 +676,66 @@ var showMoreInfo = function(d){
         }
 };
 
+const strip = function(string){
+    return string.replace(/ /g,"-").replace('&','-').replace('(', '').replace(')', '');
+}
 
-fetchData();
+const toggleFilters = function(name, value){
+    switch (name) {
+        case 'Context':
+            contextFilters = toggle(contextFilters, value);
+            break;
+        case 'Input':
+            inputFilters = toggle(inputFilters, value);
+            break;
+        case 'Content':
+            contentFilters = toggle(contentFilters, value);
+            break;
+        case 'Type of MR':
+            typeOfMRFilters = toggle(typeOfMRFilters, value);
+            break;
+        case 'Output':
+            outputFilters = toggle(outputFilters, value);
+            break;
+        case 'Interaction Style':
+            interactionStyleFilters = toggle(interactionStyleFilters, value);
+            break;
+        default:
+            throw new Error('Not a valid filter array!');
+            break;
+    }
+}
+
+const toggle = function(array, value){
+    if (_.contains(array, value)){
+        return _.without(array, value);
+    }
+    else {
+        return _.union(array, [value]);
+    }
+}
+
+const getFiltersForCategory = function(category) {
+    switch (category) {
+        case 'Context':
+            return contextFilters;
+        case 'Input':
+            return inputFilters;
+            break;
+        case 'Content':
+            return contentFilters;
+        case 'Type of MR':
+            return typeOfMRFilters;
+        case 'Output':
+            return outputFilters;
+        case 'Interaction Style':
+            return interactionStyleFilters;
+        default:
+            throw new Error(category + ' is not a valid filter category!');
+            break;
+    }
+}
+
+$(document).ready(function() {
+    fetchData();
+});
