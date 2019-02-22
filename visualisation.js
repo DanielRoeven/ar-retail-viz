@@ -258,7 +258,7 @@ var makeFilterDropdown = function(id, options, name){
             })
 
     $(id).multiselect({
-        buttonClass: 'btn btn-outline-secondary ' + id,
+        buttonClass: 'btn btn-outline-secondary filterButton ' + id,
         buttonText: function(){return name},
         onChange: function(option){
             toggleFilters(name, $(option).val());
@@ -301,10 +301,10 @@ var makeCellTuples = function(bizValuesWithHeader, userValuesWithHeader){
                     example.relevance = 1;
                 }
                 else if ((primaryFitsColumn && otherFitsRow) || (otherFitsColumn && primaryFitsRow)) {
-                    example.relevance = .31;
+                    example.relevance = .26;
                 }
                 else if (otherFitsColumn && otherFitsRow) {
-                    example.relevance = .3;
+                    example.relevance = .25;
                 }
                 else {
                     example.relevance = 0;
@@ -519,7 +519,7 @@ var renderExamples = function() {
             .merge(selection)
                 .attr('class', 'exampleLabel')
                 .style('background-color', function(d){
-                    return 'hsla(0, 0%, 75%, ' + d.relevance + ')';
+                    return 'hsla(0, 0%, 84%, ' + d.relevance + ')';
                 })
                 .text(function(d){return d['Title of product/project']})
                 .on("click", function(d, i){ 

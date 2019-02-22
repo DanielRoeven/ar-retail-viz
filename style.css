@@ -5,6 +5,7 @@
 	--mrorange1: #FFF9F5;
 	--mrorange2: #FFEBDF;
 	--mrorange3: #FDC09A;
+	--mrorange4: #FAA26B;
 	--mrorange5: #F8853E;
 	--mrorange7: #DD671E;
 	--mrorange9: #924211;
@@ -78,6 +79,12 @@ p {
 	color: var(--mrorange5);
 }
 
+
+.multiselect-container{
+	background-color: var(--mrorange1);
+}
+
+
 .multiselect-container>li>a:focus {
 	outline: none !important;
 }
@@ -85,6 +92,84 @@ p {
 .multiselect-container>li>a>label {
 	padding: .25rem .5rem !important;
 	font-size: 1.2rem;
+	color: var(--mrorange5);
+
+}
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+	margin-left: 1rem;
+	vertical-align: middle;
+  }
+  
+  .switch input { 
+	opacity: 0;
+	width: 0;
+	height: 0;
+  }
+  
+  .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  .slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  input:checked + .slider {
+	background-color: var(--mrorange5);
+  }
+  
+  input:focus + .slider {
+	box-shadow: 0 0 1px var(--mrorange5);
+  }
+  
+  input:checked + .slider:before {
+	-webkit-transform: translateX(26px);
+	-ms-transform: translateX(26px);
+	transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+	border-radius: 34px;
+  }
+  
+  .slider.round:before {
+	border-radius: 50%;
+  }
+
+
+#ttconly{
+	font-size: 1.6rem;
+	color: var(--mrorange5);
+}
+
+.filterButton {
+	border-radius: 0 !important;
+	border-right: none;
+}
+
+.multiselect-native-select:first-child > div > button {
+	border-radius: .25rem 0 0 .25rem !important;
 }
 
 .grid {
@@ -92,6 +177,7 @@ p {
     /*min-height: 700px;*/
     display: grid;
     grid-auto-columns: 1fr;
+    grid-template-rows: 4rem;
     grid-auto-rows: 1fr;
     height: calc(100vh - 22rem - 3rem);
 }
@@ -112,22 +198,28 @@ p {
 	background-color: var(--mrblue1);
 }
 
+.columnHeaderLabel p {
+	width: 100%;
+	text-align: center;
+}
+
 .exampleLabel {
     font-size: 1.2rem;
     border-radius: 8px;
     padding: 2px 4px;
     margin: 4px;
     overflow: hidden;
+    color: var(--mrblue9);
 }
 
 .exampleLabel:hover {
-    background: rgba(253, 200, 140, 0.747)!important;
+    background: var(--mrorange3) !important;
     z-index: 9999;
     cursor: pointer;
 }
 
 .exampleLabel.selectedExample {
-    background: rgb(241, 172, 93)!important;
+    background: var(--mrorange4) !important;
     cursor: pointer;
 }
 
@@ -135,7 +227,7 @@ p {
 	background: none;
 	border: none;
 	border-radius: 16px;
-	color: #8995AE;
+	color: var(--mrblue5);
 	padding: 3px 6px 2px;
 	text-align: center;
 	text-decoration: underline;
@@ -278,7 +370,6 @@ p {
 	font-size: 1.2rem;
 	color: var(--mrblue9);
 }
-
 
 
 
