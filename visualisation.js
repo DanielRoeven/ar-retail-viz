@@ -197,7 +197,16 @@ var renderFramework = function(){
             .style('grid-column', function(d){return d['column']})
             .style('grid-row', 1)
             .append('p')
-                .text(function(d){return d['bizValue']});
+                .html(function(d){
+                    var string = '<i class="fas fa-info-circle" data-toggle="tooltip" data-trigger="hover" style="color: var(--mrorange3)" ';
+                    string += ' title="' + valueDescriptions[d['bizValue']] + '"> ' + '</i> ';
+
+                    string += '<span>';
+                    string += d['bizValue'];
+                    string += '</span>';
+                    return string;
+                    
+                });
 
     // Create the row header labels
     const rowHeaderLabels = grid.selectAll('.rowHeaderLabel');
