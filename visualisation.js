@@ -2,7 +2,7 @@ var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 var allExamples = [];
 var tagDescriptions = [];
-var valueDescriptions = [];
+var valueDescriptions = {};
 var contentCellTuples = [];
 var contextFilters = [];
 var inputFilters = [];
@@ -107,7 +107,9 @@ var fetchData = function(){
         // Called for each 'page' (~50 records)
         records.forEach(function(record) {
             // Add all fields of records (examples) to examples array
-            valueDescriptions.push(record.fields);
+            //valueDescriptions.push(record.fields);
+            valueDescriptions[record.fields.Name] = record.fields['Description notes'];
+            
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -210,7 +212,21 @@ var renderFramework = function(){
             .style('grid-column', 1)
             .style('grid-row', function(d){return d['row']})
             .append('p')
-                .text(function(d){return d['userValue']});
+                .html(function(d){
+                    var string = '<i class="fas fa-info-circle" data-toggle="tooltip" data-trigger="hover" style="color: var(--mrorange3)" ';
+                    string += ' title="' + valueDescriptions[d['userValue']] + '"> ' + '</i> ';
+
+                    string += '<span>';
+                    string += d['userValue'];
+                    string += '</span>';
+                    return string;
+                    
+                });
+            
+
+            $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                  });
 
     // Create the cell divs containing the labels
     const cells = grid.selectAll('.cell');
