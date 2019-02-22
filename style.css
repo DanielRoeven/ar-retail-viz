@@ -1,6 +1,11 @@
+/***************************************************/
+/********************* FONTS ***********************/
+/***************************************************/
 @import url("https://use.typekit.net/vhp3qnp.css");
 
-/********* Custom Colors **********/
+/***************************************************/
+/******************* CUSTOM COLORS *****************/
+/***************************************************/
 :root {
 	--mrorange1: #FFF9F5;
 	--mrorange2: #FFEBDF;
@@ -31,8 +36,9 @@
 	--mrgrey9: #353535;
 }
 
-/********* General CSS **********/
-
+/**************************************************/
+/******************* GENERAL **********************/
+/**************************************************/
 html {
 	font-size: 10px !important;
 }
@@ -147,6 +153,7 @@ p {
 	color: var(--mrorange5);
 }
 
+/* TOGGLE SWITCH FOR TTC ONLY*/
 .switch {
 	position: relative;
 	display: inline-block;
@@ -209,9 +216,12 @@ input:checked + .slider:before {
 	font-size: 1.6rem;
 	color: var(--mrorange5);
 }
+/*END TOGGLE SWITCH*/
 
-/********* Grid Container **********/
 
+/***************************************************/
+/********************** MATRIX *********************/
+/***************************************************/
 .matrixbox {
 	height: calc(100vh - 15rem - 3rem);
     padding: 1em 0;
@@ -281,7 +291,9 @@ input:checked + .slider:before {
 	opacity: .66;
 }
 
-/********* Active Filter Container **********/
+/***************************************************/
+/************** Active Filter Box ******************/
+/***************************************************/
 
 #activefilters{
     height: calc(33vh - 1.5em);
@@ -320,7 +332,20 @@ input:checked + .slider:before {
 	color: var(--mrblue9);
 }
 
-/********* More Info Container **********/
+
+/***************************************************/
+/******************* MORE INFO BOX *****************/
+/***************************************************/
+.infobox {
+	background-color: #F0F2F6;
+}
+
+#infobox{
+    height: calc(67vh - 1.5em);
+    overflow: scroll;
+	padding: 1em 0;
+	
+}
 
 #projectTitle {
 	font-size: 2rem;
@@ -338,7 +363,7 @@ input:checked + .slider:before {
 	font-style: italic;
 }
 
-#projectPurposes, #projectTech {
+#projectTech {
 	font-weight: bold;
 }
 
@@ -375,19 +400,6 @@ input:checked + .slider:before {
 #projectVideoLink:hover {
 	text-decoration: underline;
 }
-
-#infobox{
-    height: calc(67vh - 1.5em);
-    overflow: scroll;
-	padding: 1em 0;
-}
-
-
-
-
-
-
-
 
 
 
