@@ -5,7 +5,7 @@
         <title>Mixed Reality within Retail | Industry & Research Examples</title>
 
         <!-- JS -->
-        
+       
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -17,6 +17,8 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <!-- Bootstrap Multiselect -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js" integrity="sha256-qoj3D1oB1r2TAdqKTYuWObh01rIVC1Gmw9vWp1+q5xw=" crossorigin="anonymous"></script>
+       
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <!-- Airtable -->
         <script src="https://cdn.jsdelivr.net/npm/airtable@0.5.8/build/airtable.browser.js"></script>
         <!-- D3 -->
@@ -27,14 +29,19 @@
         <!-- Custom JS -->
         <script src="./visualisation.js"></script>
 
+        
+       
+
         <!-- CSS -->
         
         <!-- Bootstrap Multiselect -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" integrity="sha256-7stu7f6AB+1rx5IqD8I+XuIcK4gSnpeGeSjqsODU+Rk=" crossorigin="anonymous" />
         <!-- FontAwesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         <!-- Custom CSS -->
         <link rel="stylesheet" href='./style.css'>
+        
     </head>
     <body>
         <div class="container-fluid">
@@ -69,11 +76,14 @@
                                         </select>
                                         <select id="interactionStyleDropdown" multiple="multiple">
                                         </select>
-                                        <button id="ttcButton"
-                                                class="btn btn-outline-secondary filtercontrol"
-                                                type="button">
-                                            TTC Only
-                                        </button>
+                                      <div style="vertical-align:middle;">
+                                        <label class="switch">
+                                                <input id="ttcButton"
+                                                    class=""
+                                                    type="checkbox">
+                                                <span class="slider round"></span>
+                                        </label>
+                                        <span id="ttconly">TTC Only</span></div>
                                     </div>
                                 </div>
                             </div>
