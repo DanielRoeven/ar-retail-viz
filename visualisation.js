@@ -535,7 +535,7 @@ var renderExamples = function() {
             .merge(selection)
                 .attr('class', 'exampleLabel')
                 .style('background-color', function(d){
-                    return 'hsla(0, 0%, 84%, ' + d.relevance + ')';
+                    return 'hsla(203, 64%, 81%, ' + d.relevance + ')';
                 })
                 .text(function(d){return d['Title of product/project']})
                 .on("click", function(d, i){ 
