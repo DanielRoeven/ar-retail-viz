@@ -1,6 +1,13 @@
+/***************************************************/
+/********************* FONTS ***********************/
+/***************************************************/
 @import url("https://use.typekit.net/vhp3qnp.css");
 
-/********* CUSTOM COLORS **********/
+
+
+/***************************************************/
+/******************* CUSTOM COLORS *****************/
+/***************************************************/
 :root {
 	--mrorange1: #FFF9F5;
 	--mrorange2: #FFEBDF;
@@ -31,6 +38,10 @@
 	--mrgrey9: #353535;
 }
 
+
+/***************************************************/
+/******************* GENEREAL **********************/
+/***************************************************/
 html {
 	font-size: 10px !important;
 }
@@ -64,6 +75,41 @@ h4 {
 p {
 	font-size: 1.6rem;
 }
+
+
+/* THE FOUR MAIN DIVS (tools, grid, active filter, more info) */
+.whitecards{
+	margin-bottom: 1rem;
+	background: white;
+	border-radius: 5px;
+}
+
+/* HEADER STRUCTURE */
+.myrow{
+	display: flex;
+	height: 10rem;
+}
+
+.colleft {
+	padding: 1rem 0;
+	width: 65%;
+}
+
+.colright {
+	padding: 1rem 0;
+	width: 35%;
+}
+
+
+
+/***************************************************/
+/*************** FILTER TOOL BOX *******************/
+/***************************************************/
+
+.titlefilterbox{
+    height: 15rem;
+}
+
 
 .filterControlsContainer {
 	display: flex;
@@ -117,6 +163,7 @@ p {
 	color: var(--mrorange5);
 }
 
+/* TOGGLE SWITCH FOR TTC ONLY*/
 .switch {
 	position: relative;
 	display: inline-block;
@@ -179,7 +226,13 @@ input:checked + .slider:before {
 	font-size: 1.6rem;
 	color: var(--mrorange5);
 }
+/*END TOGGLE SWITCH*/
 
+
+
+/***************************************************/
+/********************** MATRIX *********************/
+/***************************************************/
 .matrixbox {
 	height: calc(100vh - 15rem - 3rem);
     padding: 1em 0;
@@ -249,99 +302,9 @@ input:checked + .slider:before {
 	opacity: .66;
 }
 
-.infobox {
-	background-color: #F0F2F6;
-}
-
-#projectTitle {
-	font-size: 2rem;
-}
-
-#projectLink {
-	color: #212E48;
-}
-
-.fa-external-link-alt, .fa-youtube, .fa-info-circle {
-	color: #8995AE;
-}
-
-#projectByline {
-	font-style: italic;
-}
-
-#projectPurposes, #projectTech {
-	font-weight: bold;
-}
-
-.purposeTag, .techTag {
-	background-color: #D8D8D8;
-	border-radius: 100px;
-	padding: 0px 8px;
-	margin: 4px 4px;
-	display: inline-block;
-	font-weight: normal;
-}
-
-.primPurposeTag {
-	background-color: white;
-	border: 1px solid #909090;
-}
-
-
-#projectImg {
-	display: block;
-	width: 100%;
-}
-
-#projectImg.hidden, #projectVideo.hidden {
-	display: none;
-}
-
-#projectVideoLink {
-	color: #212E48;
-	text-decoration: none;
-	width: 100%;
-}
-
-#projectVideoLink:hover {
-	text-decoration: underline;
-}
-
-.titlefilterbox{
-    height: 15rem;
-}
-
-#infobox{
-    height: calc(67vh - 1.5em);
-    overflow: scroll;
-	padding: 1em 0;
-	
-}
-
-.whitecards{
-	margin-bottom: 1rem;
-	background: white;
-	border-radius: 5px;
-}
-
-/* Create two equal columns that floats next to each other */
-.myrow{
-	display: flex;
-	height: 10rem;
-}
-
-.colleft {
-	padding: 1rem 0;
-	width: 65%;
-}
-
-.colright {
-	padding: 1rem 0;
-	width: 35%;
-}
-
-/* Active Filter Box */
-
+/***************************************************/
+/************** Active Filter Box ******************/
+/***************************************************/
 #activefilters{
     height: calc(33vh - 1.5em);
     overflow: scroll;
@@ -379,6 +342,77 @@ input:checked + .slider:before {
 	color: var(--mrblue9);
 }
 
+
+
+
+
+/***************************************************/
+/******************* MORE INFO BOX *****************/
+/***************************************************/
+.infobox {
+	background-color: #F0F2F6;
+}
+
+#infobox{
+    height: calc(67vh - 1.5em);
+    overflow: scroll;
+	padding: 1em 0;
+	
+}
+
+#projectTitle {
+	font-size: 2rem;
+}
+
+#projectLink {
+	color: #212E48;
+}
+
+.fa-external-link-alt, .fa-youtube, .fa-info-circle {
+	color: #8995AE;
+}
+
+#projectByline {
+	font-style: italic;
+}
+
+#projectTech {
+	font-weight: bold;
+}
+
+.purposeTag, .techTag {
+	background-color: #D8D8D8;
+	border-radius: 100px;
+	padding: 0px 8px;
+	margin: 4px 4px;
+	display: inline-block;
+	font-weight: normal;
+}
+
+.primPurposeTag {
+	background-color: white;
+	border: 1px solid #909090;
+}
+
+
+#projectImg {
+	display: block;
+	width: 100%;
+}
+
+#projectImg.hidden, #projectVideo.hidden {
+	display: none;
+}
+
+#projectVideoLink {
+	color: #212E48;
+	text-decoration: none;
+	width: 100%;
+}
+
+#projectVideoLink:hover {
+	text-decoration: underline;
+}
 
 
 
