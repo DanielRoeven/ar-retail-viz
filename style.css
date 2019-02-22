@@ -1,11 +1,8 @@
-/***************************************************/
-/********************* FONTS ***********************/
-/***************************************************/
+/**************************************************************/
+/********************* Fonts and Colors ***********************/
+/**************************************************************/
 @import url("https://use.typekit.net/vhp3qnp.css");
 
-/***************************************************/
-/******************* CUSTOM COLORS *****************/
-/***************************************************/
 :root {
 	--mrorange1: #FFF9F5;
 	--mrorange2: #FFEBDF;
@@ -37,7 +34,7 @@
 }
 
 /**************************************************/
-/******************* GENERAL **********************/
+/******************* General **********************/
 /**************************************************/
 html {
 	font-size: 10px !important;
@@ -49,10 +46,15 @@ body {
     background: linear-gradient(45deg, #9ac3de 29%,#9ac3de 29%,#9fd3d2 76%,#9fd3d2 76%);
 }
 
-h1, h2 {
+h1 {
      font-family: objektiv-mk1;
      font-size: 4rem;
-     color: var(--mrblue9);
+}
+
+h2 {
+	font-family: objektiv-mk1;
+	font-weight: bold;
+	color: var(--mrblue6);
 }
 
 h3 {
@@ -153,7 +155,7 @@ p {
 	color: var(--mrorange5);
 }
 
-/* TOGGLE SWITCH FOR TTC ONLY*/
+/* TOGGLE SWITCH FOR TTC ONLY */
 .switch {
 	position: relative;
 	display: inline-block;
@@ -216,12 +218,10 @@ input:checked + .slider:before {
 	font-size: 1.6rem;
 	color: var(--mrorange5);
 }
-/*END TOGGLE SWITCH*/
 
-
-/***************************************************/
-/********************** MATRIX *********************/
-/***************************************************/
+/*************************************************/
+/********************** Grid *********************/
+/*************************************************/
 .matrixbox {
 	height: calc(100vh - 15rem - 3rem);
     padding: 1em 0;
@@ -259,7 +259,7 @@ input:checked + .slider:before {
 
 .exampleLabel {
     font-size: 1.2rem;
-    border-radius: 8px;
+    border-radius: 1.25rem;
     padding: 2px 4px;
     margin: 4px;
     overflow: hidden;
@@ -291,24 +291,35 @@ input:checked + .slider:before {
 	opacity: .66;
 }
 
+.tooltip {
+	font-size: 1.2rem;
+}
+
 /***************************************************/
 /************** Active Filter Box ******************/
 /***************************************************/
 
-#activefilters{
+#activefilters {
     height: calc(33vh - 1.5em);
-    overflow: scroll;
     padding: 1em 0;
     font-weight: 100;
-    overflow: visible !important;
-    overflow-y: scroll !important;
+}
+
+#activeFiltersContainer {
+	height: calc(33vh - 6.5em);
+	overflow: scroll;
 }
 
 .filterCategoryBox {
-	background: var(--mrorange1);
 	margin: 0 -.5rem 1rem;
 	padding: .5rem;
 	border-radius: 5px;
+}
+
+.filterText {
+	font-weight: 400;
+	font-size: 1.2rem;
+	color: var(--mrblue9);
 }
 
 .activeFilterTag, .goodExampleTag {
@@ -319,6 +330,10 @@ input:checked + .slider:before {
 	color: var(--mrblue9);
 }
 
+.activeFilterTag:hover, .goodExampleTag:hover {
+	cursor: pointer;
+}
+
 .activeFilterTag {
 	font-weight: bold;
 }
@@ -327,18 +342,9 @@ input:checked + .slider:before {
 	padding: 0 .25rem 0 0;
 }
 
-.filterText {
-	font-size: 1.2rem;
-	color: var(--mrblue9);
-}
-
-
 /***************************************************/
-/******************* MORE INFO BOX *****************/
+/******************* More Info Box *****************/
 /***************************************************/
-.infobox {
-	background-color: #F0F2F6;
-}
 
 #infobox{
     height: calc(67vh - 1.5em);
@@ -356,7 +362,7 @@ input:checked + .slider:before {
 }
 
 .fa-external-link-alt, .fa-youtube, .fa-info-circle {
-	color: #8995AE;
+	color: var(--mrblue5);
 }
 
 #projectByline {
@@ -364,23 +370,21 @@ input:checked + .slider:before {
 }
 
 #projectTech {
+	color: var(--mrblue7);
 	font-weight: bold;
 }
 
-.purposeTag, .techTag {
-	background-color: #D8D8D8;
-	border-radius: 100px;
-	padding: 0px 8px;
-	margin: 4px 4px;
-	display: inline-block;
-	font-weight: normal;
+.techTag {
+    font-size: 1.6rem;
+    border-radius: 1.25rem;
+    padding: 0 1rem;
+    margin: .25rem;
+    font-weight: normal;
+    overflow: hidden;
+    color: var(--mrblue9);
+    background-color: var(--mrblue3);
+    display: inline-block;
 }
-
-.primPurposeTag {
-	background-color: white;
-	border: 1px solid #909090;
-}
-
 
 #projectImg {
 	display: block;

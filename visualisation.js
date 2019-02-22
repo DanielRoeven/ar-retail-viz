@@ -1,7 +1,7 @@
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'keyBoUtj67XZsejy7' }).base('appCQJs47j3IvmonX');
 var allExamples = [];
-var tagDescriptions = [];
+var tagDescriptions = {};
 var valueDescriptions = {};
 var contentCellTuples = [];
 var contextFilters = [];
@@ -11,6 +11,9 @@ var typeOfMRFilters = [];
 var outputFilters = [];
 var interactionStyleFilters = [];
 var creatorsFilters = [];
+var examplesLoaded = false;
+var valuesLoaded = false;
+var tagsLoaded = false;
 
 // Colors for matrix
 var cardsbackground = [ 'hsla(2, 15, 92, ',     //redish
@@ -65,7 +68,7 @@ var fetchData = function(){
         }
         else {
             // // Nothing went wrong, start plotting our examples
-            renderFramework();
+            examplesLoaded = true;
         }
     });
 
@@ -77,11 +80,7 @@ var fetchData = function(){
         
         // Called for each 'page' (~50 records)
         records.forEach(function(record) {
-            // Add all fields of records (examples) to examples array
-            tagDescriptions.push(record.fields);
-            // const description = record.fields['Description'];
-            // const goodExample = record.fields['Good Example'];
-            // tagDescriptions[record.fields['Tag']] = {description, goodExample};
+            tagDescriptions[record.fields['Tag']] = {description: record.fields['Description'], goodExample: record.fields['Good Example']};
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -97,7 +96,7 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong
+            tagsLoaded = true;
         }
     });
 
@@ -109,10 +108,7 @@ var fetchData = function(){
         
         // Called for each 'page' (~50 records)
         records.forEach(function(record) {
-            // Add all fields of records (examples) to examples array
-            //valueDescriptions.push(record.fields);
             valueDescriptions[record.fields.Name] = record.fields['Description notes'];
-            
         });
 
         // To fetch the next page of records, call `fetchNextPage`.
@@ -128,10 +124,18 @@ var fetchData = function(){
             return;
         }
         else {
-            // Nothing went wrong
+            valuesLoaded = true;
         }
     });
 };
+
+var renderAfterLoad = function(){
+    if (examplesLoaded && valuesLoaded && tagsLoaded) {
+        renderFramework();
+    } else {
+        setTimeout(renderAfterLoad, 100);
+    }
+}
 
 // Plot examples we retrieved from Airtable
 var renderFramework = function(){
@@ -471,29 +475,27 @@ var renderDescriptions = function(){
     selection
         .enter()
             .append(function(d){
-                const tagDescriptionRecord = _.find(tagDescriptions, function(tagDescription){
-                    return tagDescription['Tag'] === d;
-                })
-                
+                const tagDescriptionRecord = tagDescriptions[d];
+
                 var node = document.createElement('p');
                 node.classList.add('filterText');
 
                 var activeFilterTag = document.createElement('span');
                 activeFilterTag.classList.add('activeFilterTag')
-                activeFilterTag.textContent = tagDescriptionRecord['Tag'];
+                activeFilterTag.textContent = d;
                 
-                var descriptionText = document.createTextNode(' ' + tagDescriptionRecord['Description'] + ' A good example is ')
+                var descriptionText = document.createTextNode(' ' + tagDescriptionRecord.description + ' A good example is ')
 
                 var goodExampleTag = document.createElement('span');
                 goodExampleTag.classList.add('goodExampleTag');
-                goodExampleTag.textContent = tagDescriptionRecord['Good Example'];
+                goodExampleTag.textContent = tagDescriptionRecord.goodExample;
                 
                 node.appendChild(activeFilterTag);
                 node.appendChild(descriptionText);
                 node.appendChild(goodExampleTag);
 
                 node.addEventListener('click', function(){
-                    showMoreInfo(tagDescriptionRecord['Good Example']);
+                    showMoreInfo(tagDescriptionRecord.goodExample);
 
                     selectedExamples = document.getElementsByClassName('selectedExample');
 
@@ -621,33 +623,39 @@ var showMoreInfo = function(exampelTitle){
         const technologies = document.getElementById('projectTech');
         technologies.textContent = 'Technologies:';
         
-        d['MR Input'].forEach(function(tech){
+        if (d['MR Input']){
+            d['MR Input'].forEach(function(tech){
+                const techTag = document.createElement('span');
+                techTag.classList.add('techTag');
+                techTag.textContent = tech;
+                technologies.appendChild(techTag);
+            });            
+        }
+
+        if (d['Content']) {
+            d['Content'].forEach(function(tech){
+                const techTag = document.createElement('span');
+                techTag.classList.add('techTag');
+                techTag.textContent = tech;
+                technologies.appendChild(techTag);
+            });            
+        }
+
+        if (d['Output']) {
+            d['Output'].forEach(function(tech){
+                const techTag = document.createElement('span');
+                techTag.classList.add('techTag');
+                techTag.textContent = tech;
+                technologies.appendChild(techTag);
+            });
+        }
+
+        if (d['Type of MR']) {
             const techTag = document.createElement('span');
             techTag.classList.add('techTag');
-            techTag.textContent = tech;
+            techTag.textContent = d['Type of MR'];
             technologies.appendChild(techTag);
-        });
-
-        d['Content'].forEach(function(tech){
-            const techTag = document.createElement('span');
-            techTag.classList.add('techTag');
-            techTag.textContent = tech;
-            technologies.appendChild(techTag);
-        });
-
-        d['Output'].forEach(function(tech){
-            const techTag = document.createElement('span');
-            techTag.classList.add('techTag');
-            techTag.textContent = tech;
-            technologies.appendChild(techTag);
-        });
-
-       
-        const techTag = document.createElement('span');
-        techTag.classList.add('techTag');
-        techTag.textContent = d['Type of MR'];
-        technologies.appendChild(techTag);
-      
+        }      
 
         // Pictures
         const image = document.getElementById('projectImg');
@@ -709,26 +717,7 @@ const toggle = function(array, value){
     }
 }
 
-const getFiltersForCategory = function(category) {
-    switch (category) {
-        case 'Context':
-            return contextFilters;
-        case 'Input':
-            return inputFilters;
-        case 'Content':
-            return contentFilters;
-        case 'Type of MR':
-            return typeOfMRFilters;
-        case 'Output':
-            return outputFilters;
-        case 'Interaction Style':
-            return interactionStyleFilters;
-        default:
-            throw new Error(category + ' is not a valid filter category!');
-            break;
-    }
-}
-
 $(document).ready(function() {
     fetchData();
+    renderAfterLoad();
 });
