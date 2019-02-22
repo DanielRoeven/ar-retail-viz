@@ -1,6 +1,6 @@
 @import url("https://use.typekit.net/vhp3qnp.css");
 
-/********* CUSTOM COLORS **********/
+/********* Custom Colors **********/
 :root {
 	--mrorange1: #FFF9F5;
 	--mrorange2: #FFEBDF;
@@ -30,6 +30,8 @@
 	--mrgrey7: #6B6B6B;
 	--mrgrey9: #353535;
 }
+
+/********* General CSS **********/
 
 html {
 	font-size: 10px !important;
@@ -63,6 +65,34 @@ h4 {
 
 p {
 	font-size: 1.6rem;
+}
+
+.whitecards{
+	margin-bottom: 1rem;
+	background: white;
+	border-radius: .5rem;
+}
+
+/********* Title and Filter Container **********/
+
+.titleFilterContainer{
+    height: 15rem;
+}
+
+.titleContainer {
+	display: flex;
+	height: 10rem;
+}
+
+.header {
+	padding: 1rem 0;
+	width: 65%;
+}
+
+.madeby {
+	padding: 1rem 0;
+	width: 35%;
+	text-align: right;
 }
 
 .filterControlsContainer {
@@ -180,6 +210,8 @@ input:checked + .slider:before {
 	color: var(--mrorange5);
 }
 
+/********* Grid Container **********/
+
 .matrixbox {
 	height: calc(100vh - 15rem - 3rem);
     padding: 1em 0;
@@ -206,7 +238,7 @@ input:checked + .slider:before {
     text-align: center;
 }
 
-.cell.odd, .rowHeaderLabel.odd, .columnHeaderLabel.odd {
+.cell.odd, .rowHeaderLabel.odd {
 	background-color: var(--mrblue1);
 }
 
@@ -232,7 +264,7 @@ input:checked + .slider:before {
 }
 
 .exampleLabel.selectedExample {
-	color: var(--mrorange1);
+	color: white;
     background: var(--mrorange4) !important; /*Override D3 inline style*/
     cursor: pointer;
 }
@@ -249,9 +281,46 @@ input:checked + .slider:before {
 	opacity: .66;
 }
 
-.infobox {
-	background-color: #F0F2F6;
+/********* Active Filter Container **********/
+
+#activefilters{
+    height: calc(33vh - 1.5em);
+    overflow: scroll;
+    padding: 1em 0;
+    font-weight: 100;
+    overflow: visible !important;
+    overflow-y: scroll !important;
 }
+
+.filterCategoryBox {
+	background: var(--mrorange1);
+	margin: 0 -.5rem 1rem;
+	padding: .5rem;
+	border-radius: 5px;
+}
+
+.activeFilterTag, .goodExampleTag {
+	background: var(--mrteal3);
+	padding: 0 .5rem;
+	border-radius: 100px;
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
+
+.activeFilterTag {
+	font-weight: bold;
+}
+
+.activeFilterTag > i {
+	padding: 0 .25rem 0 0;
+}
+
+.filterText {
+	font-size: 1.2rem;
+	color: var(--mrblue9);
+}
+
+/********* More Info Container **********/
 
 #projectTitle {
 	font-size: 2rem;
@@ -307,76 +376,10 @@ input:checked + .slider:before {
 	text-decoration: underline;
 }
 
-.titlefilterbox{
-    height: 15rem;
-}
-
 #infobox{
     height: calc(67vh - 1.5em);
     overflow: scroll;
 	padding: 1em 0;
-	
-}
-
-.whitecards{
-	margin-bottom: 1rem;
-	background: white;
-	border-radius: 5px;
-}
-
-/* Create two equal columns that floats next to each other */
-.myrow{
-	display: flex;
-	height: 10rem;
-}
-
-.colleft {
-	padding: 1rem 0;
-	width: 65%;
-}
-
-.colright {
-	padding: 1rem 0;
-	width: 35%;
-}
-
-/* Active Filter Box */
-
-#activefilters{
-    height: calc(33vh - 1.5em);
-    overflow: scroll;
-    padding: 1em 0;
-    font-weight: 100;
-    overflow: visible !important;
-    overflow-y: scroll !important;
-}
-
-.filterCategoryBox {
-	background: var(--mrorange1);
-	margin: 0 -.5rem 1rem;
-	padding: .5rem;
-	border-radius: 5px;
-}
-
-.activeFilterTag, .goodExampleTag {
-	background: var(--mrteal3);
-	padding: 0 .5rem;
-	border-radius: 100px;
-	font-size: 1.2rem;
-	color: var(--mrblue9);
-}
-
-.activeFilterTag {
-	font-weight: bold;
-}
-
-.activeFilterTag > i {
-	padding: 0 .25rem 0 0;
-}
-
-.filterText {
-	font-size: 1.2rem;
-	color: var(--mrblue9);
 }
 
 
