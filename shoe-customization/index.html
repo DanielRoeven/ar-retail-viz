@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+
+            body {
+                height: calc(100vh + 1px);
+                background-image: url(./img/Studio-Background.png);
+                background-position: top right;
+                background-size: 100vw calc(100vh + 1px);
+            }
+
+            #laces {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 4;
+
+                background-image: url(./img/Laces-Red-Wax.png);
+                background-position: center center;
+                background-size: 80vw auto;
+                background-repeat: no-repeat;
+            }
+
+            #logo {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 3;
+
+                background-image: url(./img/Logo-Brown-Fabric.png);
+                background-position: center center;
+                background-size: 80vw auto;
+                background-repeat: no-repeat;
+            }
+
+            #sole {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 2;
+
+                background-image: url(./img/Sole-Brown-Normal.png);
+                background-position: center center;
+                background-size: 80vw auto;
+                background-repeat: no-repeat;
+            }
+
+            #face {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+
+                background-image: url(./img/Face-Yellow-Fabric.png);
+                background-position: center center;
+                background-size: 80vw auto;
+                background-repeat: no-repeat;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="laces">
+        </div>
+        <div id="logo">
+        </div>
+        <div id="sole">
+        </div>
+        <div id="face">
+        </div>
+        <script type="text/javascript">
+            (function(){
+                window.scrollTo(0, 1);
+
+                const laces = ['Laces-Black-Wax', '/Laces-Blue-Wide', 'Laces-Red-Wax', 'Laces-White-Wax'];
+                const logos = ['Logo-Black-Leather', 'Logo-Brown-Fabric', 'Logo-Gold-Metallic', 'Logo-White-Matte'];
+                const soles = ['Sole-Black-Bouncy', 'Sole-Black-Normal', 'Sole-Brown-Normal', 'Sole-White-Bouncy'];
+                const faces = ['Face-Black-Leather', 'Face-Gray-Leather', 'Face-Yellow-Fabric', 'Face-White-Matte'];
+
+                const lace = document.getElementById('laces');
+                const logo = document.getElementById('logo');
+                const sole = document.getElementById('sole');
+                const face = document.getElementById('face');
+
+                const setImage = function(div, name){
+                    const imgString = 'url(./img/' + name + '.png)';
+                    console.log(imgString);
+                    div.style.backgroundImage = imgString;
+                }
+
+                window.addEventListener("keypress", function(event){
+                    key = String.fromCharCode(event.keyCode)
+                    switch (key) {
+                        case 'z':
+                            setImage(face, faces[0]);
+                            break;
+                        case 'x':
+                            setImage(face, faces[1]);
+                            break;
+                        case 'c':
+                            setImage(face, faces[2]);
+                            break;
+                        case 'v':
+                            setImage(face, faces[3]);
+                            break;
+
+                        case 'a':
+                            setImage(sole, soles[0]);
+                            break;
+                        case 's':
+                            setImage(sole, soles[1]);
+                            break;
+                        case 'd':
+                            setImage(sole, soles[2]);
+                            break;
+                        case 'f':
+                            setImage(sole, soles[3]);
+                            break;
+
+                        case 'q':
+                            setImage(logo, logos[0]);
+                            break;
+                        case 'w':
+                            setImage(logo, logos[1]);
+                            break;
+                        case 'e':
+                            setImage(logo, logos[2]);
+                            break;
+                        case 'r':
+                            setImage(logo, logos[3]);
+                            break;
+
+                        case '1':
+                            setImage(lace, laces[0]);
+                            break;
+                        case '2':
+                            setImage(lace, laces[1]);
+                            break;
+                        case '3':
+                            setImage(lace, laces[2]);
+                            break;
+                        case '4':
+                            setImage(lace, laces[3]);
+                            break;
+                        default:
+                            // statements_def
+                            break;
+                    }
+                });                
+            })();
+        </script>
+    </body>
+</html>
