@@ -159,14 +159,14 @@ var renderFramework = function(){
     // Map all examples to array with only the field other user values and flatten it
     // Then make join arrays, make unique, and remove undefined
     const predeterminedUserValues = ['Appropriateness',
-                                    'Physical Compatibility',
-                                    'Accessibility',
-                                    'Time Management',
-                                    'Fun',
-                                    'Purchase Economy',
-                                    'Avoidance of Sensory Unpleasantness',
-                                    'Impression Management',
-                                    'Group Belongingness'];
+                                    'Physical Compatibility (Product)',
+                                    'Accessibility (Experience)',
+                                    'Time Management (Experience)',
+                                    'Fun (Experience)',
+                                    'Purchase Economy (Product)',
+                                    'Avoidance of Sensory Unpleasantness (Experience)',
+                                    'Impression Management (Product)',
+                                    'Group Belongingness (Experience)'];
     const primUserValues = allExamples.map(example => example['Primary User Value']);
     const otherUserValues = _.flatten(allExamples.map(example => example['Other User Values']));
     const userValues = _.without(_.uniq(_.union(predeterminedUserValues, primUserValues, otherUserValues)), undefined);
