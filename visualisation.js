@@ -158,7 +158,8 @@ var renderFramework = function(){
     // Map all examples to array with only the field primary user value
     // Map all examples to array with only the field other user values and flatten it
     // Then make join arrays, make unique, and remove undefined
-    const predeterminedUserValues = ['Appropriateness',
+    const predeterminedUserValues = ['Appropriateness (Product)',
+                                    'Appropriateness (Experience)',
                                     'Physical Compatibility (Product)',
                                     'Accessibility (Experience)',
                                     'Time Management (Experience)',
